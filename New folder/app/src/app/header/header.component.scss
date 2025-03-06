@@ -27,20 +27,20 @@
         flex-direction: row;
         list-style: none;
         margin: 0;
-        padding: 1rem 0;
         @media screen and (max-width : 768px) {
             flex-direction: column;
         }
     }
 
     .list-cls{
-        padding: 0.5rem 1rem 0.5rem 1rem;
+        padding: 2rem;
         cursor: pointer;
         margin: 0;
     }
 
     .list-cls:hover{
         background-color: green;
+        box-shadow: inset 0px 0px 20px 10px rgba(0, 0, 0, 0.2);
     }
 
     .mobile-nav-view{

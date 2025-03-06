@@ -1,4 +1,60 @@
 
 .home-comp{
-  padding: 0 1rem;
+  overflow: hidden;
+
+  .name-cls{
+    text-align: center;
+    font-family: 'MyFont';
+    margin: auto;
+
+    @media screen and (max-width:768px) {
+      margin: 5rem 0;
+    }
+  }
+
+  .hey-cls{ 
+   font-family: 'light-font';
+   margin: 0;
+   font-weight: 600;
+  }
+  .my-name{
+    font-family: 'my-font';
+    letter-spacing: 0.25rem;
+    font-weight: 700;
+  }
+  .role{
+    font-family: 'regular-font';
+  }
+  .icon-cls{
+    margin: 0 0.5rem 0 0;
+  }
+  .img-cls{
+    width: 101%;
+  }
+  .img-lang-icon{
+    width: 25%;
+  }
+  .img-lang-icon-1{
+    width: 10%;
+    object-fit: scale-down;
+  }
+
+  .img-lang-icon-2{
+    width: 12%;
+  }
+  .img-gp{
+    margin-top: 1rem; 
+    gap: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn.btn-dark{
+    color: black;
+    background: green;
+    border: none;
+    border-radius: 0;
+    padding: 0.75rem;
+  }
+
 }
