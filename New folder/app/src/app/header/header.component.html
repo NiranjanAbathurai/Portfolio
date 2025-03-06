@@ -1,0 +1,28 @@
+<div class="header-component">
+    <div class="nav-row">
+        <div>
+            <!-- <img src="../../assets/image.png" class="img-cls"> -->
+            <p class="name-cls"><img src="../../assets/image.png" class="img-cls">NIRANJAN</p>
+        </div>
+       
+        <nav class="navBar-cls" *ngIf="!isMobile">
+            <ul class="ul-list">
+                @for(item of navItems; track item){
+                 <li class="list-cls" (click)="onClickItem(item)">{{item}}</li>
+                }
+            </ul>
+        </nav>
+
+        <nav *ngIf="isMobile"  class="mobile-nav-view">
+            <div class="mobile-nav">
+                <i class="fa-solid fa-bars hamburger-icon" (click)="toggleDropdown(!dropdownVisible)" (mouseover)="toggleDropdown(!dropdownVisible)"></i>
+            </div>
+            <div class="position-relative">
+            <ul *ngIf="dropdownVisible" class="ul-list" (mouseleave)="toggleDropdown(false)">
+                <li *ngFor="let item of navItems" class="list-cls"  (click)="onClickItem(item)">{{ item }}</li>
+            </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
