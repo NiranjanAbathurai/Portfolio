@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -6,6 +6,25 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+
+  windowWidth !: number;
+  isMobile !: boolean;
+  event !: Event;
+
+  ngOnInit(){
+    this.onResize(this.event)
+  }
+
+    @HostListener('window:resize',['$event'])
+    onResize(event:Event){
+      this.windowWidth = window.innerWidth;
+      console.log('Window resized, new width:', this.windowWidth);
+      if (this.windowWidth <= 768) {
+       this.isMobile = true;
+      } else {
+        this.isMobile = false;
+      }
+    }
 
   downloadFile(){
     const link = document.createElement('a');

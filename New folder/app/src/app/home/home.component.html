@@ -1,6 +1,6 @@
 
 <div class="home-comp">
-  <div class="row">
+  <div class="row row-cls">
     <div class="col-md-6 col-12 name-cls">
       <p class="hey-cls">Hey, I'm </p>
       <h1 class="my-name">Niranjan Abathurai</h1>
@@ -8,19 +8,46 @@
       <h4 class="role">Angular Frontend Developer</h4>
       <button class="btn btn-dark my-3" (click)="downloadFile()"><i class="fa fa-thin fa-download icon-cls"></i>Download CV </button>
     
-    <div class="icon-group">
-      <img src="../../assets/angular_logo.png" class="img-lang-icon">
-      <br>
-      <div class="img-gp">
-        <img src="../../assets/typescript.png" class="img-lang-icon-1">
-        <img src="../../assets/javascript.png" class="img-lang-icon-1">
-        <img src="../../assets/html5.png" class="img-lang-icon-2">
-        <img src="../../assets/css3.png" class="img-lang-icon-2">
+      <div class="row mt-8">
+        <div class="col-4">
+          <h3 class="high-txt">5+</h3>
+          <span class="low-txt">years of experience</span>
+        </div>
+        <div class="col-4">
+          <h3 class="high-txt">5+</h3>
+          <span class="low-txt">years of experience</span>
+        </div>
+        <div class="col-4">
+          <h3 class="high-txt">5+</h3>
+          <span class="low-txt">years of experience</span>
+        </div>
       </div>
+
     </div>
-    </div>
-    <div class="col-md-6 col-12 p-0">
-      <img src="../../assets/Niranjan.png" class="img-cls">
+    <div class="col-md-6 col-12 second-col">
+      <div class="image-box">
+        <img src="../../assets/Niranjan.png" class="img-cls">
+      </div>
+        <img src="../../assets/angular_logo-Photoroom.png"  *ngIf="!isMobile" class="img-ang">
+        <div class="revolve-imgs" *ngIf="!isMobile">
+          <div class="position-relative">
+            <img src="../../assets/typescript.png" class="img-1" id="img1">
+            <img src="../../assets/javascript.png" class="img-2" id="img2">
+            <img src="../../assets/html5.png" class="img-3" id="img3">
+            <img src="../../assets/css3-.png" class="img-4" id="img4">
+          
+          </div>
+        </div>
+        <div class="icon-group mt-8" *ngIf="isMobile">
+          <img src="../../assets/angular_logo.png" class="img-lang-icon">
+          <br>
+          <div class="img-gp">
+            <img src="../../assets/typescript.png" class="img-lang-icon-1">
+            <img src="../../assets/javascript.png" class="img-lang-icon-1">
+            <img src="../../assets/html5.png" class="img-lang-icon-2">
+            <img src="../../assets/css3.png" class="img-lang-icon-2">
+          </div>
+        </div>
     </div>
   </div>
 </div>

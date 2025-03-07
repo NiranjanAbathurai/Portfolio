@@ -49,7 +49,10 @@
             }
           },
           "configurations": {
-            "production": {
+            "production": { 
+              "aot": true,
+              "optimization": true,
+              "sourceMap": false,
               "budgets": [
                 {
                   "type": "initial",

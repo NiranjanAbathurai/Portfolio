@@ -25,7 +25,7 @@ export class HeaderComponent {
   onResize(event:Event){
     this.windowWidth = window.innerWidth;
     console.log('Window resized, new width:', this.windowWidth);
-    if (this.windowWidth < 768) {
+    if (this.windowWidth <= 768) {
      this.isMobile = true;
     } else {
       this.isMobile = false;
