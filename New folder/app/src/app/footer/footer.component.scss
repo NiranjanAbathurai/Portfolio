@@ -1,6 +1,7 @@
 .footer-comp{
   background-color: black;
   color: white;
+  border-top: 3px solid green;
 
   .high-txt{
     font-family: 'my-font';
@@ -19,6 +20,9 @@
   }
   .li-type{
     list-style: none !important;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
   }
   .icon-cls{
     width: 1rem;
