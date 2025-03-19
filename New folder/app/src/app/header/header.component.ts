@@ -1,5 +1,6 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Route, Router } from '@angular/router';
+import { CommonService } from '../service/common.service';
 
 @Component({
   selector: 'app-header',
@@ -8,13 +9,13 @@ import { Route, Router } from '@angular/router';
 })
 export class HeaderComponent {
 
-  navItems = ['Home','About','Projects','Contact']
+  navItems = ['Home','Skills','Projects','Contact']
   windowWidth !: number;
   isMobile = false;
   dropdownVisible = false;
   event !: Event
 
-  constructor(private router:Router){}
+  constructor(private router:Router, private commonService: CommonService){}
 
   ngOnInit(){
     this.onResize(this.event);
@@ -39,6 +40,7 @@ export class HeaderComponent {
   onClickItem(item:string){
     console.log(item);
     this.dropdownVisible = false;
-    this.router.navigateByUrl(item.toLowerCase())
+    // this.router.navigateByUrl(item.toLowerCase());
+    this.commonService.scrollToTarget.next(item.toLowerCase()+'ViewChild');
   }
 }

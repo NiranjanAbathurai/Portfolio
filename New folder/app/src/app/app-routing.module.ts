@@ -12,7 +12,8 @@ const routes: Routes = [
   {path:'about',component:AboutComponent},
   {path:'project',component:ProjectsComponent},
   {path:'contact',component:ContactComponent},
-  {path: '**',component:PageNotFoundComponent}
+  // {path: '**',component:PageNotFoundComponent}
+  {path:'**',redirectTo:'/home'}
 ];
 
 @NgModule({

@@ -1,4 +1,5 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { CommonService } from '../service/common.service';
 
 @Component({
   selector: 'app-home',
@@ -10,9 +11,24 @@ export class HomeComponent {
   windowWidth !: number;
   isMobile !: boolean;
   event !: Event;
+  @ViewChild('projectsViewChild') projectsSection: ElementRef | undefined;
+  @ViewChild('skillsViewChild') skillsSection: ElementRef | undefined;
+  @ViewChild('contactViewChild') contactSection: ElementRef | undefined;
+
+  constructor(private commonService: CommonService){}
 
   ngOnInit(){
-    this.onResize(this.event)
+    this.onResize(this.event);
+    this.commonService.scrollToTarget.subscribe((data:any)=>{
+      console.log(data);
+      if (this.projectsSection && data == 'projectsViewChild') {
+        this.projectsSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      } else if (this.skillsSection && data == 'skillsViewChild') {
+        this.skillsSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      } else if (this.contactSection && data == 'contactViewChild') {
+        this.contactSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      } 
+    })
   }
 
     @HostListener('window:resize',['$event'])

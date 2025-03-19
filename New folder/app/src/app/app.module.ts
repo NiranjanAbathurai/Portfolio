@@ -11,6 +11,8 @@ import { ContactComponent } from './contact/contact.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { FooterComponent } from './footer/footer.component';
 import { WorkExperienceComponent } from './work-experience/work-experience.component';
+import { TechnologyComponent } from './technology/technology.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,11 +24,13 @@ import { WorkExperienceComponent } from './work-experience/work-experience.compo
     ContactComponent,
     PageNotFoundComponent,
     FooterComponent,
-    WorkExperienceComponent
+    WorkExperienceComponent,
+    TechnologyComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [
     provideClientHydration()

@@ -30,10 +30,11 @@
   .prj-cls{
     width: 5rem;
     object-fit: contain;
-    margin: 0.25rem 1.25rem 0.25rem 1.25rem;
+    margin: 0.25rem 1.25rem 1rem 1.25rem;
   }
   .justify-s{
     justify-self: center;
+    flex-wrap: wrap;
   }
   .border-left{
     border-left: 1px solid white;

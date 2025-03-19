@@ -82,33 +82,7 @@
   .experience{
     animation:  slideright 1s ease-in forwards;
   }
-  .technology{
-    display:flex;
-    justify-content: center;
-    color: green;
-    font-family: 'my-font';
-    margin-top: 2rem;
-    animation: slideIn 1s ease-in forwards;
-  }
-
-  .glowing-text {
-    font-weight: bold;
-    animation: glow-animation 1.5s ease-in-out infinite;
-    letter-spacing: 0.25rem;
-    color: black;
-  }
-
-  @keyframes glow-animation {
-    0% {
-      text-shadow: 0 0 5px #28a745, 0 0 10px #28a745, 0 0 15px #28a745, 0 0 20px #28a745;
-    }
-    50% {
-      text-shadow: 0 0 20px #28a745, 0 0 30px #28a745, 0 0 40px #28a745, 0 0 50px #28a745;
-    }
-    100% {
-      text-shadow: 0 0 5px #28a745, 0 0 10px #28a745, 0 0 15px #28a745, 0 0 20px #28a745;
-    }
-  }
+  
 
   @keyframes glow-btn-animation {
     0% {
@@ -123,20 +97,7 @@
   }
   
 
-  .image-group{
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-    margin: 2rem 0;
-  }
 
-  .image-div{
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3), 0 0 15px rgba(40, 167, 69, 0.1),0 4px 8px rgba(40, 167, 69, 0.3), 0 0 15px rgba(40, 167, 69, 0.1);
-    animation: slideIn 1s ease-in forwards;
-    padding: 1rem;
-  }
 
   @keyframes slideIn {
     0% {
@@ -149,27 +110,8 @@
     }
   }
 
-  .tools-cls{
-    width: 7%;
-  }
-
   .bg-black{
     background-color: black;
-  }
-  .ang-img{
-    width: 15%;
-  }
-  .img-1{
-    width: 8%; 
-  }
-  .img-2{
-    width: 8%; 
-  }
-  .img-3{
-    width: 7%;
-  }
-  .img-4{
-    width: 5%;
   }
   
   .high-txt{
@@ -203,7 +145,9 @@
     place-self: center;
     animation:   slideleft 1s ease-in forwards;
     @media screen and (max-width:768px) {
-      height: 430px;
+      height: auto;
+      max-height: 430px;
+      min-height: 290px;
     }
    
   }
@@ -222,7 +166,9 @@
   #carouselExample .carousel-inner {
     height: 350px;
     @media screen and (max-width:768px) {
-      height: 430px;
+      max-height: 430px;
+      height: auto;
+      min-height: 225px;
     }
   }
 
@@ -247,9 +193,6 @@
   }
   .p-4rem{
     padding: 4rem;
-  }
-  .object_contain{
-    object-fit: contain;
   }
   .pt-2rem{
     padding-top: 2rem;

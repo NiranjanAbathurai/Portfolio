@@ -59,40 +59,17 @@
       
     </div>
 
-    <div class="col-12 bg-black pt-2rem">
-      <div>
-        <h3 class="technology"><span class="glowing-text">{{'Technical Skills' | uppercase}}</span>
-        </h3>
-        <div class="image-group image-div">
-          <img src="../../assets/sass_logo.png" class="img-4 object_contain" id="img4">
-          <img src="../../assets/ngrx.png" class="img-3 object_contain" id="img3">
-          <img src="../../assets/html.png" class="img-2 object_contain" id="img2">
-          <img src="../../assets/javascript.png" class="img-1 object_contain" id="img2">
-          <img src="../../assets/nre_angular.png" class="ang-img object_contain">
-          <img src="../../assets/typescript.png" class="img-1 object_contain" id="img1">
-          <img src="../../assets/css3.png" class="img-2 object_contain" id="img4">
-          <img src="../../assets/jasmine.png" class="img-3 object_contain" id="img3">
-          <img src="../../assets/bootstrap.png" class="img-4 object_contain" id="img4">
-        </div>
-
-        <h3 class="technology"><span class="glowing-text">{{'Tools worked' | uppercase}}</span>
-        </h3>
-          <div class="image-group image-div gap-2">
-            <img src="../../assets/git.png" class="tools-cls object_contain">
-            <img src="../../assets/vscode.png" class="tools-cls object_contain">
-            <img src="../../assets/figma.png" class="tools-cls object_contain">
-            <img src="../../assets/eclipse.png" class="tools-cls object_contain">
-            <img src="../../assets/java.png" class="tools-cls object_contain">
-            <img src="../../assets/mongo.png" class="tools-cls object_contain" style="width: 10%;">
-            <img src="../../assets/spinnaker.png" class="tools-cls object_contain">
-            <img src="../../assets/splunk.png" class="tools-cls object_contain">
-        </div>
-      </div>
+    <div #skillsViewChild class="col-12 bg-black pt-2rem">
+      <app-technology></app-technology>
     </div>
 
-    <div class="col-12">
+    <div #projectsViewChild class="col-12 bg-black pt-2rem">
       <app-work-experience></app-work-experience>
     </div>
+
+    <div #contactViewChild class="col-12 bg-black pt-2rem pb-4">
+      <app-contact></app-contact>
+    </div>    
 
   </div>
 </div>
