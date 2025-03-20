@@ -1,6 +1,8 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { CommonService } from '../service/common.service';
 
+import * as angJson from '../../../../app/angular.json';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -14,6 +16,7 @@ export class HomeComponent {
   @ViewChild('projectsViewChild') projectsSection: ElementRef | undefined;
   @ViewChild('skillsViewChild') skillsSection: ElementRef | undefined;
   @ViewChild('contactViewChild') contactSection: ElementRef | undefined;
+  jsonFile !: any;
 
   constructor(private commonService: CommonService){}
 
@@ -28,7 +31,9 @@ export class HomeComponent {
       } else if (this.contactSection && data == 'contactViewChild') {
         this.contactSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
       } 
-    })
+    });
+    this.jsonFile = angJson
+
   }
 
     @HostListener('window:resize',['$event'])
