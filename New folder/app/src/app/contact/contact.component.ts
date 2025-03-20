@@ -40,8 +40,19 @@ export class ContactComponent {
   }
 
   onReset(){
-    this.contactForm.reset();
+    this.contactForm.reset({
+      firstName:'',
+      lastName:'',
+      mobile:'',
+      email:''
+    });
     this.displaySuccess = false;
+    // temp:() => {
+    //   console.log(this.displaySuccess);
+    // }
+    // print:()=>{
+    //   this.temp
+    // };
   }
 
 }

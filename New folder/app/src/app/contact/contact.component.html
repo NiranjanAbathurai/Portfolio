@@ -21,7 +21,7 @@
         </div>
         <div class="col-12 btn-div" [ngStyle]="{'margin-bottom':displaySuccess?'1rem':'0'}">
           <button type="submit" class=" btn btn-dark submit-btn col-md-6 col-12">SUBMIT</button>
-          <button type="button" (clic)="onReset()" class="btn btn-outline-success reset-btn col-md-6 col-12">RESET</button>
+          <button type="button" (click)="onReset()" class="btn btn-outline-success reset-btn col-md-6 col-12">RESET</button>
         </div>
         <span *ngIf="displaySuccess" class="col-12 success-msg">Thank you! I will respond shortly.</span>
       </div>
