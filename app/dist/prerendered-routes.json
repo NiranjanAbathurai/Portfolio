@@ -1,8 +1,6 @@
 {
   "routes": [
-    "/about",
-    "/contact",
     "/home",
-    "/project"
+    "/mini-projects"
   ]
 }
