@@ -1,6 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'bootstrap/scss/bootstrap.scss';
-@import "tailwindcss";
+// @import "tailwindcss";
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 @font-face {
   font-family: 'my-font';
