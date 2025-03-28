@@ -1,4 +1,5 @@
 import { Component, HostListener, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-work-experience',
@@ -37,7 +38,7 @@ export class WorkExperienceComponent {
     },
   ]
 
-  constructor(){}
+  constructor(private router:Router){}
 
   ngOnInit(){
     this.onResize(this.event)
@@ -52,6 +53,10 @@ export class WorkExperienceComponent {
     } else {
       this.isMobile.set(false);
     }
+  }
+
+  onClick(){
+    this.router.navigate(['mini-projects'])
   }
 
 }
