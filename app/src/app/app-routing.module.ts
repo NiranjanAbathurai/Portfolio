@@ -7,7 +7,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {path:'home',component:HomeComponent},
-  {path:'mini-projects',component:PageNotFoundComponent},
+  {path:'mini-projects',loadChildren: () => import ('./mini-projects/mini-projects.module').then(m=> m.MiniProjectsModule)},
   // {path: '**',component:PageNotFoundComponent}
   {path:'**',redirectTo:'/home'}
 ];

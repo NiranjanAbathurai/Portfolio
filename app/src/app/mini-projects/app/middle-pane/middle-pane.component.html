@@ -1,0 +1,184 @@
+<div class="bg-white shadow p-4 rounded-lg mb-3 flex justify-between items-start">
+  <div class="mr-2">
+    <h2 class="text-2xl font-bold mb-4" *ngIf="!isEditable">{{selectedItem.name != undefined ? selectedItem.name :  null}} </h2>
+    <p class="text-gray-500 mb-4" *ngIf="!isEditable">{{selectedItem.description ||  'Add description ...'}} </p>
+
+    <input *ngIf="isEditable" [(ngModel)]="selectedItem.name" class="w-full mb-1 p-2 text-2xl border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+    <p *ngIf="displaynewItemError && !newTaskName" class="text-red-700">Please enter name</p>
+    <textarea *ngIf="isEditable" [(ngModel)]="selectedItem.description" class="w-full mb-1 p-2 border-b text-gray-500 text-lg border border-gray-300 rounded-lg" rows="4" placeholder="Enter the description"></textarea>
+   
+    <button *ngIf="isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right" (click)="onSave()">Save</button>
+  </div>
+ 
+  <div class="flex flex-row gap-2">
+    <svg class="h-4 w-4 text-gray-300 cursor-pointer" (click)="editText()"  width="24"  height="24"  viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" /></svg>
+    <svg class="h-4 w-4 text-gray-300 cursor-pointer" (click)="cloneText()"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+    </svg>
+    <svg class="h-4 w-4 text-gray-300 cursor-pointer" (click)="deleteItem()" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <polyline points="3 6 5 6 21 6" />  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />  <line x1="10" y1="11" x2="10" y2="17" />  <line x1="14" y1="11" x2="14" y2="17" /></svg>
+  </div>
+</div>
+
+
+<div class="bg-white shadow p-4 rounded-lg mb-3 flex" *ngFor="let item of selectedItem.elements;let i = index;trackBy: trackByFn"
+    [attr.draggable]="true" (dragstart)="onDragStart($event, i)" (dragover)="onDragOver($event)"  (drop)="onDrop($event, i)">
+    
+    <div [ngSwitch]="item.type" class="w-full mr-2">
+      <div *ngSwitchCase="'input-text'" class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label *ngIf="!item.isEditable" class="block text-gray-700 font-bold">{{item.label}} 
+            <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <input type="text" [disabled]="item.isEditable"  class="w-full border p-2 rounded mt-2 disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="Type here" (blur)="onBlurFunction()">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'input-text-area'"  class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label  *ngIf="!item.isEditable" class="block text-gray-700 font-bold">{{item.label}}
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <textarea  [disabled]="item.isEditable" class="w-full mb-1 p-2 border-b text-gray-500 text-lg border border-gray-300 rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed" rows="4" (blur)="onBlurFunction()" placeholder="Type here" [(ngModel)]="item.value"></textarea>
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'input-number'"  class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <input  [disabled]="item.isEditable" type="number" class="w-full border p-2 rounded mt-2 disabled:bg-gray-200 disabled:cursor-not-allowed"  [(ngModel)]="item.value" placeholder="Type here" (blur)="onBlurFunction()">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'input-date'"  class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <input  [disabled]="item.isEditable" type="date" id="date" name="date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="Type here" (blur)="onBlurFunction()">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'input-time'"  class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <input  [disabled]="item.isEditable" type="time" id="time" name="time" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="Select time" (blur)="onBlurFunction()" />
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'input-date-time'"  class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <input  [disabled]="item.isEditable" type="datetime-local" id="datetime" name="datetime" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="Select date and time" (blur)="onBlurFunction()" />
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'input-single-select'"  class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <div class="mt-2">
+            <label class="inline-flex items-center mr-4" *ngFor="let opt of item.selectValues;let i = index">
+              <input  [disabled]="item.isEditable" type="radio" name="gender" [(ngModel)]="item.value" [value]="opt" class="form-radio text-blue-500 h-5 w-5 disabled:bg-gray-200 disabled:cursor-not-allowed">
+              <span class="ml-2 text-gray-700">{{opt}}</span>
+            </label>
+          </div>
+          <p *ngIf="item.isEditable" class="text-black-400">Enter the values with comma to modify values</p>
+          <input type="text" *ngIf="item.isEditable" [(ngModel)]="item.itemList" class="w-full border p-2 rounded mt-2"  placeholder="Type list here">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'input-multi-select'"  class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed" placeholder="Enter the name"/>
+          <div class="mt-2">
+            <label class="inline-flex items-center mr-4" *ngFor="let opt of item.selectValues;let i = index">
+              <input  [disabled]="item.isEditable" type="checkbox" [(ngModel)]="item.value[opt]" (ngModelChange)="onSelectCheckbox(item,opt)" class="form-checkbox text-blue-500 h-5 w-5" [value]="opt">
+              <span class="ml-2 text-gray-700">{{opt}}</span>
+            </label>
+          </div>
+          <p *ngIf="item.isEditable" class="text-black-400">Enter the values with comma to modify values</p>
+          <input type="text" *ngIf="item.isEditable" [(ngModel)]="item.itemList" class="w-full border p-2 rounded mt-2"  placeholder="Type list here">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'input-dropdown'"  class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <div class="mt-2">
+            <label class="inline-flex items-center mr-4 w-full" >
+              <select  [disabled]="item.isEditable" [(ngModel)]="item.value" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed">
+                <option *ngFor="let opt of item.selectValues;let i = index" [value]="opt">{{ opt }}</option>
+              </select>          
+            </label>
+          </div>
+          <p *ngIf="item.isEditable" class="text-black-400">Enter the values with comma to modify values</p>
+          <input type="text" *ngIf="item.isEditable" [(ngModel)]="item.itemList" class="w-full border p-2 rounded mt-2"  placeholder="Type list here">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'input-file'"  class="flex items-center w-full">
+        <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <div class="w-full">
+          <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <div class="mt-2">
+            <label class="inline-flex items-center mr-4 w-full" >
+              <input  [disabled]="item.isEditable" type="file" (change)="onFileSelect($event,item)" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" placeholder="Select file"/>
+                  
+            </label>
+            <p *ngIf="item.value.name" class="mt-2 text-gray-700 block cursor-pointer" (click)="downloadFile(item)">Selected file: <strong>{{ item.value.name }}</strong></p>    
+          </div>
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+        </div>
+      </div>
+   
+  </div>
+
+  <div class="flex flex-row gap-2">
+    <svg class="h-4 w-4 text-gray-300 cursor-pointer" (click)="editItem(item,i)"  width="24"  height="24"  viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" /></svg>
+    <svg class="h-4 w-4 text-gray-300 cursor-pointer" (click)="copyItem(item,i)"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+    </svg>
+    <svg class="h-4 w-4 text-gray-300 cursor-pointer" (click)="deleteItemTask(item,i)" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <polyline points="3 6 5 6 21 6" />  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />  <line x1="10" y1="11" x2="10" y2="17" />  <line x1="14" y1="11" x2="14" y2="17" /></svg>
+  </div>
+</div>

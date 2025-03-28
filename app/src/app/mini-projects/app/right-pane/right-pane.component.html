@@ -1,0 +1,90 @@
+<div class="right-pane">
+  <h2 class="font-bold text-lg mb-4">Elements</h2>
+  
+  <div class="relative">
+    <input type="text" class="pl-10 pr-4 py-2 w-full border rounded-lg" placeholder="Search..." [(ngModel)] = "searchFilter">
+    <svg class="absolute left-3 top-8 transform -translate-y-1/2 text-gray-500 w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M18 10a8 8 0 1 1-8-8 8 8 0 0 1 8 8z"/>
+    </svg>
+  </div>
+
+  <div *ngIf="filterItemsByCategory('Text').length > 0" class="border-b border-gray-300 p-2 mb-2">
+    <h4 class="font-bold text-md mb-2">Text Fields</h4>
+    <ul>
+      <li *ngFor="let item of filterItemsByCategory('Text')" class="flex p-2 mb-2 cursor-pointer" 
+      [attr.draggable]="true" (dragstart)="onDragStart($event, item)">
+        <!-- <i class="fa fa-font mr-2" *ngIf="item.name == 'Single Line Text'" aria-hidden="true"></i>
+        <i class="fa fa-align-left mr-2" *ngIf="item.name == 'Multi Line Text'" aria-hidden="true"></i>
+        <i class="fa fa-sort-numeric-asc mr-2" *ngIf="item.name == 'Integer'" aria-hidden="true"></i>
+        {{ item.name }}
+        <div>{{ item.name }}</div>    
+        <div class="text-sm text-gray-500">{{ item.description }}</div> -->
+
+        <div style="display: flex; align-items: center;">
+          <i class="fa fa-font mr-2 bg-gray-300 p-1" *ngIf="item.name == 'Single Line Text'" aria-hidden="true"></i>
+          <i class="fa fa-align-left mr-2 bg-gray-300 p-1" *ngIf="item.name == 'Multi Line Text'" aria-hidden="true"></i>
+          <i class="fa fa-sort-numeric-asc mr-2 bg-gray-300 p-1" *ngIf="item.name == 'Integer'" aria-hidden="true"></i>
+      </div>
+  
+      <!-- Text Section -->
+      <div style="display: flex; flex-direction: column; align-items: flex-start;">
+          <div class="text-sm">{{ item.name }}</div>
+          <div class="text-xs text-gray-500">{{ item.description }}</div>
+      </div>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="filterItemsByCategory('DateTime').length > 0" class="border-b border-gray-300 p-2 mb-2">
+    <h4 class="font-bold text-md mb-2">Date/Time Fields</h4>
+    <ul>
+      <li *ngFor="let item of filterItemsByCategory('DateTime')" class=" flex p-2  mb-2 cursor-pointer"
+      [attr.draggable]="true" (dragstart)="onDragStart($event, item)">
+      <div style="display: flex; align-items: center;">
+        <i class="fa fa-calendar mr-2 bg-gray-300 p-1" *ngIf="item.name == 'Date'" aria-hidden="true"></i>
+        <i class="fa fa-clock-o mr-2 bg-gray-300 p-1 " *ngIf="item.name == 'Time'" aria-hidden="true"></i>
+        <i class="fa fa-calendar-check-o mr-2 bg-gray-300 p-1" *ngIf="item.name == 'Date & Time'" aria-hidden="true"></i>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="text-sm">{{ item.name }}</div>
+        <div class="text-xs text-gray-500">{{ item.description }}</div>
+      </div>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="filterItemsByCategory('Dropdown').length > 0" class="border-b border-gray-300 p-2 mb-2">
+    <h4 class="font-bold text-md mb-2">Dropdown/Upload Fields</h4>
+    <ul>
+      <li *ngFor="let item of filterItemsByCategory('Dropdown')" class="flex p-2  mb-2 cursor-pointer"
+      [attr.draggable]="true" (dragstart)="onDragStart($event, item)">
+      <div style="display: flex; align-items: center;">
+        <i class="fa fa-dot-circle-o mr-2 bg-gray-300 p-1" *ngIf="item.name == 'Single Selection'" aria-hidden="true"></i>
+        <i class="fa fa-check-circle mr-2 bg-gray-300 p-1" *ngIf="item.name == 'Multi Selection'" aria-hidden="true"></i>
+        <i class="fa fa-tasks mr-2  bg-gray-300 p-1" *ngIf="item.name == 'Dropdown'" aria-hidden="true"></i>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="text-sm">{{ item.name }}</div>
+        <div class="text-xs text-gray-500">{{ item.description }}</div>
+      </div>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="filterItemsByCategory('Upload').length > 0" class="border-b border-gray-300 p-2 mb-2">
+    <h4 class="font-bold text-md mb-2">Dropdown/Upload Fields</h4>
+    <ul>
+      <li *ngFor="let item of filterItemsByCategory('Upload')" class="flex p-2  mb-2 cursor-pointer"
+      [attr.draggable]="true" (dragstart)="onDragStart($event, item)">
+      <div style="display: flex; align-items: center;">
+        <i class="fa fa-upload mr-2 bg-gray-300 p-1" *ngIf="item.name == 'Upload'" aria-hidden="true"></i>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="text-sm">{{ item.name }}</div>
+        <div class="text-xs text-gray-500">{{ item.description }}</div>
+      </div>
+      </li>
+    </ul>
+  </div>
+
+</div>

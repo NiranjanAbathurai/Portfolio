@@ -1,0 +1,61 @@
+<div class="flex h-auto">
+
+  <!-- Left sidebar -->
+  <div class="w-1/4 bg-gray-100 p-4">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="font-bold text-lg">Field Groups</h2> 
+      <span class="text-blue-700 flex items-center cursor-pointer" (click)="openModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /> 
+        </svg> Create new
+      </span>
+    </div>
+    <div class="bg-white border border-gray-300 p-2 mb-2 rounded-lg cursor-pointer" (click)="onDefaultClick()">
+      <h4 class="text-md font-bold">Default field group</h4>
+    </div>
+    <ul>
+      <li *ngFor="let item of fieldGroups;let i = index" class="p-2 bg-gray-200 mb-2 cursor-pointer"  [ngClass]="{'bg-blue-400': index === i}"  (click)="onClickItem(item,i)"
+        [attr.draggable]="true" (dragstart)="onDragStart($event, i)" (dragover)="onDragOver($event)" (drop)="onDrop($event, i)">
+        <svg class="text-grey-500 float-left mt-04 mr-3"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
+        <p >{{item.name}}</p>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Pop up for create new -->
+  <div *ngIf="isModalOpen" class="fixed inset-0 bg-gray-500 bg-opacity-50 z-50 flex justify-center items-center">
+    <div class="modal-content bg-white p-6 rounded-lg shadow-lg w-1/3">
+      <div class="modal-header flex justify-between items-center">
+        <h2 class="text-xl font-bold">Modal Header</h2>
+        <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-2">Enter the name</p>
+        <input id="name" type="text" [(ngModel)]="taskName"
+          class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+          placeholder="Enter your name" />
+        <p *ngIf="displayError && !taskName" class="text-red-700">Please enter name</p>
+  
+        <p class="mb-2">Enter the description</p>
+        <input id="description" type="text"  [(ngModel)] = "descriptionName"
+          class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+          placeholder="Enter description" />
+      </div>
+      <div class="flex items-center justify-center mt-4">
+        <button (click)="Onsubmit()" class="bg-blue-500 text-white p-2 rounded-lg">Submit</button>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- Main Content -->
+  <div class="flex-1 p-6" (dragover)="onDragOverItem($event)" (drop)="onDropItem($event)">
+    <app-middle-pane [index]="index" [selectedItem]="selectedItem" [defaultItem]="defaultItem" [fieldGroups]="fieldGroups"
+       [isEditable]="isEditable" (newItemList)="newItemList($event)" (fieldGroupsList)="fieldGroupsList($event)" (cloneItem)="cloneItem($event)"></app-middle-pane>
+  </div>
+
+  <!-- Elements Sidebar -->
+  <div class="w-1/4 bg-gray-100 p-4">
+    <app-right-pane></app-right-pane>
+  </div>
+</div>

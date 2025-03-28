@@ -14,10 +14,12 @@
     .name-cls{
         font-size: xx-large;
         margin: 0;
-        padding: 0.5rem 0;
+        padding: 0.8rem 0 0.5rem 0;
         font-family: fantasy;
         letter-spacing: 2px;
         font-family: 'my-font';
+        display: flex;
+        align-items: center;
     }
 
     .img-cls{
