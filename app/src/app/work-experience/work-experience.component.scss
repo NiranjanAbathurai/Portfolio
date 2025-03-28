@@ -104,4 +104,14 @@
     padding-top: 2rem;
   }
 
+  @media screen and (max-width:500px){
+    ul{
+      padding-left: 0;
+    }
+    
+    .li-cls{
+      padding: 0 1rem;
+    }
+  }
+
 }
