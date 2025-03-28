@@ -1,0 +1,81 @@
+
+.header-component{
+    padding: 0 1rem;
+    background-color: black;
+    border-bottom: 3px solid green;
+    color: white;
+
+    .nav-row{
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+    }
+
+    .name-cls{
+        font-size: xx-large;
+        margin: 0;
+        padding: 0.5rem 0;
+        font-family: fantasy;
+        letter-spacing: 2px;
+        font-family: 'my-font';
+    }
+
+    .img-cls{
+        width: 4rem;
+    }
+
+    .ul-list{
+        display: flex;
+        flex-direction: row;
+        list-style: none;
+        margin: 0;
+        z-index: 99;
+        @media screen and (max-width : 768px) {
+            flex-direction: column;
+        }
+    }
+
+    .list-cls{
+        padding: 2rem;
+        cursor: pointer;
+        margin: 0;
+    }
+
+    .list-cls:hover{
+        background-color: green;
+        box-shadow: inset 0px 0px 20px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .mobile-nav-view{
+        .mobile-nav {
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .hamburger-icon{
+            margin-top: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .ul-list{
+            padding: 0;
+            background-color: grey;
+            position: absolute;
+            right: 0;
+            top: 1.25rem;
+            width: 200px;
+            margin-right: -1rem;
+        }
+
+        .list-cls{
+            padding: 1rem 2rem;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .list-cls:hover{
+            background-color: green;
+        }
+    }
+    
+}

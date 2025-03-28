@@ -1,0 +1,77 @@
+
+<div class="home-comp">
+  <div class="row row-cls">
+    <div class="col-md-6 col-12 name-cls">
+      <div class="text-div">
+        <p class="hey-cls">Hey, I'm </p>
+        <h1 class="my-name">Niranjan Abathurai</h1>
+
+        <h4 class="role">Angular Frontend Developer</h4>
+        <button class="btn btn-dark my-3" (click)="downloadFile()"><i class="fa fa-thin fa-download icon-cls"></i>Download CV </button>
+      </div>
+
+      <div>
+        <h5 class="role about-cls">
+          Hi, I'm Niranjan Abathurai, a Frontend Developer with a deep passion for crafting exceptional user experiences. Specializing in Angular, I’m dedicated to building dynamic, interactive, and responsive web applications that not only perform flawlessly but also engage and delight users.
+         </h5>
+      </div>
+
+      <div class="row mt-3rem experience">
+        <div class="col-4">
+          <h3 class="high-txt">5+</h3>
+          <p class="low-text">years experience as UI developer </p>
+        </div>
+        <div class="col-4">
+          <h3 class="high-txt">4+</h3>
+          <p class="low-text">Certification as angular developer</p>
+        </div>
+        <div class="col-4">
+          <h3 class="high-txt">3+</h3>
+          <p class="low-text">projects worked on and more</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-6 col-12 second-col">
+      <div id="carouselExample" class="carousel slide mt-6rem" data-ride="carousel"  data-interval="2500">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="../../assets/test/angular-inter.png" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="../../assets/test/angular_basic.png" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="../../assets/test/infosys_angular.png" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="../../assets/test/infosys_frontend.png" class="d-block w-100" alt="...">
+          </div>
+        </div>
+
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExample" data-slide-to="0" class="active">.</li>
+          <li data-target="#carouselExample" data-slide-to="1">.</li>
+          <li data-target="#carouselExample" data-slide-to="2">.</li>
+          <li data-target="#carouselExample" data-slide-to="3">.</li>
+        </ol>
+      </div>
+      
+    </div>
+
+    <div #skillsViewChild class="col-12 bg-black pt-2rem">
+      <app-technology></app-technology>
+    </div>
+
+    <div #projectsViewChild class="col-12 bg-black pt-2rem">
+      <app-work-experience></app-work-experience>
+    </div>
+
+    <div #contactViewChild class="col-12 bg-black pt-2rem pb-4">
+      <app-contact></app-contact>
+    </div>    
+
+  </div>
+</div>
+
+<!-- <div>{{jsonFile | json}}</div> -->

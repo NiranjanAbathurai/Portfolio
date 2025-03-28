@@ -1,0 +1,44 @@
+.footer-comp{
+  background-color: black;
+  color: white;
+  border-top: 3px solid green;
+
+  .high-txt{
+    font-family: 'my-font';
+  }
+
+  .low-text{
+    font-family: 'light-font' !important;
+    vertical-align: middle !important;
+    font-size: 0.85rem !important;
+  }
+  .mt-8{
+    margin-top: 4rem;
+  }
+  .footer-heading{
+    margin: auto;
+  }
+  .li-type{
+    list-style: none !important;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+  }
+  .icon-cls{
+    width: 1rem;
+  }
+  .prj-cls{
+    width: 5rem;
+    object-fit: contain;
+    margin: 0.25rem 1.25rem 1rem 1.25rem;
+  }
+  .justify-s{
+    justify-self: center;
+    flex-wrap: wrap;
+  }
+  .border-left{
+    border-left: 1px solid white;
+    margin: 1rem 0 0 0;
+  }
+
+}

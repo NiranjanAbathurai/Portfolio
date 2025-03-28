@@ -1,0 +1,9 @@
+[build]
+    base = "app"
+    command = "npm run build:prod"
+    publish = "dist/browser"
+
+    [[redirects]]
+    frpm = "/*"
+    to="/index.html"
+    status = 200
