@@ -11,6 +11,10 @@ import { FooterComponent } from './footer/footer.component';
 import { WorkExperienceComponent } from './work-experience/work-experience.component';
 import { TechnologyComponent } from './technology/technology.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -27,9 +31,20 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useClass: TranslateHttpLoader
+      }
+    })
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),
+    provideTranslateHttpLoader({
+      prefix: './assets/i18n/',
+      suffix: '.json'
+    })
   ],
   bootstrap: [AppComponent]
 })

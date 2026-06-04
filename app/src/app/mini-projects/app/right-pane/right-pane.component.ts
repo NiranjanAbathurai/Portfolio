@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-right-pane',
@@ -6,6 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './right-pane.component.scss'
 })
 export class RightPaneComponent {
+
+   constructor(private cd: ChangeDetectorRef,private translate: TranslateService){
+
+  }
 
   searchFilter : string = ''
   items = [
