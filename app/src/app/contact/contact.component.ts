@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { first } from 'rxjs';
+import emailjs from '@emailjs/browser';
 
 @Component({
   selector: 'app-contact',
@@ -26,9 +27,16 @@ export class ContactComponent {
   onSubmit(){
     console.log(this.contactForm);
     this.displaySuccess = true;
+    const templateParams = {
+    name: this.contactForm.value.firstName + ' ' + this.contactForm.value.lastName,   // Maps to {{name}}
+    email: this.contactForm.value.email, // Maps to {{email}}
+  };
+    emailjs.send("service_rwwe5fo", "template_lr19d9g", templateParams, "7slh2XluDfB5VFJMm")
+      .then(() => console.log('Email sent successfully!'))
+      .catch((err) => console.error(err));
     setTimeout(()=>{
       this.displaySuccess = false;
-    },3000)
+    },2000)
   }
 
   onKeyPress(){

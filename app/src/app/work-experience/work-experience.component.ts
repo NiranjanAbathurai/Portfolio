@@ -12,30 +12,51 @@ export class WorkExperienceComponent {
   isMobile = signal<boolean>(false);
   event !: Event
   jobDetails = [ 
-    {role:'Technology Analsyt', company:'Infosys, Ltd, Chennai', projectName: "Hershey's B2B", domain:'E-Commerce shopping site',
-      description:[
-        'Working on the development of new SAP Spartacus store front project with Angular 17 version.',
-        'Developing responsive UI features according to the figma designs that supports mobile,tablet and desktop view',
-        'Worked on registration form using reactive forms, Signals for auto updating changes and @media queries for handling responsiveness of the application',
-        'Having hands-on experience in building and deploying the codebase in non-prod environment using SAP commerce cloud.'
+    {
+      roleKey: 'WORK_EXPERIENCE.JOB_1.ROLE',
+      companyKey: 'WORK_EXPERIENCE.JOB_1.COMPANY',
+      projectNameKey: 'WORK_EXPERIENCE.JOB_1.PROJECT_NAME',
+      descriptionKeys: [
+        'WORK_EXPERIENCE.JOB_1.DESCRIPTION_1',
+        'WORK_EXPERIENCE.JOB_1.DESCRIPTION_2',
+        'WORK_EXPERIENCE.JOB_1.DESCRIPTION_3',
+        'WORK_EXPERIENCE.JOB_1.DESCRIPTION_4',
+        'WORK_EXPERIENCE.JOB_1.DESCRIPTION_5'
       ]
     },
-    {role:'Senior System Engineer', company:'Infosys, Ltd, Chennai', projectName: "Apple Inc,", domain:'Manufacturing & Processing',
-      description: [
-        'Worked on creating a user interactive web application where user upload images and process them in OCR and display the data',
-        'Created responsive modal dialog with multiple table to add data and validations which will generate and download a report',
-        'Have work experience in creating API using spring boot java and do CRUD operations in non-sql mongoDB collections',
-        'Also build and deployed the codebase in IT and UAT using Rio and spinnaker tools'
+    {
+      roleKey: 'WORK_EXPERIENCE.JOB_2.ROLE',
+      companyKey: 'WORK_EXPERIENCE.JOB_2.COMPANY',
+      projectNameKey: 'WORK_EXPERIENCE.JOB_2.PROJECT_NAME',
+      descriptionKeys: [
+        'WORK_EXPERIENCE.JOB_2.DESCRIPTION_1',
+        'WORK_EXPERIENCE.JOB_2.DESCRIPTION_2',
+        'WORK_EXPERIENCE.JOB_2.DESCRIPTION_3',
+        'WORK_EXPERIENCE.JOB_2.DESCRIPTION_4'
       ]
     },
-    {role:'System Engineer', company:'Tata Consultancy Services, Chennai', projectName: "NielsenIQ", domain:'Marketing and data analysing',
-      description:[
-        'Migrating an exisiting application to Angular 8 project and also optimizing performance of the application',
-        'Worked on multiple angular features like Pipes, Directives, Route guards, Lazy loading modules and so on',
-        'Creating and integrating API using HTTP modules with the help of Rxjs operators and Ngrx store concepts',
-        'Also worked on ag-grid modules for adding grid data and displaying in simpler format'
+    {
+      roleKey: 'WORK_EXPERIENCE.JOB_3.ROLE',
+      companyKey: 'WORK_EXPERIENCE.JOB_3.COMPANY',
+      projectNameKey: 'WORK_EXPERIENCE.JOB_3.PROJECT_NAME',
+      descriptionKeys: [
+        'WORK_EXPERIENCE.JOB_3.DESCRIPTION_1',
+        'WORK_EXPERIENCE.JOB_3.DESCRIPTION_2',
+        'WORK_EXPERIENCE.JOB_3.DESCRIPTION_3',
+        'WORK_EXPERIENCE.JOB_3.DESCRIPTION_4'
       ]
     },
+    {
+      roleKey: 'WORK_EXPERIENCE.JOB_4.ROLE',
+      companyKey: 'WORK_EXPERIENCE.JOB_4.COMPANY',
+      projectNameKey: 'WORK_EXPERIENCE.JOB_4.PROJECT_NAME',
+      descriptionKeys: [
+        'WORK_EXPERIENCE.JOB_4.DESCRIPTION_1',
+        'WORK_EXPERIENCE.JOB_4.DESCRIPTION_2',
+        'WORK_EXPERIENCE.JOB_4.DESCRIPTION_3',
+        'WORK_EXPERIENCE.JOB_4.DESCRIPTION_4'
+      ]
+    }
   ]
 
   constructor(private router:Router){}

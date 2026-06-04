@@ -7,16 +7,16 @@
         <div class="icon-cls-right" *ngIf="isMobile()"  [ngClass]="{ 'right-mbl' :isMobile()}">
           <i class="fa fa-light fa-circle "></i>
         </div>
-        <h3 class=" role-cls" [ngClass]="isMobile()?'ml-4rem':'mr-4rem'">{{item.role}}</h3>
-        <h4 class=" role-cls" [ngClass]="isMobile()?'ml-4rem':'mr-4rem'">{{item.company}}</h4>
-        <h5 class=" role-cls" [ngClass]="isMobile()?'ml-4rem':'mr-4rem'">{{item.projectName}}</h5>
+        <h3 class=" role-cls" [ngClass]="isMobile()?'ml-4rem':'mr-4rem'">{{ item.roleKey | translate }}</h3>
+        <h4 class=" role-cls" [ngClass]="isMobile()?'ml-4rem':'mr-4rem'">{{ item.companyKey | translate }}</h4>
+        <h5 class=" role-cls" [ngClass]="isMobile()?'ml-4rem':'mr-4rem'">{{ item.projectNameKey | translate }}</h5>
         <div class="icon-cls-left" *ngIf="!isMobile()">
           <i class="fa fa-light fa-circle "></i>
         </div>
       </div>
       <div class=" col-md-6 col-12 pt-2rem" *ngIf="!odd" [ngClass]="isMobile()?'vertical-line-l ':'pl-2rem'">
         <ul>
-          <li class="li-cls" *ngFor="let val of item.description"> {{val}}</li>
+          <li class="li-cls" *ngFor="let val of item.descriptionKeys">{{ val | translate }}</li>
         </ul>
       </div>
 
@@ -25,29 +25,29 @@
         <div class="icon-cls-right" [ngClass]="{ 'right-mbl' :isMobile()}">
           <i class="fa fa-light fa-circle "></i>
         </div>
-        <h3 class="ml-4rem role-cls">{{item.role}}</h3>
-        <h4 class="ml-4rem role-cls">{{item.company}}</h4>
-        <h5 class="ml-4rem role-cls">{{item.projectName}}</h5>
+        <h3 class="ml-4rem role-cls">{{ item.roleKey | translate }}</h3>
+        <h4 class="ml-4rem role-cls">{{ item.companyKey | translate }}</h4>
+        <h5 class="ml-4rem role-cls">{{ item.projectNameKey | translate }}</h5>
         
       </div>
       <div class=" col-md-6 col-12 pt-2rem"  *ngIf="odd" [ngClass]="isMobile()?'vertical-line-l justify-start':'vertical-line-r pr-2rem'">
         <ul>
-          <li class="li-cls" *ngFor="let val of item.description"> {{val}}</li>
+          <li class="li-cls" *ngFor="let val of item.descriptionKeys">{{ val | translate }}</li>
         </ul>
       </div>
       <div class="col-md-6 col-12 p-4" *ngIf="odd && !isMobile()" [ngClass]="isMobile()?'vertical-line-1 justify-start':'vertical-line-1 justify-start'">
         <div class="icon-cls-right" [ngClass]="{ 'right-mbl' :isMobile()}">
           <i class="fa fa-light fa-circle "></i>
         </div>
-        <h3 class="ml-4rem role-cls">{{item.role}}</h3>
-        <h4 class="ml-4rem role-cls">{{item.company}}</h4>
-        <h5 class="ml-4rem role-cls">{{item.projectName}}</h5>
+        <h3 class="ml-4rem role-cls">{{ item.roleKey | translate }}</h3>
+        <h4 class="ml-4rem role-cls">{{ item.companyKey | translate }}</h4>
+        <h5 class="ml-4rem role-cls">{{ item.projectNameKey | translate }}</h5>
         
       </div>
 
     </div>
     <div class="d-flex justify-content-center mt-4">
-      <button type="button" class="btn btn-outline-success w-25" (click)="onClick()">View Mini project</button>
+      <button type="button" class="btn btn-outline-success w-25" (click)="onClick()">{{ 'WORK_EXPERIENCE.VIEW_MINI_PROJECT' | translate }}</button>
     </div>
   </div>
 </div>

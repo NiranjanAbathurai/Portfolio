@@ -1,13 +1,13 @@
 <div class="bg-white shadow p-4 rounded-lg mb-3 flex justify-between items-start">
   <div class="mr-2">
     <h2 class="text-2xl font-bold mb-4" *ngIf="!isEditable">{{selectedItem.name != undefined ? selectedItem.name :  null}} </h2>
-    <p class="text-gray-500 mb-4" *ngIf="!isEditable">{{selectedItem.description ||  'Add description ...'}} </p>
+    <p class="text-gray-500 mb-4" *ngIf="!isEditable">{{selectedItem.description || ('MIDDLE_PANE.ADD_DESCRIPTION' | translate)}} </p>
 
-    <input *ngIf="isEditable" [(ngModel)]="selectedItem.name" class="w-full mb-1 p-2 text-2xl border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
-    <p *ngIf="displaynewItemError && !newTaskName" class="text-red-700">Please enter name</p>
-    <textarea *ngIf="isEditable" [(ngModel)]="selectedItem.description" class="w-full mb-1 p-2 border-b text-gray-500 text-lg border border-gray-300 rounded-lg" rows="4" placeholder="Enter the description"></textarea>
+    <input *ngIf="isEditable" [(ngModel)]="selectedItem.name" class="w-full mb-1 p-2 text-2xl border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
+    <p *ngIf="displaynewItemError && !newTaskName" class="text-red-700">{{ 'MIDDLE_PANE.ERROR_ENTER_NAME' | translate }}</p>
+    <textarea *ngIf="isEditable" [(ngModel)]="selectedItem.description" class="w-full mb-1 p-2 border-b text-gray-500 text-lg border border-gray-300 rounded-lg" rows="4" placeholder="{{ 'MIDDLE_PANE.ENTER_DESCRIPTION' | translate }}"></textarea>
    
-    <button *ngIf="isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right" (click)="onSave()">Save</button>
+    <button *ngIf="isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right" (click)="onSave()">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
   </div>
  
   <div class="flex flex-row gap-2">
@@ -28,11 +28,11 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label *ngIf="!item.isEditable" class="block text-gray-700 font-bold">{{item.label}} 
-            <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
-          <input type="text" [disabled]="item.isEditable"  class="w-full border p-2 rounded mt-2 disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="Type here" (blur)="onBlurFunction()">
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+            <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
+          <input type="text" [disabled]="item.isEditable"  class="w-full border p-2 rounded mt-2 disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="{{ 'MIDDLE_PANE.TYPE_HERE' | translate }}" (blur)="onBlurFunction()">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
 
@@ -40,11 +40,11 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label  *ngIf="!item.isEditable" class="block text-gray-700 font-bold">{{item.label}}
-          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
-          <textarea  [disabled]="item.isEditable" class="w-full mb-1 p-2 border-b text-gray-500 text-lg border border-gray-300 rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed" rows="4" (blur)="onBlurFunction()" placeholder="Type here" [(ngModel)]="item.value"></textarea>
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
+          <textarea  [disabled]="item.isEditable" class="w-full mb-1 p-2 border-b text-gray-500 text-lg border border-gray-300 rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed" rows="4" (blur)="onBlurFunction()" placeholder="{{ 'MIDDLE_PANE.TYPE_HERE' | translate }}" [(ngModel)]="item.value"></textarea>
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
 
@@ -52,11 +52,11 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
-          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
-          <input  [disabled]="item.isEditable" type="number" class="w-full border p-2 rounded mt-2 disabled:bg-gray-200 disabled:cursor-not-allowed"  [(ngModel)]="item.value" placeholder="Type here" (blur)="onBlurFunction()">
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
+          <input  [disabled]="item.isEditable" type="number" class="w-full border p-2 rounded mt-2 disabled:bg-gray-200 disabled:cursor-not-allowed"  [(ngModel)]="item.value" placeholder="{{ 'MIDDLE_PANE.TYPE_HERE' | translate }}" (blur)="onBlurFunction()">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
 
@@ -64,11 +64,11 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
-          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
-          <input  [disabled]="item.isEditable" type="date" id="date" name="date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="Type here" (blur)="onBlurFunction()">
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
+          <input  [disabled]="item.isEditable" type="date" id="date" name="date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="{{ 'MIDDLE_PANE.TYPE_HERE' | translate }}" (blur)="onBlurFunction()">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
 
@@ -76,11 +76,11 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
-          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
-          <input  [disabled]="item.isEditable" type="time" id="time" name="time" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="Select time" (blur)="onBlurFunction()" />
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
+          <input  [disabled]="item.isEditable" type="time" id="time" name="time" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="{{ 'MIDDLE_PANE.SELECT_TIME' | translate }}" (blur)="onBlurFunction()" />
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
 
@@ -88,11 +88,11 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
-          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
-          <input  [disabled]="item.isEditable" type="datetime-local" id="datetime" name="datetime" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="Select date and time" (blur)="onBlurFunction()" />
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
+          <input  [disabled]="item.isEditable" type="datetime-local" id="datetime" name="datetime" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" [(ngModel)]="item.value" placeholder="{{ 'MIDDLE_PANE.SELECT_DATE_TIME' | translate }}" (blur)="onBlurFunction()" />
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
 
@@ -100,18 +100,18 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
-          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
           <div class="mt-2">
             <label class="inline-flex items-center mr-4" *ngFor="let opt of item.selectValues;let i = index">
               <input  [disabled]="item.isEditable" type="radio" name="gender" [(ngModel)]="item.value" [value]="opt" class="form-radio text-blue-500 h-5 w-5 disabled:bg-gray-200 disabled:cursor-not-allowed">
               <span class="ml-2 text-gray-700">{{opt}}</span>
             </label>
           </div>
-          <p *ngIf="item.isEditable" class="text-black-400">Enter the values with comma to modify values</p>
-          <input type="text" *ngIf="item.isEditable" [(ngModel)]="item.itemList" class="w-full border p-2 rounded mt-2"  placeholder="Type list here">
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+          <p *ngIf="item.isEditable" class="text-black-400">{{ 'MIDDLE_PANE.ENTER_VALUES_LIST' | translate }}</p>
+          <input type="text" *ngIf="item.isEditable" [(ngModel)]="item.itemList" class="w-full border p-2 rounded mt-2"  placeholder="{{ 'MIDDLE_PANE.TYPE_LIST_HERE' | translate }}">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
 
@@ -119,18 +119,18 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
-          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed" placeholder="Enter the name"/>
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
           <div class="mt-2">
             <label class="inline-flex items-center mr-4" *ngFor="let opt of item.selectValues;let i = index">
               <input  [disabled]="item.isEditable" type="checkbox" [(ngModel)]="item.value[opt]" (ngModelChange)="onSelectCheckbox(item,opt)" class="form-checkbox text-blue-500 h-5 w-5" [value]="opt">
               <span class="ml-2 text-gray-700">{{opt}}</span>
             </label>
           </div>
-          <p *ngIf="item.isEditable" class="text-black-400">Enter the values with comma to modify values</p>
-          <input type="text" *ngIf="item.isEditable" [(ngModel)]="item.itemList" class="w-full border p-2 rounded mt-2"  placeholder="Type list here">
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+          <p *ngIf="item.isEditable" class="text-black-400">{{ 'MIDDLE_PANE.ENTER_VALUES_LIST' | translate }}</p>
+          <input type="text" *ngIf="item.isEditable" [(ngModel)]="item.itemList" class="w-full border p-2 rounded mt-2"  placeholder="{{ 'MIDDLE_PANE.TYPE_LIST_HERE' | translate }}">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
 
@@ -138,8 +138,8 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
-          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
           <div class="mt-2">
             <label class="inline-flex items-center mr-4 w-full" >
               <select  [disabled]="item.isEditable" [(ngModel)]="item.value" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed">
@@ -147,10 +147,10 @@
               </select>          
             </label>
           </div>
-          <p *ngIf="item.isEditable" class="text-black-400">Enter the values with comma to modify values</p>
-          <input type="text" *ngIf="item.isEditable" [(ngModel)]="item.itemList" class="w-full border p-2 rounded mt-2"  placeholder="Type list here">
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+          <p *ngIf="item.isEditable" class="text-black-400">{{ 'MIDDLE_PANE.ENTER_VALUES_LIST' | translate }}</p>
+          <input type="text" *ngIf="item.isEditable" [(ngModel)]="item.itemList" class="w-full border p-2 rounded mt-2"  placeholder="{{ 'MIDDLE_PANE.TYPE_LIST_HERE' | translate }}">
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
 
@@ -158,17 +158,17 @@
         <svg class="text-grey-500 float-left mt-04 mr-3 w-1/12"  width="12" height="12" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="5" r="1" />  <circle cx="9" cy="12" r="1" />  <circle cx="9" cy="19" r="1" />  <circle cx="15" cy="5" r="1" />  <circle cx="15" cy="12" r="1" />  <circle cx="15" cy="19" r="1" /></svg>
         <div class="w-full">
           <label  *ngIf="!item.isEditable"  class="block text-gray-700 font-bold">{{item.label}}
-          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>(Required)</span></label>
-          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="Enter the name"/>
+          <span  *ngIf="item.required" class="text-xs"> <span class="text-red-500">*</span>({{ 'MIDDLE_PANE.REQUIRED' | translate }})</span></label>
+          <input *ngIf="item.isEditable" [(ngModel)]="item.label" class="w-full mb-1 p-2 text-md border-b font-bold border border-gray-300 rounded-lg" placeholder="{{ 'MIDDLE_PANE.ENTER_NAME' | translate }}"/>
           <div class="mt-2">
             <label class="inline-flex items-center mr-4 w-full" >
-              <input  [disabled]="item.isEditable" type="file" (change)="onFileSelect($event,item)" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" placeholder="Select file"/>
+              <input  [disabled]="item.isEditable" type="file" (change)="onFileSelect($event,item)" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" placeholder="{{ 'MIDDLE_PANE.SELECT_FILE' | translate }}"/>
                   
             </label>
-            <p *ngIf="item.value.name" class="mt-2 text-gray-700 block cursor-pointer" (click)="downloadFile(item)">Selected file: <strong>{{ item.value.name }}</strong></p>    
+            <p *ngIf="item.value.name" class="mt-2 text-gray-700 block cursor-pointer" (click)="downloadFile(item)">{{ 'MIDDLE_PANE.SELECTED_FILE' | translate }} <strong>{{ item.value.name }}</strong></p>    
           </div>
-          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">Required fields</span>
-          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">Save</button>
+          <input type="checkbox" *ngIf="item.isEditable" class="mr-2" [(ngModel)] = "item.required"><span *ngIf="item.isEditable" class="text-sm">{{ 'MIDDLE_PANE.REQUIRED_FIELDS' | translate }}</span>
+          <button *ngIf="item.isEditable" class="bg-blue-500 text-white p-2 rounded-lg float-right mt-2" (click)="onSaveItem(item,i)">{{ 'MIDDLE_PANE.SAVE' | translate }}</button>
         </div>
       </div>
    

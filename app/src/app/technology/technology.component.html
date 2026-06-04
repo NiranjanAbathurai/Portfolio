@@ -1,7 +1,7 @@
 <div class="technology-worked mt-4">
   <div class="row mx-0 my-4 onScroll">
       <div class="col-12">
-          <h3 class="technology"><span class="glowing-text">{{'Technical Skills' | uppercase}}</span>
+          <h3 class="technology"><span class="glowing-text">{{ 'TECHNOLOGY.TITLE' | translate | uppercase }}</span>
           </h3>
           <div class="image-group image-div">
             <img src="../../assets/figma.png" class="img-4 object_contain" id="img4">
@@ -21,7 +21,7 @@
       </div>
       <div class="col-md-6 col-12 mt-4">
         <div class="image-div p-1-2">
-          <h4 class="tools text-color glowing-text " ><span class="heading">{{'Tools worked' | uppercase}}</span>
+          <h4 class="tools text-color glowing-text " ><span class="heading">{{ 'TECHNOLOGY.TOOLS' | translate | uppercase }}</span>
           </h4>
           <ul class="my-4">
             @for(item of toolsUsed; track item){
@@ -32,7 +32,7 @@
       </div>
       <div class=" col-md-6 col-12 mt-4">
         <div class="image-div p-2">
-          <h4 class="tools text-color glowing-text mt-3" ><span class="heading">{{'Version controls' | uppercase}}</span>
+          <h4 class="tools text-color glowing-text mt-3" ><span class="heading">{{ 'TECHNOLOGY.VERSION_CONTROLS' | translate | uppercase }}</span>
           </h4>
           <ul class="my-4">
             @for(item of versionControl; track item){
@@ -40,7 +40,7 @@
             }
           </ul>
 
-          <h4 class="tools text-color glowing-text " ><span class="heading">{{'IDE worked' | uppercase}}</span>
+          <h4 class="tools text-color glowing-text " ><span class="heading">{{ 'TECHNOLOGY.IDE_WORKED' | translate | uppercase }}</span>
           </h4>
           <ul class="my-4">
             @for(item of ideWorked; track item){

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -8,7 +9,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChange
 })
 export class MiddlePaneComponent {
 
-  constructor(private cd: ChangeDetectorRef){
+  constructor(private cd: ChangeDetectorRef,private translate: TranslateService){
 
   }
 
