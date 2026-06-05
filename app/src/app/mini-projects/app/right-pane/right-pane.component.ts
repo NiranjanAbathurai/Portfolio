@@ -1,10 +1,15 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
+  standalone: true,
   selector: 'app-right-pane',
   templateUrl: './right-pane.component.html',
-  styleUrl: './right-pane.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ['./right-pane.component.scss'],
+  imports: [CommonModule, FormsModule, TranslateModule]
 })
 export class RightPaneComponent {
 

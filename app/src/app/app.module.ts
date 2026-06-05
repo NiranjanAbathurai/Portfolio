@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { BrowserModule, provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,18 +15,9 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { DropdownComponent } from './shared/dropdown/dropdown.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    HeaderComponent,
-    ContactComponent,
-    PageNotFoundComponent,
-    FooterComponent,
-    WorkExperienceComponent,
-    TechnologyComponent
-  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -37,10 +28,19 @@ import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/
         provide: TranslateLoader,
         useClass: TranslateHttpLoader
       }
-    })
+    }),
+    AppComponent,
+    HomeComponent,
+    HeaderComponent,
+    ContactComponent,
+    PageNotFoundComponent,
+    FooterComponent,
+    WorkExperienceComponent,
+    TechnologyComponent,
+    DropdownComponent
   ],
   providers: [
-    provideClientHydration(),
+    provideClientHydration(withNoIncrementalHydration()),
     provideTranslateHttpLoader({
       prefix: './assets/i18n/',
       suffix: '.json'

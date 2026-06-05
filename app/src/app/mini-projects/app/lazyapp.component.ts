@@ -1,9 +1,18 @@
-import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, NgZone, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { MiddlePaneComponent } from './middle-pane/middle-pane.component';
+import { RightPaneComponent } from './right-pane/right-pane.component';
+import { polyfill } from 'mobile-drag-drop';
 
 @Component({
+  standalone: true,
   selector: 'lazy-app-root',
   templateUrl: './lazyapp.component.html',
-  styleUrl: './lazyapp.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ['./lazyapp.component.scss'],
+  imports: [CommonModule, FormsModule, TranslateModule, MiddlePaneComponent, RightPaneComponent]
 })
 export class LazyAppComponent {
   title = 'zuper-app';
@@ -19,9 +28,10 @@ export class LazyAppComponent {
   draggedIndex: number | null = null;
   droppedItem: string | null = null
   isEditable = false;
-  uploadFile !: File[]
+  uploadFile !: File[];
+  private polyfillLoaded = false;
 
-  constructor(private cd:ChangeDetectorRef, private zone: NgZone){}
+  constructor(private cd:ChangeDetectorRef, private zone: NgZone,@Inject(PLATFORM_ID) private platformId: Object){}
 
   ngOnInit(){
     this.fieldGroups = [
@@ -43,6 +53,11 @@ export class LazyAppComponent {
     this.selectedItem = JSON.parse(JSON.stringify(this.newItem));
     this.index = -1
     this.isEditable = true;
+    window.addEventListener('touchmove', () => {}, { passive: false });
+    if (isPlatformBrowser(this.platformId) && !this.polyfillLoaded) {
+      polyfill({ holdToDrag: 300 });
+      this.polyfillLoaded = true;
+    }
   }
 
   onClickItem(item:any,i:number){

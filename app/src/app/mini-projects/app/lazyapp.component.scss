@@ -1,3 +1,4 @@
+@import "mobile-drag-drop/default.css";
 /* Modal backdrop (background overlay) */
 .modal-backdrop {
   position: fixed;
@@ -12,18 +13,113 @@
   z-index: 1000;
 }
 
+.mini-project-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mini-left-sidebar,
+.mini-right-sidebar,
+.mini-main-content {
+  width: 100%;
+  min-width: 0;
+}
+
+.mini-main-content {
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 1024px) {
+  .mini-project-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .mini-left-sidebar,
+  .mini-right-sidebar {
+    width: 25%;
+  }
+
+  .mini-main-content {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mini-left-sidebar,
+  .mini-right-sidebar,
+  .mini-main-content {
+    padding: 1rem !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .mini-left-sidebar,
+  .mini-right-sidebar,
+  .mini-main-content {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Responsive sidebar list items */
+.mini-left-sidebar ul li {
+  padding: 0.5rem;
+}
+
+.mini-left-sidebar ul li p {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media screen and (max-width: 768px) {
+  .mini-left-sidebar ul li {
+    padding: 0.35rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Right pane scrolling on smaller screens */
+@media screen and (max-width: 768px) {
+  .mini-right-sidebar {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mini-left-sidebar,
+  .mini-right-sidebar,
+  .mini-main-content {
+    padding: 1rem !important;
+  }
+}
+
 /* Modal content */
 .modal-content {
   background-color: white;
   padding: 1rem;
   border-radius: 0.5rem;
   width: 35%;
+  max-width: 90%;
   z-index: 1010;
   position: relative;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
-  // position: absolute;
-  // top: 40%;
-  // right: 40%;
+}
+
+@media screen and (max-width: 1024px) {
+  .modal-content {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .modal-content {
+    width: 100%;
+    border-radius: 0;
+    height: auto;
+    margin: 0 0.5rem;
+  }
 }
 
 /* Modal header */
@@ -64,4 +160,8 @@ button:hover {
 
 .mt-04{
   margin-top: 0.4rem;
+}
+
+.your-draggable-item {
+  touch-action: none; /* Stops the screen from scrolling when they touch it */
 }

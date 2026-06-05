@@ -9,19 +9,18 @@ import { LazyAppComponent } from './app/lazyapp.component';
 
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideClientHydration } from '@angular/platform-browser';
+import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 
 @NgModule({
-  declarations: [
-    LazyAppComponent,
-    MiddlePaneComponent,
-    RightPaneComponent
-  ],
   imports: [
     CommonModule,
     MiniProjectsRoutingModule,
     FormsModule,
-     TranslateModule.forRoot({
+    LazyAppComponent,
+    MiddlePaneComponent,
+    RightPaneComponent,
+    TranslateModule.forChild({
+      extend: true,
       loader: {
         provide: TranslateLoader,
         useClass: TranslateHttpLoader
@@ -29,7 +28,7 @@ import { provideClientHydration } from '@angular/platform-browser';
     })
   ],
   providers: [
-    provideClientHydration(),
+    provideClientHydration(withNoIncrementalHydration()),
     provideTranslateHttpLoader({
       prefix: './assets/i18n/',
       suffix: '.json'

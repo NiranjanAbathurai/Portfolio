@@ -7,9 +7,10 @@
        
         <nav class="navBar-cls" *ngIf="!isMobile">
             <ul class="ul-list">
-                @for(item of navItems; track item){
-                 <li class="list-cls" (click)="onClickItem(item)">{{item}}</li>
-                }
+                <li class="list-cls" *ngFor="let item of navItems" (click)="onClickItem(item)">{{ item }}</li>
+                <li class="language-picker">
+                    <app-dropdown [options]="languages" [selectedValue]="currentLang" (selectionChange)="onLanguageChange($event)"></app-dropdown>
+                </li>
             </ul>
         </nav>
 
@@ -20,6 +21,9 @@
             <div class="position-relative">
             <ul *ngIf="dropdownVisible" class="ul-list" (mouseleave)="toggleDropdown(false)">
                 <li *ngFor="let item of navItems" class="list-cls"  (click)="onClickItem(item)">{{ item }}</li>
+                <li class="language-picker list-cls">
+                <app-dropdown [options]="languages" [selectedValue]="currentLang" (selectionChange)="onLanguageChange($event)"></app-dropdown>
+            </li>
             </ul>
             </div>
         </nav>

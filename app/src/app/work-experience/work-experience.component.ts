@@ -1,10 +1,15 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
+  standalone: true,
   selector: 'app-work-experience',
   templateUrl: './work-experience.component.html',
-  styleUrl: './work-experience.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ['./work-experience.component.scss'],
+  imports: [CommonModule, TranslateModule]
 })
 export class WorkExperienceComponent {
 
@@ -68,7 +73,7 @@ export class WorkExperienceComponent {
   @HostListener('window:resize',['$event'])
   onResize(event:Event){
     this.windowWidth = window.innerWidth;
-    console.log('Window resized, new width:', this.windowWidth);
+    // console.log('Window resized, new width:', this.windowWidth);
     if (this.windowWidth <= 768) {
       this.isMobile.set(true);
     } else {
