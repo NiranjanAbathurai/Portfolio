@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { BrowserModule, provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,7 +42,7 @@ import { DropdownComponent } from './shared/dropdown/dropdown.component';
     }),
   ],
   providers: [
-    provideClientHydration(),
+    provideClientHydration(withNoIncrementalHydration()),
     provideTranslateHttpLoader({
       prefix: './assets/i18n/',
       suffix: '.json'

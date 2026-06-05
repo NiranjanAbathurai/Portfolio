@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-middle-pane',
   templateUrl: './middle-pane.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './middle-pane.component.scss'
 })
 export class MiddlePaneComponent {

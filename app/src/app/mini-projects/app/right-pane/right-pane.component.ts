@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-right-pane',
   templateUrl: './right-pane.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './right-pane.component.scss'
 })
 export class RightPaneComponent {

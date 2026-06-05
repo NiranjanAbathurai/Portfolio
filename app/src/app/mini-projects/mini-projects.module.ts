@@ -9,7 +9,7 @@ import { LazyAppComponent } from './app/lazyapp.component';
 
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideClientHydration } from '@angular/platform-browser';
+import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ import { provideClientHydration } from '@angular/platform-browser';
     })
   ],
   providers: [
-    provideClientHydration(),
+    provideClientHydration(withNoIncrementalHydration()),
     provideTranslateHttpLoader({
       prefix: './assets/i18n/',
       suffix: '.json'

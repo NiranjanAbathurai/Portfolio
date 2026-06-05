@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-technology',
   templateUrl: './technology.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './technology.component.scss'
 })
 export class TechnologyComponent {

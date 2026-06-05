@@ -1,9 +1,10 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-work-experience',
   templateUrl: './work-experience.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './work-experience.component.scss'
 })
 export class WorkExperienceComponent {

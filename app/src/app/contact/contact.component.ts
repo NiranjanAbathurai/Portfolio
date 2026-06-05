@@ -1,4 +1,4 @@
-import { Component,Inject,PLATFORM_ID } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { first } from 'rxjs';
 import emailjs from '@emailjs/browser';
@@ -10,6 +10,7 @@ declare var grecaptcha: any;
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './contact.component.scss'
 })
 export class ContactComponent {

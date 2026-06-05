@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 
 export interface DropdownOption {
   value: string;
@@ -8,6 +8,7 @@ export interface DropdownOption {
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dropdown.component.scss'
 })
 export class DropdownComponent {

@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, Inject, NgZone, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, NgZone, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { polyfill } from 'mobile-drag-drop';
 
 @Component({
   selector: 'lazy-app-root',
   templateUrl: './lazyapp.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './lazyapp.component.scss'
 })
 export class LazyAppComponent {
