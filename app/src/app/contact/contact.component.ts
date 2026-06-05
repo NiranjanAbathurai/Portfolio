@@ -1,21 +1,22 @@
 import { Component, Inject, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { first } from 'rxjs';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ReactiveFormsModule, AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import emailjs from '@emailjs/browser';
-import { isPlatformBrowser } from '@angular/common';
 
 declare var grecaptcha: any;
 
-
 @Component({
+  standalone: true,
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './contact.component.scss'
+  styleUrls: ['./contact.component.scss'],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule]
 })
 export class ContactComponent {
 
-  constructor(private fb:FormBuilder, @Inject(PLATFORM_ID) private platformId: Object){
+  constructor(@Inject(PLATFORM_ID) private platformId: Object){
    
   }
 
@@ -55,7 +56,7 @@ export class ContactComponent {
   }
 
   async onSubmit() {
-    console.log(this.contactForm);
+    // console.log(this.contactForm);
     const isHuman = await this.verifyRecaptcha();
     if (this.contactForm.valid && isHuman) {
       this.displaySuccess = true;

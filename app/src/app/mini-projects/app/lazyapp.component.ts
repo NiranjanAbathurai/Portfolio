@@ -1,12 +1,18 @@
 import { ChangeDetectorRef, Component, Inject, NgZone, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { MiddlePaneComponent } from './middle-pane/middle-pane.component';
+import { RightPaneComponent } from './right-pane/right-pane.component';
 import { polyfill } from 'mobile-drag-drop';
 
 @Component({
+  standalone: true,
   selector: 'lazy-app-root',
   templateUrl: './lazyapp.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './lazyapp.component.scss'
+  styleUrls: ['./lazyapp.component.scss'],
+  imports: [CommonModule, FormsModule, TranslateModule, MiddlePaneComponent, RightPaneComponent]
 })
 export class LazyAppComponent {
   title = 'zuper-app';

@@ -12,16 +12,14 @@ import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/
 import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 
 @NgModule({
-  declarations: [
-    LazyAppComponent,
-    MiddlePaneComponent,
-    RightPaneComponent
-  ],
   imports: [
     CommonModule,
     MiniProjectsRoutingModule,
     FormsModule,
-     TranslateModule.forChild({
+    LazyAppComponent,
+    MiddlePaneComponent,
+    RightPaneComponent,
+    TranslateModule.forChild({
       extend: true,
       loader: {
         provide: TranslateLoader,

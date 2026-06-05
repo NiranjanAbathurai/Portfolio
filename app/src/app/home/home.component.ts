@@ -1,14 +1,20 @@
 import { Component, ElementRef, HostListener, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CommonService } from '../service/common.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TechnologyComponent } from '../technology/technology.component';
+import { WorkExperienceComponent } from '../work-experience/work-experience.component';
+import { ContactComponent } from '../contact/contact.component';
 
 import * as angJson from '../../../../app/angular.json';
 
 @Component({
+  standalone: true,
   selector: 'app-home',
   templateUrl: './home.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './home.component.scss'
+  styleUrls: ['./home.component.scss'],
+  imports: [CommonModule, TranslateModule, TechnologyComponent, WorkExperienceComponent, ContactComponent]
 })
 export class HomeComponent {
 

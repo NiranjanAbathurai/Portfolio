@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 export interface DropdownOption {
   value: string;
@@ -6,10 +7,12 @@ export interface DropdownOption {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './dropdown.component.scss'
+  styleUrls: ['./dropdown.component.scss'],
+  imports: [CommonModule]
 })
 export class DropdownComponent {
 @Input() options: DropdownOption[] = [];

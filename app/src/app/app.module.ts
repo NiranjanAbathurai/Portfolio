@@ -18,17 +18,6 @@ import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/
 import { DropdownComponent } from './shared/dropdown/dropdown.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    HeaderComponent,
-    ContactComponent,
-    PageNotFoundComponent,
-    FooterComponent,
-    WorkExperienceComponent,
-    TechnologyComponent,
-    DropdownComponent
-  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -40,6 +29,15 @@ import { DropdownComponent } from './shared/dropdown/dropdown.component';
         useClass: TranslateHttpLoader
       }
     }),
+    AppComponent,
+    HomeComponent,
+    HeaderComponent,
+    ContactComponent,
+    PageNotFoundComponent,
+    FooterComponent,
+    WorkExperienceComponent,
+    TechnologyComponent,
+    DropdownComponent
   ],
   providers: [
     provideClientHydration(withNoIncrementalHydration()),

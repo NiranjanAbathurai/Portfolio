@@ -1,10 +1,14 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
+  standalone: true,
   selector: 'app-technology',
   templateUrl: './technology.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './technology.component.scss'
+  styleUrls: ['./technology.component.scss'],
+  imports: [CommonModule, TranslateModule]
 })
 export class TechnologyComponent {
 

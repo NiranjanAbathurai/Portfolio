@@ -1,13 +1,17 @@
-import { Component, ElementRef, HostListener, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { Route, Router } from '@angular/router';
+import { Component, ElementRef, HostListener, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { CommonService } from '../service/common.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DropdownComponent } from '../shared/dropdown/dropdown.component';
 
 @Component({
+  standalone: true,
   selector: 'app-header',
   templateUrl: './header.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss'],
+  imports: [CommonModule, TranslateModule, DropdownComponent]
 })
 export class HeaderComponent {
 

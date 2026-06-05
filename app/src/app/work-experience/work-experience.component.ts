@@ -1,11 +1,15 @@
 import { Component, HostListener, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
+  standalone: true,
   selector: 'app-work-experience',
   templateUrl: './work-experience.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './work-experience.component.scss'
+  styleUrls: ['./work-experience.component.scss'],
+  imports: [CommonModule, TranslateModule]
 })
 export class WorkExperienceComponent {
 
