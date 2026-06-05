@@ -84,4 +84,14 @@
     margin-left: 0.25rem;
   }
 
+  .text-area{
+    min-height: 100px;
+    max-height: 100px;
+    resize: none;
+  }
+
+  .recaptcha-disclaimer{
+    color: white;
+    font-family: 'regular-font';
+  }
 }

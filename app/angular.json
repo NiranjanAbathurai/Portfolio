@@ -37,7 +37,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/mobile-drag-drop/default.css"
             ],
             "scripts": [
               
@@ -107,7 +108,8 @@
               "src/assets"
             ],
             "styles": [
-               "src/styles.css"
+               "src/styles.css",
+               "node_modules/mobile-drag-drop/default.css"
             ],
             "scripts": []
           }

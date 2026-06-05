@@ -1,0 +1,43 @@
+/* Right pane responsive styles */
+.right-pane {
+  h4 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+/* Line clamp utility if not available in Tailwind version */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile optimizations */
+@media screen and (max-width: 480px) {
+  .right-pane h2 {
+    font-size: 1rem;
+  }
+  
+  .right-pane h4 {
+    font-size: 0.875rem;
+    padding: 0.5rem 0;
+  }
+  
+  .right-pane ul li {
+    padding: 0.5rem;
+    min-height: auto;
+  }
+}
+
+/* Hover effect for list items */
+.right-pane ul li:hover {
+  background-color: #f3f4f6;
+}
+
+/* Truncate text properly */
+.right-pane ul li div {
+  min-width: 0;
+}

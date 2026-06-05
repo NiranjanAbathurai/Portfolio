@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class TechnologyComponent {
 
-  toolsUsed = ['Figma','Splunk','Postman','Spinnaker','Rio','MongoDB compass','SAP Commernce Cloud','Tortoise git'];
+  toolsUsed = ['Figma','Splunk','Postman','Spinnaker','Rio','MongoDB compass','SAP Commernce Cloud','JIRA'];
   versionControl = ['Git','Bitbucket','Microsoft Azure'];
   ideWorked = ['Visual studio code', 'Eclipse IDE']
 }

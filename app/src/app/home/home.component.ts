@@ -33,7 +33,7 @@ export class HomeComponent {
     this.translate.use('en');
     this.onResize(this.event);
     this.commonService.scrollToTarget.subscribe((data:any)=>{
-      console.log(data);
+      // console.log(data);
       if (this.projectsSection && data == 'projectsViewChild') {
         this.projectsSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
       } else if (this.skillsSection && data == 'skillsViewChild') {
@@ -49,7 +49,7 @@ export class HomeComponent {
     @HostListener('window:resize',['$event'])
     onResize(event:Event){
       this.windowWidth = window.innerWidth;
-      console.log('Window resized, new width:', this.windowWidth);
+      // console.log('Window resized, new width:', this.windowWidth);
       if (this.windowWidth <= 768) {
        this.isMobile = true;
       } else {

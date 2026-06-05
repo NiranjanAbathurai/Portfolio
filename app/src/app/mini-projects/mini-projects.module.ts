@@ -21,7 +21,8 @@ import { provideClientHydration } from '@angular/platform-browser';
     CommonModule,
     MiniProjectsRoutingModule,
     FormsModule,
-     TranslateModule.forRoot({
+     TranslateModule.forChild({
+      extend: true,
       loader: {
         provide: TranslateLoader,
         useClass: TranslateHttpLoader

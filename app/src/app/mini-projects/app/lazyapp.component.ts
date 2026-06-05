@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, NgZone, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { polyfill } from 'mobile-drag-drop';
 
 @Component({
   selector: 'lazy-app-root',
@@ -19,9 +21,10 @@ export class LazyAppComponent {
   draggedIndex: number | null = null;
   droppedItem: string | null = null
   isEditable = false;
-  uploadFile !: File[]
+  uploadFile !: File[];
+  private polyfillLoaded = false;
 
-  constructor(private cd:ChangeDetectorRef, private zone: NgZone){}
+  constructor(private cd:ChangeDetectorRef, private zone: NgZone,@Inject(PLATFORM_ID) private platformId: Object){}
 
   ngOnInit(){
     this.fieldGroups = [
@@ -43,6 +46,11 @@ export class LazyAppComponent {
     this.selectedItem = JSON.parse(JSON.stringify(this.newItem));
     this.index = -1
     this.isEditable = true;
+    window.addEventListener('touchmove', () => {}, { passive: false });
+    if (isPlatformBrowser(this.platformId) && !this.polyfillLoaded) {
+      polyfill({ holdToDrag: 300 });
+      this.polyfillLoaded = true;
+    }
   }
 
   onClickItem(item:any,i:number){

@@ -1,0 +1,119 @@
+/* Middle pane responsive styles */
+
+/* Header section with edit/clone/delete icons */
+.mini-project-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  
+  .header-content {
+    flex: 1;
+    min-width: 0;
+    
+    h2 {
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+  
+  .header-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+}
+
+/* Form element containers */
+.form-element {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
+  
+  svg {
+    flex-shrink: 0;
+  }
+  
+  .element-content {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    
+    @media screen and (min-width: 640px) {
+      width: auto;
+    }
+  }
+  
+  .element-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+}
+
+/* Input elements wrapping */
+.form-element input,
+.form-element textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Label and input group */
+label {
+  display: block;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin-bottom: 0.25rem;
+}
+
+/* Button responsive styling */
+button {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Mobile optimizations */
+@media screen and (max-width: 480px) {
+  .form-element {
+    padding: 0.75rem 0;
+    gap: 0.5rem;
+  }
+  
+  .form-element button {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .mini-project-header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .mini-project-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* Tablet optimizations */
+@media screen and (max-width: 768px) {
+  .form-element button {
+    width: 100%;
+  }
+}

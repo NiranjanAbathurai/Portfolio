@@ -68,7 +68,7 @@ export class WorkExperienceComponent {
   @HostListener('window:resize',['$event'])
   onResize(event:Event){
     this.windowWidth = window.innerWidth;
-    console.log('Window resized, new width:', this.windowWidth);
+    // console.log('Window resized, new width:', this.windowWidth);
     if (this.windowWidth <= 768) {
       this.isMobile.set(true);
     } else {

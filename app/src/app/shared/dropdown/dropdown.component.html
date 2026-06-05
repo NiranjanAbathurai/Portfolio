@@ -1,0 +1,15 @@
+<div class="custom-dropdown" (click)="toggleDropdown()">
+  <div class="dropdown-header">
+    {{ selectedLabel }}
+    <span class="arrow" [class.open]="isOpen">▼</span>
+  </div>
+
+  <ul class="dropdown-list" *ngIf="isOpen">
+    <li 
+      *ngFor="let option of options" 
+      (click)="selectOption(option.value, $event)"
+      [class.active]="selectedValue === option.value">
+      {{ option.label }}
+    </li>
+  </ul>
+</div>

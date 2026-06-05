@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { DropdownComponent } from './shared/dropdown/dropdown.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/
     PageNotFoundComponent,
     FooterComponent,
     WorkExperienceComponent,
-    TechnologyComponent
+    TechnologyComponent,
+    DropdownComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +39,7 @@ import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/
         provide: TranslateLoader,
         useClass: TranslateHttpLoader
       }
-    })
+    }),
   ],
   providers: [
     provideClientHydration(),

@@ -4,8 +4,9 @@
       <div class="form-input row">
         <h4>{{ 'CONTACT.HEADING' | translate }}</h4>
         <div class="col-md-6 col-12">
-          <label for="firstName" class="form-label">{{ 'CONTACT.FIRST_NAME' | translate }}</label><br>
+          <label for="firstName" class="form-label">{{ 'CONTACT.FIRST_NAME' | translate }}<span class="text-danger">*</span></label><br>
           <input id="firstName" name="firstName" formControlName = "firstName" type="text" class="form-label form-control">
+          <span *ngIf="contactForm.get('firstName')?.invalid && contactForm.get('firstName')?.touched" class="text-danger">{{ 'CONTACT.FIRST_NAME_REQUIRED' | translate }}</span>
         </div>
         <div class="col-md-6 col-12">
           <label for="lastName">{{ 'CONTACT.LAST_NAME' | translate }}</label><br>
@@ -16,9 +17,23 @@
           <input id="mobile" name="mobile" formControlName = "mobile" type="text" (keyup)="onKeyPress()" class="form-label form-control">
         </div>
         <div class="col-md-6 col-12">
-          <label for="email">{{ 'CONTACT.EMAIL' | translate }}</label><br>
+          <label for="email">{{ 'CONTACT.EMAIL' | translate }}<span class="text-danger">*</span></label><br>
           <input id="email" name="email" formControlName = "email" type="email" class="form-label form-control">
+          <span *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="text-danger">{{ 'CONTACT.EMAIL_REQUIRED' | translate }}</span>
         </div>
+        <div class="col-md-12 col-12">
+          <label for="message">{{ 'CONTACT.MESSAGE' | translate }}<span class="text-danger">*</span></label><br>
+          <textarea id="message" name="message" formControlName = "message" class="form-label form-control text-area"></textarea>
+          <span *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="text-danger">{{ 'CONTACT.MESSAGE_REQUIRED' | translate }}</span>
+        </div>
+        <div class="recaptcha-disclaimer">
+          {{ 'CONTACT.RECAPTCHA_INFO' | translate }}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">{{ 'CONTACT.PRIVACY_POLICY' | translate }}</a>
+          {{ 'CONTACT.AND' | translate }}
+          <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">{{ 'CONTACT.TERMS_OF_SERVICE' | translate }}</a>
+          {{ 'CONTACT.APPLY' | translate }}
+        </div>
+        <span class="text-danger" *ngIf="recaptchaError">{{ 'CONTACT.RECAPTCHA_FAILED' | translate }}</span>
         <div class="col-12 btn-div" [ngStyle]="{'margin-bottom':displaySuccess?'1rem':'0'}">
           <button type="submit" class=" btn btn-dark submit-btn col-md-6 col-12">{{ 'CONTACT.SUBMIT' | translate }}</button>
           <button type="button" (click)="onReset()" class="btn btn-outline-success reset-btn col-md-6 col-12">{{ 'CONTACT.RESET' | translate }}</button>
