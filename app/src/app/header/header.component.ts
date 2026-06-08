@@ -1,6 +1,6 @@
-import { Component, ElementRef, HostListener, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, HostListener, ChangeDetectionStrategy, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { CommonService } from '../service/common.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DropdownComponent } from '../shared/dropdown/dropdown.component';
@@ -20,8 +20,11 @@ export class HeaderComponent {
   isMobile = false;
   dropdownVisible = false;
   event !: Event
+  isBrowser: boolean;
 
-  constructor(private router:Router, private commonService: CommonService,private translateService: TranslateService){}
+  constructor(private router:Router, private commonService: CommonService,private translateService: TranslateService, @Inject(PLATFORM_ID) platformId: Object){
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
  languages = [
     { value: 'en', label: 'English' },
@@ -36,7 +39,9 @@ export class HeaderComponent {
   onLanguageChange(newLang: string) {
     this.currentLang = newLang || 'en';
     this.translateService.use(this.currentLang);
-    localStorage.setItem('selectedLang', this.currentLang);
+    if (this.isBrowser) {
+      localStorage.setItem('selectedLang', this.currentLang);
+    }
   }
 
   ngOnInit(){

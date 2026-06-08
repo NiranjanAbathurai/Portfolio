@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { AgentService, Agent, ChatMessage, SSEEvent } from './agent.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 
@@ -66,14 +66,21 @@ export class AgentComponent {
 
   private shouldScrollToBottom = false;
 
-  constructor(private figmaService: AgentService,private cdr: ChangeDetectorRef) {}
+  constructor(private figmaService: AgentService,private cdr: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit(): void {
     this.fetchAgents();
     this.fetchHealth();
 
     // Restore saved agent
-    const savedAgent = localStorage.getItem('figma-to-code-agent');
+    let savedAgent;
+    if (isPlatformBrowser(this.platformId)) {
+      savedAgent = localStorage.getItem('figma-to-code-agent');
+    } else{
+      
+    }
     if (savedAgent) {
       this.currentAgentSlug = savedAgent;
     }

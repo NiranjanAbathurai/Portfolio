@@ -59,9 +59,9 @@ export class LazyAppComponent {
     if (isPlatformBrowser(this.platformId) && !this.polyfillLoaded) {
       polyfill({ holdToDrag: 300 });
       this.polyfillLoaded = true;
-    }
-    if (!localStorage.getItem('hasSeenWelcome')) {
-      this.showWelcome = true;
+      if (!localStorage.getItem('hasSeenWelcome')) {
+        this.showWelcome = true;
+      }
     }
   }
 
