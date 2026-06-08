@@ -1,0 +1,130 @@
+{
+  "HOME": {
+    "HEY": "Bonjour, je suis",
+    "NAME": "Niranjan Abathurai",
+    "ROLE": "Développeur Frontend Angular",
+    "DOWNLOAD_CV": "Télécharger le CV",
+    "ABOUT": "Je conçois des applications web dynamiques et hautement performantes qui allient un code propre à des expériences utilisateur exceptionnelles. De la traduction de conceptions Figma complexes en interfaces utilisateur au pixel près à la création de plateformes sécurisées et multilingues.",
+    "EXPERIENCE_1": "années d'expérience en tant que développeur UI",
+    "EXPERIENCE_2": "Certification de développeur Angular",
+    "EXPERIENCE_3": "projets réalisés et plus",
+    "CERTIFICATE_1_ALT": "Certificat d'interaction Angular",
+    "CERTIFICATE_2_ALT": "Certificat de base Angular",
+    "CERTIFICATE_3_ALT": "Certificat Infosys Angular",
+    "CERTIFICATE_4_ALT": "Certificat Infosys Frontend",
+    "CERTIFICATE_5_ALT": "Certificat CSS"
+  },
+  "CONTACT": {
+    "HEADING": "N'hésitez pas à laisser un message",
+    "FIRST_NAME": "Prénom",
+    "LAST_NAME": "Nom de famille",
+    "MOBILE_NUMBER": "Numéro de téléphone",
+    "EMAIL": "E-mail",
+    "MESSAGE": "Message",
+    "FIRST_NAME_REQUIRED": "Le prénom est requis.",
+    "EMAIL_REQUIRED": "L'e-mail est requis.",
+    "MESSAGE_REQUIRED": "Le message est requis.",
+    "RECAPTCHA_INFO": "Ce site est protégé par reCAPTCHA et la",
+    "PRIVACY_POLICY": "politique de confidentialité",
+    "AND": "et",
+    "TERMS_OF_SERVICE": "Conditions d'utilisation",
+    "APPLY": "s'appliquent.",
+    "RECAPTCHA_FAILED": "La vérification de sécurité a échoué. Veuillez actualiser la page et réessayer.",
+    "SUBMIT": "Soumettre",
+    "RESET": "Réinitialiser",
+    "SUCCESS": "Merci ! Je vous répondrai sous peu."
+  },
+  "FOOTER": {
+    "PROJECTS_TITLE": "Projets réalisés",
+    "CONNECT_TITLE": "Connectons-nous sur",
+    "LINKEDIN": "LinkedIn",
+    "GMAIL": "Gmail",
+    "GITHUB": "Github",
+    "INSTAGRAM": "Instagram",
+    "FACEBOOK": "Facebook"
+  },
+  "HEADER": {
+    "NAME": "Niranjan"
+  },
+  "TECHNOLOGY": {
+    "TITLE": "Compétences Techniques",
+    "TOOLS": "Outils utilisés",
+    "VERSION_CONTROLS": "Contrôle de version",
+    "IDE_WORKED": "IDE utilisés"
+  },
+  "WORK_EXPERIENCE": {
+    "VIEW_MINI_PROJECT": "Voir le mini-projet",
+    "JOB_1": {
+      "ROLE": "Associé",
+      "COMPANY": "Cognizant Technology Solutions, Ltd, Chennai",
+      "PROJECT_NAME": "Portail d'admission Abbvie",
+      "DESCRIPTION_1": "Direction du développement de bout en bout d'une application web moderne à partir de zéro en utilisant Angular 19 et 20, en concevant un agent IA personnalisé pour générer de manière autonome des bases de code frontend complètes à partir des conceptions UI Figma.",
+      "DESCRIPTION_2": "Mise en œuvre d'un support multilingue dynamique et de flux de travail d'admission des utilisateurs sécurisés, comprenant des téléchargements de fichiers simultanés et la protection contre les bots Google reCAPTCHA.",
+      "DESCRIPTION_3": "Travail sur le développement d'un nouveau projet de vitrine SAP Spartacus avec Angular 17, incluant la compilation et le déploiement de la base de code dans des environnements de non-production à l'aide de SAP Commerce Cloud.",
+      "DESCRIPTION_4": "Développement de fonctionnalités UI réactives selon les conceptions Figma qui prennent en charge les vues mobile, tablette et bureau pour assurer une cohérence visuelle multiplateforme.",
+      "DESCRIPTION_5": "Travail sur des formulaires d'inscription complexes à l'aide de formulaires réactifs (Reactive Forms), mise en œuvre de Signals pour la mise à jour automatique des changements, et utilisation des requêtes @media pour gérer la réactivité de l'application."
+    },
+    "JOB_2": {
+      "ROLE": "Analyste Technologique",
+      "COMPANY": "Infosys, Ltd, Chennai",
+      "PROJECT_NAME": "Hershey's B2B",
+      "DESCRIPTION_1": "Travail sur le développement d'un nouveau projet de vitrine SAP Spartacus avec la version Angular 17.",
+      "DESCRIPTION_2": "Développement de fonctionnalités UI réactives selon les conceptions Figma prenant en charge les vues mobile, tablette et bureau.",
+      "DESCRIPTION_3": "Travail sur le formulaire d'inscription en utilisant des formulaires réactifs, Signals pour les mises à jour automatiques et les requêtes @media pour gérer la réactivité de l'application.",
+      "DESCRIPTION_4": "Expérience pratique de la compilation et du déploiement de la base de code dans un environnement de non-production à l'aide de SAP Commerce Cloud."
+    },
+    "JOB_3": {
+      "ROLE": "Ingénieur Système Senior",
+      "COMPANY": "Infosys, Ltd, Chennai",
+      "PROJECT_NAME": "Apple Inc.",
+      "DESCRIPTION_1": "Travail sur la création d'une application web interactive où les utilisateurs téléchargent des images, les traitent en OCR et affichent les données.",
+      "DESCRIPTION_2": "Création d'une boîte de dialogue modale réactive avec plusieurs tableaux pour ajouter des données et des validations qui génèrent et téléchargent un rapport.",
+      "DESCRIPTION_3": "Expérience professionnelle dans la création d'API à l'aide de Spring Boot Java et la réalisation d'opérations CRUD dans des collections MongoDB non-SQL.",
+      "DESCRIPTION_4": "Compilation et déploiement de la base de code dans les environnements IT et UAT à l'aide des outils Rio et Spinnaker."
+    },
+    "JOB_4": {
+      "ROLE": "Ingénieur Système",
+      "COMPANY": "Tata Consultancy Services, Chennai",
+      "PROJECT_NAME": "NielsenIQ",
+      "DESCRIPTION_1": "Migration d'une application existante vers un projet Angular 8 et optimisation des performances de l'application.",
+      "DESCRIPTION_2": "Travail sur plusieurs fonctionnalités d'Angular telles que les Pipes, les Directives, les Route guards, les modules de Lazy loading, etc.",
+      "DESCRIPTION_3": "Création et intégration d'API à l'aide de modules HTTP avec l'aide d'opérateurs Rxjs et des concepts de Ngrx store.",
+      "DESCRIPTION_4": "Travail également sur les modules ag-grid pour ajouter des données de grille et les afficher dans un format plus simple."
+    }
+  },
+  "MINI_PROJECTS": {
+    "FIELD_GROUPS": "Groupes de champs",
+    "CREATE_NEW": "Créer un nouveau",
+    "DEFAULT_FIELD_GROUP": "Groupe de champs par défaut",
+    "MODAL_HEADER": "En-tête modal",
+    "ENTER_NAME": "Entrez le nom",
+    "PLACEHOLDER_ENTER_NAME": "Entrez votre nom",
+    "ERROR_ENTER_NAME": "Veuillez entrer un nom",
+    "ENTER_DESCRIPTION": "Entrez la description",
+    "PLACEHOLDER_ENTER_DESCRIPTION": "Entrez la description",
+    "SUBMIT": "Soumettre"
+  },
+  "RIGHT_PANE": {
+    "ELEMENTS": "Éléments",
+    "SEARCH_PLACEHOLDER": "Rechercher...",
+    "TEXT_FIELDS": "Champs de texte",
+    "DATETIME_FIELDS": "Champs de date/heure",
+    "DROPDOWN_UPLOAD_FIELDS": "Champs de liste déroulante/téléchargement"
+  },
+  "MIDDLE_PANE": {
+    "ADD_DESCRIPTION": "Ajouter une description...",
+    "ENTER_NAME": "Entrez le nom",
+    "ERROR_ENTER_NAME": "Veuillez entrer un nom",
+    "ENTER_DESCRIPTION": "Entrez la description",
+    "SAVE": "Enregistrer",
+    "TYPE_HERE": "Tapez ici",
+    "REQUIRED_FIELDS": "Champs obligatoires",
+    "ENTER_VALUES_LIST": "Entrez les valeurs séparées par des virgules pour modifier la liste",
+    "TYPE_LIST_HERE": "Tapez la liste ici",
+    "SELECT_FILE": "Sélectionner un fichier",
+    "SELECTED_FILE": "Fichier sélectionné :",
+    "SELECT_TIME": "Sélectionner l'heure",
+    "SELECT_DATE_TIME": "Sélectionner la date et l'heure",
+    "REQUIRED": "Obligatoire"
+  }
+}

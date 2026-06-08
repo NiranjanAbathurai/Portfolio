@@ -1,0 +1,130 @@
+{
+  "HOME": {
+    "HEY": "Hey, I'm",
+    "NAME": "Niranjan Abathurai",
+    "ROLE": "Angular Frontend Developer",
+    "DOWNLOAD_CV": "Download CV",
+    "ABOUT": "I architect dynamic, high-performance web applications that merge clean code with exceptional user experiences.. From translating complex Figma designs into pixel-perfect UIs to building secure, multi-language platforms",
+    "EXPERIENCE_1": "years experience as UI developer",
+    "EXPERIENCE_2": "Certification as angular developer",
+    "EXPERIENCE_3": "projects worked on and more",
+    "CERTIFICATE_1_ALT": "Angular interaction certificate",
+    "CERTIFICATE_2_ALT": "Angular basic certificate",
+    "CERTIFICATE_3_ALT": "Infosys Angular certificate",
+    "CERTIFICATE_4_ALT": "Infosys frontend certificate",
+    "CERTIFICATE_5_ALT": "CSS certificate"
+  },
+  "CONTACT": {
+    "HEADING": "Feel free to drop a message",
+    "FIRST_NAME": "First Name",
+    "LAST_NAME": "Last Name",
+    "MOBILE_NUMBER": "Mobile Number",
+    "EMAIL": "Email",
+    "MESSAGE": "Message",
+    "FIRST_NAME_REQUIRED": "First name is required.",
+    "EMAIL_REQUIRED": "Email is required.",
+    "MESSAGE_REQUIRED": "Message is required.",
+    "RECAPTCHA_INFO": "This site is protected by reCAPTCHA and the Google",
+    "PRIVACY_POLICY": "Privacy Policy",
+    "AND": "and",
+    "TERMS_OF_SERVICE": "Terms of Service",
+    "APPLY": "apply.",
+    "RECAPTCHA_FAILED": "Security verification failed. Please refresh the page and try again.",
+    "SUBMIT": "Submit",
+    "RESET": "Reset",
+    "SUCCESS": "Thank you! I will respond shortly."
+  },
+  "FOOTER": {
+    "PROJECTS_TITLE": "Projects worked on",
+    "CONNECT_TITLE": "Let's connect on",
+    "LINKEDIN": "LinkedIn",
+    "GMAIL": "Gmail",
+    "GITHUB": "Github",
+    "INSTAGRAM": "Instagram",
+    "FACEBOOK": "Facebook"
+  },
+  "HEADER": {
+    "NAME": "Niranjan"
+  },
+  "TECHNOLOGY": {
+    "TITLE": "Technical Skills",
+    "TOOLS": "Tools worked",
+    "VERSION_CONTROLS": "Version controls",
+    "IDE_WORKED": "IDE worked"
+  },
+  "WORK_EXPERIENCE": {
+    "VIEW_MINI_PROJECT": "View Mini project",
+    "JOB_1": {
+      "ROLE": "Associate",
+      "COMPANY": "Cognizant Technology Solutions, Ltd, Chennai",
+      "PROJECT_NAME": "Abbvie Intake Portal",
+      "DESCRIPTION_1": "Spearheaded the end-to-end development of a modern web application from scratch using Angular 19 and 20, engineering a custom AI agent to autonomously generate complete frontend codebases from Figma UI designs.",
+      "DESCRIPTION_2": "Implemented dynamic multi-language support and secure user intake workflows featuring concurrent file uploads and Google reCAPTCHA bot protection.",
+      "DESCRIPTION_3": "Working on the development of a new SAP Spartacus storefront project with Angular 17, including building and deploying the codebase in non-prod environments using SAP commerce cloud.",
+      "DESCRIPTION_4": "Developing responsive UI features according to Figma designs that support mobile, tablet, and desktop views to ensure cross-platform visual consistency.",
+      "DESCRIPTION_5": "Worked on complex registration forms using reactive forms, implemented Signals for auto-updating changes, and utilized @media queries for handling the responsiveness of the application."
+    },
+    "JOB_2": {
+      "ROLE": "Technology Analyst",
+      "COMPANY": "Infosys, Ltd, Chennai",
+      "PROJECT_NAME": "Hershey's B2B",
+      "DESCRIPTION_1": "Working on the development of new SAP Spartacus store front project with Angular 17 version.",
+      "DESCRIPTION_2": "Developing responsive UI features according to the Figma designs that support mobile, tablet and desktop view.",
+      "DESCRIPTION_3": "Worked on registration form using reactive forms, Signals for auto updating changes and @media queries for handling responsiveness of the application.",
+      "DESCRIPTION_4": "Having hands-on experience in building and deploying the codebase in non-prod environment using SAP commerce cloud."
+    },
+    "JOB_3": {
+      "ROLE": "Senior System Engineer",
+      "COMPANY": "Infosys, Ltd, Chennai",
+      "PROJECT_NAME": "Apple Inc.",
+      "DESCRIPTION_1": "Worked on creating a user interactive web application where user upload images and process them in OCR and display the data.",
+      "DESCRIPTION_2": "Created responsive modal dialog with multiple table to add data and validations which will generate and download a report.",
+      "DESCRIPTION_3": "Have work experience in creating API using spring boot java and do CRUD operations in non-sql mongoDB collections.",
+      "DESCRIPTION_4": "Also build and deployed the codebase in IT and UAT using Rio and spinnaker tools."
+    },
+    "JOB_4": {
+      "ROLE": "System Engineer",
+      "COMPANY": "Tata Consultancy Services, Chennai",
+      "PROJECT_NAME": "NielsenIQ",
+      "DESCRIPTION_1": "Migrating an existing application to Angular 8 project and also optimizing performance of the application.",
+      "DESCRIPTION_2": "Worked on multiple angular features like Pipes, Directives, Route guards, Lazy loading modules and so on.",
+      "DESCRIPTION_3": "Creating and integrating API using HTTP modules with the help of Rxjs operators and Ngrx store concepts.",
+      "DESCRIPTION_4": "Also worked on ag-grid modules for adding grid data and displaying in simpler format."
+    }
+  },
+  "MINI_PROJECTS": {
+    "FIELD_GROUPS": "Field Groups",
+    "CREATE_NEW": "Create new",
+    "DEFAULT_FIELD_GROUP": "Default field group",
+    "MODAL_HEADER": "Modal Header",
+    "ENTER_NAME": "Enter the name",
+    "PLACEHOLDER_ENTER_NAME": "Enter your name",
+    "ERROR_ENTER_NAME": "Please enter name",
+    "ENTER_DESCRIPTION": "Enter the description",
+    "PLACEHOLDER_ENTER_DESCRIPTION": "Enter description",
+    "SUBMIT": "Submit"
+  },
+  "RIGHT_PANE": {
+    "ELEMENTS": "Elements",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "TEXT_FIELDS": "Text Fields",
+    "DATETIME_FIELDS": "Date/Time Fields",
+    "DROPDOWN_UPLOAD_FIELDS": "Dropdown/Upload Fields"
+  },
+  "MIDDLE_PANE": {
+    "ADD_DESCRIPTION": "Add description ...",
+    "ENTER_NAME": "Enter the name",
+    "ERROR_ENTER_NAME": "Please enter name",
+    "ENTER_DESCRIPTION": "Enter the description",
+    "SAVE": "Save",
+    "TYPE_HERE": "Type here",
+    "REQUIRED_FIELDS": "Required fields",
+    "ENTER_VALUES_LIST": "Enter the values with comma to modify values",
+    "TYPE_LIST_HERE": "Type list here",
+    "SELECT_FILE": "Select file",
+    "SELECTED_FILE": "Selected file:",
+    "SELECT_TIME": "Select time",
+    "SELECT_DATE_TIME": "Select date and time",
+    "REQUIRED": "Required"
+  }
+}

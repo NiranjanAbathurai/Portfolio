@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { DropdownComponent } from './shared/dropdown/dropdown.component';
+import { AgentComponent } from './agent/agent.component';
 
 @NgModule({
   imports: [
@@ -37,7 +38,7 @@ import { DropdownComponent } from './shared/dropdown/dropdown.component';
     FooterComponent,
     WorkExperienceComponent,
     TechnologyComponent,
-    DropdownComponent
+    DropdownComponent,
   ],
   providers: [
     provideClientHydration(withNoIncrementalHydration()),
@@ -46,6 +47,8 @@ import { DropdownComponent } from './shared/dropdown/dropdown.component';
       suffix: '.json'
     })
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [],
+  declarations: [
+  ]
 })
 export class AppModule { }

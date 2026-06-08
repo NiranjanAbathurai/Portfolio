@@ -2,6 +2,13 @@
     base = "app"
     command = "npm run build:prod"
     publish = "dist/browser"
+    functions = "netlify/functions"
+
+[[redirects]]
+    from = "/api/*"
+    to = "/.netlify/functions/agent/:splat"
+    status = 200
+    force = true
 
 [[redirects]]
     from = "/*"
