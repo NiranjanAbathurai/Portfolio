@@ -24,7 +24,7 @@ if (typeof global.fetch !== 'function') {
 // CONFIGURATION
 // ============================================================
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_BASE_URL = process.env.GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com/v1beta';
+const GEMINI_BASE_URL = process.env.GEMINI_BASE_URL || '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 // Workspace directory (for Netlify, use /tmp which is writable)
