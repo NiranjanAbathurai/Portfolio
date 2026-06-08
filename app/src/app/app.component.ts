@@ -20,4 +20,8 @@ export class AppComponent {
     const browserLang = this.translate.getBrowserLang() || 'en';
     this.translate.use(browserLang);
   }
+  
+  ngOnInit(){
+    localStorage.removeItem('hasSeenWelcome');
+  }
 }

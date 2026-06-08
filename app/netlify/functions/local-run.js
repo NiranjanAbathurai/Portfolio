@@ -24,7 +24,12 @@ app.all('/.netlify/functions/agent/*', async (req, res) => {
     const result = await handler(event, {});
     const headers = result.headers || {};
     for (const k of Object.keys(headers)) res.setHeader(k, headers[k]);
-    res.status(result.statusCode || 200).send(result.body || '');
+
+    if (result.isBase64Encoded && typeof result.body === 'string') {
+      res.status(result.statusCode || 200).send(Buffer.from(result.body, 'base64'));
+    } else {
+      res.status(result.statusCode || 200).send(result.body || '');
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -37,7 +42,12 @@ app.all('/api/*', async (req, res) => {
     const result = await handler(event, {});
     const headers = result.headers || {};
     for (const k of Object.keys(headers)) res.setHeader(k, headers[k]);
-    res.status(result.statusCode || 200).send(result.body || '');
+
+    if (result.isBase64Encoded && typeof result.body === 'string') {
+      res.status(result.statusCode || 200).send(Buffer.from(result.body, 'base64'));
+    } else {
+      res.status(result.statusCode || 200).send(result.body || '');
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

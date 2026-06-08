@@ -10,6 +10,7 @@ import { LazyAppComponent } from './app/lazyapp.component';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
+import { WelcomeModalComponent } from './app/welcome/welcome-popup.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { provideClientHydration, withNoIncrementalHydration } from '@angular/pla
     LazyAppComponent,
     MiddlePaneComponent,
     RightPaneComponent,
+    WelcomeModalComponent,
     TranslateModule.forChild({
       extend: true,
       loader: {

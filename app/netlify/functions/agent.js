@@ -5,6 +5,7 @@
 const path = require('path');
 const fs = require('fs');
 const yaml = require('js-yaml');
+const AdmZip = require('adm-zip');
 // Load .env when running locally (non-fatal if missing)
 try { require('dotenv').config(); } catch (e) {}
 
@@ -359,10 +360,12 @@ function convertToGeminiMessages(messages) {
 
 // Parse the route from the path
 function getRoute(path) {
+  const pathOnly = typeof path === 'string' ? path.split(/[?#]/)[0] : '';
+
   // Remove leading /api/ or /.netlify/functions/agent/
-  const cleaned = path
+  const cleaned = pathOnly
     .replace(/^\/?\.netlify\/functions\/agent\/?/, '')
-    .replace(/^\/?(api)?\/?/, '')
+    .replace(/^\/?api\/?/, '')
     .replace(/\/$/, '');
   return cleaned;
 }
@@ -719,31 +722,31 @@ async function handleAgentChat(body) {
 
 // GET /api/workspace/download
 function handleDownload() {
-  // In Netlify serverless, we can't easily stream zip files
-  // Instead, return the file list and let the client know to use a different approach
-  // For production, you'd use Netlify Blobs or an external storage
   try {
     const files = listFilesRecursive(WORKSPACE_DIR, WORKSPACE_DIR, 10);
-    const fileContents = {};
+    const zip = new AdmZip();
 
     for (const file of files) {
       if (file.type === 'file') {
+        const filePath = path.join(WORKSPACE_DIR, file.path);
         try {
-          const filePath = path.join(WORKSPACE_DIR, file.path);
-          fileContents[file.path] = fs.readFileSync(filePath, 'utf8');
+          const content = fs.readFileSync(filePath);
+          zip.addFile(file.path, content);
         } catch (e) {
-          // Skip binary files or unreadable files
+          // Skip unreadable files
         }
       }
     }
 
+    const zipBuffer = zip.toBuffer();
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        files: fileContents,
-        message: 'Download the files below. In a full deployment, this would be a ZIP file.'
-      })
+      headers: {
+        'Content-Type': 'application/zip',
+        'Content-Disposition': 'attachment; filename="workspace.zip"'
+      },
+      body: zipBuffer.toString('base64'),
+      isBase64Encoded: true
     };
   } catch (err) {
     return {
@@ -787,7 +790,7 @@ exports.handler = async (event, context) => {
       result = handleGetWorkspaceFiles();
     } else if (method === 'POST' && route === 'workspace/clean') {
       result = handleCleanWorkspace();
-    } else if (method === 'GET' && route === 'workspace/download') {
+    } else if (method === 'GET' && (route === 'workspace/download' || route.startsWith('workspace/download'))) {
       result = handleDownload();
     } else if (method === 'POST' && route === 'chat') {
       const body = JSON.parse(event.body || '{}');

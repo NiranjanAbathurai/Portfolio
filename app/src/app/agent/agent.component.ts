@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { AgentService, Agent, ChatMessage, SSEEvent } from './agent.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -66,7 +66,7 @@ export class AgentComponent {
 
   private shouldScrollToBottom = false;
 
-  constructor(private figmaService: AgentService) {}
+  constructor(private figmaService: AgentService,private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.fetchAgents();
@@ -77,6 +77,7 @@ export class AgentComponent {
     if (savedAgent) {
       this.currentAgentSlug = savedAgent;
     }
+    this.cdr.detectChanges();
   }
 
   ngAfterViewChecked(): void {
@@ -98,6 +99,7 @@ export class AgentComponent {
       if (savedAgent && this.agents.find(a => a.slug === savedAgent)) {
         this.currentAgentSlug = savedAgent;
       }
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Failed to load agents:', error);
     }
@@ -424,6 +426,8 @@ export class AgentComponent {
       this.showGenerationPanel = false;
       this.showCompletedPanel = true;
       this.sessionEnded = true;
+
+      this.cdr.detectChanges();
     }, 1500);
   }
 
