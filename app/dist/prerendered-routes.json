@@ -1,6 +1,7 @@
 {
   "routes": {
     "/": {},
+    "/ai-agent": {},
     "/home": {},
     "/mini-projects": {}
   }
