@@ -46,8 +46,10 @@
       </div>
 
     </div>
-    <div class="d-flex justify-content-center mt-4">
-      <button type="button" class="btn btn-outline-success w-25" (click)="onClick()">{{ 'WORK_EXPERIENCE.VIEW_MINI_PROJECT' | translate }}</button>
+    <div class="d-flex justify-content-evenly mt-4">
+      <button type="button" class="btn btn-outline-success w-25" (click)="navigateProject('mini-project')">{{ 'WORK_EXPERIENCE.VIEW_MINI_PROJECT' | translate }}</button>
+      <button type="button" class="btn btn-outline-success w-25" (click)="navigateProject('chatbot')">{{ 'WORK_EXPERIENCE.VIEW_CHATBOT' | translate }}</button>
+
     </div>
   </div>
 </div>

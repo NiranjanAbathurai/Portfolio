@@ -81,8 +81,19 @@ export class WorkExperienceComponent {
     }
   }
 
-  onClick(){
-    this.router.navigate(['mini-projects'])
+  navigateProject(project: string | undefined){
+    if (!project) {
+      console.warn('navigateProject called with undefined project');
+      return;
+    }
+
+    if(project === 'mini-project') {
+      this.router.navigate(['mini-projects']);
+    } else if(project === 'chatbot') {
+      this.router.navigate(['ai-agent']);
+    } else {
+      console.warn('navigateProject called with unexpected project:', project);
+    }
   }
 
 }

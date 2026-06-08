@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MiddlePaneComponent } from './middle-pane/middle-pane.component';
 import { RightPaneComponent } from './right-pane/right-pane.component';
 import { polyfill } from 'mobile-drag-drop';
+import { WelcomeModalComponent } from './welcome/welcome-popup.component';
 
 @Component({
   standalone: true,
@@ -12,7 +13,7 @@ import { polyfill } from 'mobile-drag-drop';
   templateUrl: './lazyapp.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./lazyapp.component.scss'],
-  imports: [CommonModule, FormsModule, TranslateModule, MiddlePaneComponent, RightPaneComponent]
+  imports: [CommonModule, FormsModule, TranslateModule, MiddlePaneComponent, RightPaneComponent,WelcomeModalComponent]
 })
 export class LazyAppComponent {
   title = 'zuper-app';
@@ -30,6 +31,7 @@ export class LazyAppComponent {
   isEditable = false;
   uploadFile !: File[];
   private polyfillLoaded = false;
+  showWelcome = false;
 
   constructor(private cd:ChangeDetectorRef, private zone: NgZone,@Inject(PLATFORM_ID) private platformId: Object){}
 
@@ -57,6 +59,9 @@ export class LazyAppComponent {
     if (isPlatformBrowser(this.platformId) && !this.polyfillLoaded) {
       polyfill({ holdToDrag: 300 });
       this.polyfillLoaded = true;
+    }
+    if (!localStorage.getItem('hasSeenWelcome')) {
+      this.showWelcome = true;
     }
   }
 

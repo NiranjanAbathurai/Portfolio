@@ -1,10 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
-@import 'bootstrap/scss/bootstrap.scss';
-// @import "tailwindcss";
+// @import 'bootstrap/scss/bootstrap.scss';
+// // @import "tailwindcss";
 
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+// @import "tailwindcss/base";
+// @import "tailwindcss/components";
+// @import "tailwindcss/utilities";
+
+// Use @use for standard Sass/SCSS files
+@use 'bootstrap/scss/bootstrap';
+
+// Tailwind requires a special approach for Sass 
+// because it is typically processed as a CSS directive
+@layer base, components, utilities;
+
+@layer base {
+  @import "tailwindcss/base";
+}
+@layer components {
+  @import "tailwindcss/components";
+}
+@layer utilities {
+  @import "tailwindcss/utilities";
+}
 
 @font-face {
   font-family: 'my-font';

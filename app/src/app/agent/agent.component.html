@@ -1,0 +1,214 @@
+<div class="app-container">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">🎨</span>
+        <h1>Figma to Code</h1>
+      </div>
+      <span class="header-badge">Powered by Gemini AI</span>
+    </div>
+    <div class="header-right">
+      <div class="agent-selector-wrapper">
+        <select
+          class="agent-select"
+          [(ngModel)]="currentAgentSlug"
+          (ngModelChange)="onAgentChange()"
+        >
+          <option value="">Default Agent</option>
+          <option *ngFor="let agent of agents" [value]="agent.slug">
+            {{ agent.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Chat / Conversation Area -->
+    <div
+      class="chat-area"
+      [class.drag-over]="isDragOver"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave()"
+      (drop)="onDrop($event)"
+    >
+      <div #messagesContainer class="messages-container">
+        <!-- Welcome State -->
+        <div *ngIf="showWelcome" class="welcome-state">
+          <div class="welcome-card">
+            <div class="welcome-icon">🎨</div>
+            <h2>Welcome to Figma to Code</h2>
+            <p>Upload your Figma design screenshots and I'll generate a complete, production-ready codebase for you.</p>
+            <div class="workflow-steps">
+              <div class="workflow-step">
+                <div class="step-icon">💬</div>
+                <span>Chat with AI normally</span>
+              </div>
+              <div class="workflow-step">
+                <div class="step-icon">📎</div>
+                <span>Upload Figma screenshots</span>
+              </div>
+              <div class="workflow-step">
+                <div class="step-icon">⚡</div>
+                <span>AI generates your code</span>
+              </div>
+              <div class="workflow-step">
+                <div class="step-icon">📥</div>
+                <span>Download the project</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <ng-container *ngFor="let msg of displayMessages">
+          <!-- User Message -->
+          <div *ngIf="msg.role === 'user'" class="message user">
+            <div class="message-avatar">👤</div>
+            <div class="message-content">
+              <div *ngIf="msg.images && msg.images.length > 0" class="message-images">
+                <img
+                  *ngFor="let img of msg.images"
+                  [src]="img"
+                  class="message-image"
+                  alt="Figma design"
+                />
+              </div>
+              <div *ngIf="msg.text" class="message-text">{{ msg.text }}</div>
+            </div>
+          </div>
+
+          <!-- Assistant Message -->
+          <div *ngIf="msg.role === 'assistant'" class="message assistant">
+            <div class="message-avatar">✨</div>
+            <div class="message-content">
+              <div class="message-text" [innerHTML]="formatMessage(msg.text)"></div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Typing Indicator -->
+        <div *ngIf="showTypingIndicator" class="message assistant">
+          <div class="message-avatar">✨</div>
+          <div class="message-content">
+            <div class="typing-indicator">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generation Progress Panel -->
+    <div *ngIf="showGenerationPanel" class="generation-panel">
+      <div class="generation-header">
+        <div class="generation-spinner"></div>
+        <h3>Generating your code...</h3>
+      </div>
+      <div class="generation-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width]="progressWidth"></div>
+        </div>
+        <span class="progress-text">{{ progressText }}</span>
+      </div>
+      <div class="file-list">
+        <div *ngFor="let file of filesCreated" class="file-item">
+          <span class="file-status" [ngClass]="file.status">
+            {{ file.status === 'creating' ? '⏳' : file.status === 'done' ? '✅' : '❌' }}
+          </span>
+          <span class="file-path">{{ file.path }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Download / Session Ended Panel -->
+    <div *ngIf="showCompletedPanel" class="completed-panel">
+      <div class="completed-icon">✅</div>
+      <h3>Code Generation Complete!</h3>
+      <p>Your project has been generated successfully. Download it below.</p>
+
+      <div class="download-options">
+        <label class="checkbox-option">
+          <input type="checkbox" [(ngModel)]="includeNodeModules" />
+          <span>Include <code>node_modules</code> in download</span>
+          <small>(Larger file size, but ready to run immediately)</small>
+        </label>
+      </div>
+
+      <a [href]="downloadUrl" class="btn-download-large">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Download Project (.zip)
+      </a>
+      <div class="session-ended-info">
+        <p>📋 A <strong>SETUP_README.md</strong> is included with instructions on how to run the project.</p>
+        <hr>
+        <p class="session-note">Session ended. Refresh the page to start a new session.</p>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div
+      class="input-area"
+      [class.generating]="isGenerating"
+      [class.session-ended]="sessionEnded"
+    >
+      <!-- Image Preview -->
+      <div *ngIf="pendingImages.length > 0" class="image-preview-container">
+        <div class="image-previews">
+          <div *ngFor="let img of pendingImages; let i = index" class="image-preview-item">
+            <img [src]="img.preview" [alt]="img.fileName" />
+            <button class="image-preview-remove" (click)="removeImage(i)">×</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-wrapper">
+        <button class="btn-upload" title="Upload Figma Screenshots" (click)="triggerImageUpload()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+        </button>
+        <input
+          #imageInput
+          type="file"
+          accept="image/*"
+          multiple
+          hidden
+          (change)="handleImageUpload($event)"
+        />
+
+        <textarea
+          #messageInput
+          [(ngModel)]="messageText"
+          (keydown)="handleKeyDown($event)"
+          (input)="adjustTextareaHeight($event)"
+          [placeholder]="sessionEnded ? 'Session ended. Download your code above.' : 'Chat with AI or upload Figma screenshots to generate code...'"
+          [disabled]="sessionEnded"
+          rows="1"
+        ></textarea>
+        <button
+          class="btn-send"
+          [disabled]="!canSend"
+          (click)="sendMessage()"
+          title="Send"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 2L11 13"></path>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+          </svg>
+        </button>
+      </div>
+      <p class="input-hint">
+        Press Enter to send | 📎 Attach Figma design screenshots to generate code
+      </p>
+    </div>
+  </main>
+</div>
