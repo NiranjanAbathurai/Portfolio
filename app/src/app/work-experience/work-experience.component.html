@@ -46,10 +46,19 @@
       </div>
 
     </div>
-    <div class="d-flex justify-content-evenly mt-4">
+    <!-- <div class="d-flex justify-content-evenly mt-4">
       <button type="button" class="btn btn-outline-success w-25" (click)="navigateProject('mini-project')">{{ 'WORK_EXPERIENCE.VIEW_MINI_PROJECT' | translate }}</button>
       <button type="button" class="btn btn-outline-success w-25" (click)="navigateProject('chatbot')">{{ 'WORK_EXPERIENCE.VIEW_CHATBOT' | translate }}</button>
-
+    </div> -->
+    <div class="d-flex flex-column flex-md-row justify-content-evenly mt-4">
+      <button type="button" class="btn btn-outline-success mb-2 mb-md-0 w-100 w-md-25"
+        (click)="navigateProject('mini-project')">
+        {{ 'WORK_EXPERIENCE.VIEW_MINI_PROJECT' | translate }}
+      </button>
+      <button type="button" class="btn btn-outline-success w-100 w-md-25" (click)="navigateProject('chatbot')">
+        {{ 'WORK_EXPERIENCE.VIEW_CHATBOT' | translate }}
+      </button>
     </div>
+
   </div>
 </div>
