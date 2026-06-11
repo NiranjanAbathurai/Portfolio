@@ -312,14 +312,27 @@ function loadAgents() {
     }
   }
 
-  return agents.length > 0 ? agents : [
-    {
+  // Ensure UI Developer exists and stays first (fallback if no YAML defined it)
+  if (!agents.find(a => a.slug === 'ui-developer')) {
+    agents.unshift({
       slug: 'ui-developer',
       name: 'UI Developer',
       description: 'Interactive wizard for generating UI fields from images or documents.',
       systemPrompt: DEFAULT_FIGMA_SYSTEM_PROMPT
-    }
-  ];
+    });
+  }
+
+  // Always offer the Portfolio Assistant alongside any YAML-defined agent(s)
+  if (!agents.find(a => a.slug === 'general-assistant')) {
+    agents.push({
+      slug: 'general-assistant',
+      name: 'Portfolio Assistant',
+      description: "Ask about Niranjan's skills, experience, and projects.",
+      systemPrompt: PORTFOLIO_SYSTEM_PROMPT
+    });
+  }
+
+  return agents;
 }
 
 function buildSystemPrompt(mode) {

@@ -15,7 +15,6 @@
           [(ngModel)]="currentAgentSlug"
           (ngModelChange)="onAgentChange()"
         >
-          <option value="">Default Agent</option>
           <option *ngFor="let agent of agents" [value]="agent.slug">
             {{ agent.name }}
           </option>
