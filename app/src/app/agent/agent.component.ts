@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { AgentService, Agent, ChatMessage, SSEEvent } from './agent.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 
@@ -43,7 +43,10 @@ export class AgentComponent {
   messages: ChatMessage[] = [];
   displayMessages: DisplayMessage[] = [];
   agents: Agent[] = [];
-  currentAgentSlug = '';
+  currentAgentSlug = 'ui-developer';
+  previousAgentSlug = 'ui-developer';
+  // Per-agent saved conversations so switching agents preserves each chat + context
+  private conversations: { [slug: string]: { messages: ChatMessage[]; displayMessages: DisplayMessage[] } } = {};
   pendingImages: PendingImage[] = [];
   filesCreated: FileItem[] = [];
   messageText = '';
@@ -66,24 +69,11 @@ export class AgentComponent {
 
   private shouldScrollToBottom = false;
 
-  constructor(private figmaService: AgentService,private cdr: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  constructor(private figmaService: AgentService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.fetchAgents();
     this.fetchHealth();
-
-    // Restore saved agent
-    let savedAgent;
-    if (isPlatformBrowser(this.platformId)) {
-      savedAgent = localStorage.getItem('figma-to-code-agent');
-    } else{
-      
-    }
-    if (savedAgent) {
-      this.currentAgentSlug = savedAgent;
-    }
     this.cdr.detectChanges();
   }
 
@@ -101,11 +91,13 @@ export class AgentComponent {
   async fetchAgents(): Promise<void> {
     try {
       this.agents = await this.figmaService.getAgents();
-      // Restore saved agent if it exists in the list
-      const savedAgent = localStorage.getItem('figma-to-code-agent');
-      if (savedAgent && this.agents.find(a => a.slug === savedAgent)) {
-        this.currentAgentSlug = savedAgent;
-      }
+
+      // Default to UI Developer; fall back to the first available agent.
+      const hasUiDeveloper = this.agents.find(a => a.slug === 'ui-developer');
+      const initialSlug = hasUiDeveloper ? 'ui-developer' : (this.agents[0]?.slug || 'ui-developer');
+
+      this.currentAgentSlug = initialSlug;
+      this.previousAgentSlug = initialSlug;
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Failed to load agents:', error);
@@ -121,7 +113,35 @@ export class AgentComponent {
   }
 
   onAgentChange(): void {
-    localStorage.setItem('figma-to-code-agent', this.currentAgentSlug || '');
+    // Save the conversation we're leaving, so we can restore it later
+    this.conversations[this.previousAgentSlug] = {
+      messages: this.messages,
+      displayMessages: this.displayMessages
+    };
+
+    // Restore the target agent's conversation (with its context), or start a new chat
+    const saved = this.conversations[this.currentAgentSlug];
+    this.messages = saved ? saved.messages : [];
+    this.displayMessages = saved ? saved.displayMessages : [];
+    this.previousAgentSlug = this.currentAgentSlug;
+
+    // Reset transient UI so each switch is a clean slate
+    this.showWelcome = this.displayMessages.length === 0;
+    this.sessionEnded = false;
+    this.isLoading = false;
+    this.isGenerating = false;
+    this.showTypingIndicator = false;
+    this.showGenerationPanel = false;
+    this.showCompletedPanel = false;
+    this.filesCreated = [];
+    this.totalFilesCreated = 0;
+    this.pendingImages = [];
+    this.messageText = '';
+    this.progressWidth = '0%';
+    this.progressText = 'Starting...';
+
+    this.shouldScrollToBottom = true;
+    this.cdr.detectChanges();
   }
 
   // ============================================================
