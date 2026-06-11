@@ -133,6 +133,46 @@ When given a Figma design screenshot, you MUST:
 Create every single file needed for the project to work. The user will download these files and run \`npm install && npm start\`.
 `;
 
+// Portfolio assistant prompt — used for normal (non-code-generation) chat.
+const PORTFOLIO_SYSTEM_PROMPT = `You are Niranjan's portfolio assistant — a friendly, professional guide for visitors (recruiters, hiring managers, clients, and fellow developers) on Niranjan Abathurai's personal portfolio website. You speak on Niranjan's behalf.
+
+## About Niranjan Abathurai
+- Senior Angular Frontend Developer with 6+ years of experience building scalable enterprise web applications with the modern Angular ecosystem, TypeScript, and RxJS.
+- Known for frontend innovation — including building custom AI agents for automated Figma-to-code scaffolding (the very tool you're part of).
+- Also has cross-functional full-stack experience with Java, Spring, and MongoDB.
+- Based in Chennai, India.
+
+## Experience
+- **Cognizant** — Associate (Apr 2025 – Present). Project: AbbVie Intake Portal. Architected it from scratch in Angular 19/20 (standalone + modular for lazy-loading and bundle performance), complex multi-step Reactive Forms with conditional validation and dynamic fields, i18n via ngx-translate, concurrent file uploads with Google reCAPTCHA, Angular Material, and AG Grid for large datasets.
+- **Infosys** — Technology Analyst. Hershey's B2B (May 2024 – Apr 2025): B2B storefront workflows with SAP Spartacus Composable Storefront + Angular 17, RxJS, Angular Material, SAP Commerce Cloud, unit testing with Jasmine/Karma. Apple Inc (May 2022 – Apr 2024): responsive apps in Angular/TypeScript/HTML5/CSS3/Bootstrap, full-stack REST APIs with Java Spring + MongoDB, CI/CD via Rio and Spinnaker.
+- **Tata Consultancy Services (TCS)** — System Engineer (Jan 2020 – May 2022). Project: Nielsen IQ. Migrated legacy apps to modern Angular, advanced RxJS data streams, custom pipes/directives, secure routing with Route Guards and HTTP Interceptors.
+
+## Skills & Tools
+- Angular (v8–20), AngularJS, TypeScript, JavaScript
+- HTML, CSS, SCSS, SASS, Bootstrap, Angular Material, AG Grid
+- Java, Spring, MongoDB
+- Jasmine / Karma (unit testing)
+- Tools: VS Code, Eclipse, SAP Commerce Cloud, Rio, Splunk
+- Version control: GitHub, Bitbucket, Azure
+
+## Awards & Certifications
+- Infosys INSTA Award (Feb 2025)
+- Infosys Certified Angular Developer & Front End Web Developer
+- HackerRank: Angular Frontend Developer (Intermediate), Angular Basic, CSS Basic
+
+## Contact
+- Email: niranjanabathurai@gmail.com
+- LinkedIn: linkedin.com/in/niranjan-hari
+
+## How to respond
+- Answer questions about Niranjan's skills, experience, and projects accurately and concisely, using the facts above.
+- Be warm, professional, and confident. Use short paragraphs or bullet points — easy to read on a website.
+- If a visitor asks how to reach Niranjan, share his email and LinkedIn (or point them to the contact section of the site).
+- If you don't know something specific about Niranjan, say so honestly — never invent details, employers, dates, or project facts.
+- For general technical questions (e.g. "what is RxJS?"), you may answer helpfully, then relate it back to Niranjan's experience where relevant.
+- Politely steer clearly off-topic or inappropriate questions back to the portfolio.
+- Keep responses focused; avoid long generic essays.`;
+
 // ============================================================
 // TOOL EXECUTION
 // ============================================================
@@ -243,9 +283,9 @@ function loadAgents() {
       },
       {
         slug: 'general-assistant',
-        name: 'General Assistant',
-        description: 'A general-purpose AI assistant for any task.',
-        systemPrompt: 'You are a helpful AI assistant. Provide clear, accurate, and thoughtful responses.'
+        name: 'Portfolio Assistant',
+        description: "Ask about Niranjan's skills, experience, and projects.",
+        systemPrompt: PORTFOLIO_SYSTEM_PROMPT
       }
     ];
   }
@@ -355,6 +395,28 @@ function convertToGeminiMessages(messages) {
 }
 
 // ============================================================
+// HELPER: Fetch with retry on transient errors (503/429/500)
+// ============================================================
+// Gemini occasionally returns 503 (overloaded) or 429 (rate limit) on the
+// free tier. These are usually transient — retry a couple of times with
+// exponential backoff before giving up. Backoff is kept short to stay under
+// serverless timeouts.
+async function fetchWithRetry(url, options, maxRetries = 2) {
+  const RETRYABLE = [429, 500, 503, 529];
+  let response;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    response = await fetch(url, options);
+    if (response.ok || !RETRYABLE.includes(response.status) || attempt === maxRetries) {
+      return response;
+    }
+    // Backoff: 1s, then 2s
+    const delayMs = 1000 * Math.pow(2, attempt);
+    await new Promise(resolve => setTimeout(resolve, delayMs));
+  }
+  return response;
+}
+
+// ============================================================
 // ROUTE HANDLERS
 // ============================================================
 
@@ -460,6 +522,11 @@ async function handleChat(body) {
     const agent = agents.find(a => a.slug === agentSlug);
     if (agent) systemPrompt = agent.systemPrompt;
   }
+  // Default to the portfolio assistant when no specific prompt is set
+  // (e.g. the "Default Agent" option, which sends an empty agentSlug).
+  if (!systemPrompt) {
+    systemPrompt = PORTFOLIO_SYSTEM_PROMPT;
+  }
 
   try {
     const geminiContents = convertToGeminiMessages(messages);
@@ -480,7 +547,7 @@ async function handleChat(body) {
 
     const apiUrl = `${GEMINI_BASE_URL}/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
-    const response = await fetch(apiUrl, {
+    const response = await fetchWithRetry(apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody)
@@ -488,6 +555,15 @@ async function handleChat(body) {
 
     if (!response.ok) {
       const errorData = await response.text();
+      // Friendly message for transient overload/rate-limit after retries
+      if (response.status === 503 || response.status === 429) {
+        return {
+          statusCode: response.status,
+          body: JSON.stringify({
+            error: 'The AI is busy right now (high demand). Please try again in a few seconds.'
+          })
+        };
+      }
       return {
         statusCode: response.status,
         body: JSON.stringify({ error: `Gemini API Error: ${errorData}` })

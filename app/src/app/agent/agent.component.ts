@@ -263,6 +263,7 @@ export class AgentComponent {
     this.messageText = '';
     this.pendingImages = [];
     this.isLoading = true;
+    this.cdr.detectChanges();
 
     try {
       if (hasImages) {
@@ -279,11 +280,13 @@ export class AgentComponent {
 
     this.isLoading = false;
     this.shouldScrollToBottom = true;
+    this.cdr.detectChanges();
   }
 
   // Normal chat (no code generation)
   async sendChatMessage(): Promise<void> {
     this.showTypingIndicator = true;
+    this.cdr.detectChanges();
 
     try {
       const data = await this.figmaService.sendChat(this.messages, this.currentAgentSlug);
@@ -298,8 +301,11 @@ export class AgentComponent {
         role: 'assistant',
         text: assistantContent
       });
+      this.shouldScrollToBottom = true;
+      this.cdr.detectChanges();
     } catch (error) {
       this.showTypingIndicator = false;
+      this.cdr.detectChanges();
       throw error;
     }
   }
