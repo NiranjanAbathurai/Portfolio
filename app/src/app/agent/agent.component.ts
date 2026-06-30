@@ -77,6 +77,18 @@ export class AgentComponent {
     this.cdr.detectChanges();
   }
 
+ private getPreferredDefaultAgentSlug(): string {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    const preferredSlug = isMobile ? 'personal-assistant' : 'ui-developer';
+
+    // 1. Try to find the preferred agent (personal-assistant for mobile, ui-developer for desktop)
+    // 2. If it doesn't exist, just grab the very first agent in the array
+    // 3. Absolute fallback: just return the string
+    return this.agents.find(agent => agent.slug === preferredSlug)?.slug
+      || this.agents[0]?.slug 
+      || preferredSlug;
+  }
+
   ngAfterViewChecked(): void {
     if (this.shouldScrollToBottom) {
       this.scrollToBottom();
@@ -92,9 +104,7 @@ export class AgentComponent {
     try {
       this.agents = await this.figmaService.getAgents();
 
-      // Default to UI Developer; fall back to the first available agent.
-      const hasUiDeveloper = this.agents.find(a => a.slug === 'ui-developer');
-      const initialSlug = hasUiDeveloper ? 'ui-developer' : (this.agents[0]?.slug || 'ui-developer');
+      const initialSlug = this.getPreferredDefaultAgentSlug();
 
       this.currentAgentSlug = initialSlug;
       this.previousAgentSlug = initialSlug;
