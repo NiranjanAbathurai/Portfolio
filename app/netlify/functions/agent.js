@@ -265,6 +265,15 @@ function listFilesRecursive(dirPath, basePath, maxDepth, currentDepth = 0) {
 // ============================================================
 // AGENT LOADING
 // ============================================================
+function sortAgents(agents) {
+  return [...agents].sort((a, b) => {
+    const aOrder = typeof a.order === 'number' ? a.order : 100;
+    const bOrder = typeof b.order === 'number' ? b.order : 100;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return (a.name || '').localeCompare(b.name || '');
+  });
+}
+
 function loadAgents() {
   const agents = [];
 
@@ -303,7 +312,8 @@ function loadAgents() {
             slug: mode.slug,
             name: mode.name,
             description: mode.description || mode.whenToUse || '',
-            systemPrompt: buildSystemPrompt(mode)
+            systemPrompt: buildSystemPrompt(mode),
+            order: typeof mode.order === 'number' ? mode.order : (mode.slug === 'general-assistant' ? 0 : 10)
           });
         }
       }
@@ -312,27 +322,29 @@ function loadAgents() {
     }
   }
 
-  // Ensure UI Developer exists and stays first (fallback if no YAML defined it)
-  if (!agents.find(a => a.slug === 'ui-developer')) {
-    agents.unshift({
-      slug: 'ui-developer',
-      name: 'UI Developer',
-      description: 'Interactive wizard for generating UI fields from images or documents.',
-      systemPrompt: DEFAULT_FIGMA_SYSTEM_PROMPT
-    });
-  }
-
-  // Always offer the Portfolio Assistant alongside any YAML-defined agent(s)
+  // Ensure the Portfolio Assistant is available first by default.
   if (!agents.find(a => a.slug === 'general-assistant')) {
-    agents.push({
+    agents.unshift({
       slug: 'general-assistant',
       name: 'Portfolio Assistant',
       description: "Ask about Niranjan's skills, experience, and projects.",
-      systemPrompt: PORTFOLIO_SYSTEM_PROMPT
+      systemPrompt: PORTFOLIO_SYSTEM_PROMPT,
+      order: 0
     });
   }
 
-  return agents;
+  // Ensure UI Developer exists as a fallback option.
+  if (!agents.find(a => a.slug === 'ui-developer')) {
+    agents.push({
+      slug: 'ui-developer',
+      name: 'UI Developer',
+      description: 'Interactive wizard for generating UI fields from images or documents.',
+      systemPrompt: DEFAULT_FIGMA_SYSTEM_PROMPT,
+      order: 10
+    });
+  }
+
+  return sortAgents(agents);
 }
 
 function buildSystemPrompt(mode) {
@@ -848,6 +860,8 @@ function handleDownload() {
 // ============================================================
 // MAIN HANDLER
 // ============================================================
+exports.loadAgents = loadAgents;
+
 exports.handler = async (event, context) => {
   // CORS headers
   const headers = {

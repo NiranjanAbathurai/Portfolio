@@ -43,8 +43,8 @@ export class AgentComponent {
   messages: ChatMessage[] = [];
   displayMessages: DisplayMessage[] = [];
   agents: Agent[] = [];
-  currentAgentSlug = 'ui-developer';
-  previousAgentSlug = 'ui-developer';
+  currentAgentSlug = 'general-assistant';
+  previousAgentSlug = 'general-assistant';
   // Per-agent saved conversations so switching agents preserves each chat + context
   private conversations: { [slug: string]: { messages: ChatMessage[]; displayMessages: DisplayMessage[] } } = {};
   pendingImages: PendingImage[] = [];
@@ -79,13 +79,11 @@ export class AgentComponent {
 
  private getPreferredDefaultAgentSlug(): string {
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    const preferredSlug = isMobile ? 'personal-assistant' : 'ui-developer';
+    const preferredSlug = isMobile ? 'general-assistant' : 'general-assistant';
 
-    // 1. Try to find the preferred agent (personal-assistant for mobile, ui-developer for desktop)
-    // 2. If it doesn't exist, just grab the very first agent in the array
-    // 3. Absolute fallback: just return the string
+    // Prefer the portfolio assistant first, then fall back to the first agent returned by the backend.
     return this.agents.find(agent => agent.slug === preferredSlug)?.slug
-      || this.agents[0]?.slug 
+      || this.agents[0]?.slug
       || preferredSlug;
   }
 
