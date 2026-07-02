@@ -37,7 +37,8 @@
               "src/assets",
               "src/google36da6268662da866.html",
                "src/sitemap.xml",
-               "src/robots.txt"
+               "src/robots.txt",
+               "src/_headers"
             ],
             "styles": [
               "src/styles.scss",
