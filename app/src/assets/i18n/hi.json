@@ -12,7 +12,8 @@
     "CERTIFICATE_2_ALT": "एंगुलर बेसिक प्रमाणपत्र",
     "CERTIFICATE_3_ALT": "इंफोसिस एंगुलर प्रमाणपत्र",
     "CERTIFICATE_4_ALT": "इंफोसिस फ्रंटएंड प्रमाणपत्र",
-    "CERTIFICATE_5_ALT": "CSS प्रमाणपत्र"
+    "CERTIFICATE_5_ALT": "CSS प्रमाणपत्र",
+    "CERTIFICATE_6_ALT": "React basic certificate"
   },
   "CONTACT": {
     "HEADING": "बेझिझक संदेश भेजें",
@@ -55,6 +56,7 @@
   "WORK_EXPERIENCE": {
     "VIEW_MINI_PROJECT": "कैनवास फ़ॉर्म बिल्डर",
     "VIEW_CHATBOT": "AI एजेंट एक्सप्लोर करें - चैटबोट",
+    "GROCERIES_TRACKER": "Grocery tracker",
     "JOB_1": {
       "ROLE": "एसोसिएट",
       "COMPANY": "कॉग्निजेंट टेक्नोलॉजी सॉल्यूशंस, लिमिटेड, चेन्नई",

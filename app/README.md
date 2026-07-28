@@ -1,27 +1,47 @@
-# App
+# Portfolio App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.8.
+This folder contains the Angular frontend for the portfolio website.
 
-## Development server
+## Requirements
+- Node.js 22.22.3+ or 24.15+
+- npm
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Install dependencies
+```bash
+cd app
+npm install
+```
 
-## Code scaffolding
+## Start the development server
+```bash
+cd app
+npm start
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Then open:
+```text
+http://localhost:4200/
+```
 
-## Build
+## Optional: use a custom port
+```bash
+cd app
+npm start -- --port 4210
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Build for production
+```bash
+cd app
+npm run build:prod
+```
 
-## Running unit tests
+## Optional: run Netlify functions locally
+```bash
+cd app/netlify/functions
+npm install
+npm run local
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Troubleshooting
+- If the start command fails with a Node.js version error, upgrade Node.js to a compatible version.
+- If the app does not start, run npm install again and verify that the Angular CLI can resolve dependencies.

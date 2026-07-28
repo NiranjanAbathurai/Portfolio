@@ -12,7 +12,8 @@
     "CERTIFICATE_2_ALT": "Certificado básico de Angular",
     "CERTIFICATE_3_ALT": "Certificado Angular de Infosys",
     "CERTIFICATE_4_ALT": "Certificado Frontend de Infosys",
-    "CERTIFICATE_5_ALT": "Certificado CSS"
+    "CERTIFICATE_5_ALT": "Certificado CSS",
+    "CERTIFICATE_6_ALT": "React basic certificate"
   },
   "CONTACT": {
     "HEADING": "No dudes en dejar un mensaje",
@@ -55,6 +56,7 @@
   "WORK_EXPERIENCE": {
     "VIEW_MINI_PROJECT": "Constructor de formularios Canvas",
     "VIEW_CHATBOT": "Explorar agente de IA - Chatbot",
+    "GROCERIES_TRACKER": "Grocery tracker",
     "JOB_1": {
       "ROLE": "Asociado",
       "COMPANY": "Cognizant Technology Solutions, Ltd, Chennai",
