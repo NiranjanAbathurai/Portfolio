@@ -53,6 +53,7 @@ export class HeaderComponent {
   onResize(event:Event){
     this.windowWidth = window.innerWidth;
     // console.log('Window resized, new width:', this.windowWidth);
+    // console.log('Window resized, new width:', this.windowWidth);
     if (this.windowWidth <= 768) {
      this.isMobile = true;
     } else {
@@ -68,6 +69,12 @@ export class HeaderComponent {
     // console.log(item);
     this.dropdownVisible = false;
     // this.router.navigateByUrl(item.toLowerCase());
+    if(window.location.pathname != "/home"){
+      this.router.navigateByUrl('home');
+      setTimeout(()=> {
+        this.commonService.scrollToTarget.next(item.toLowerCase()+'ViewChild');
+      },10)
+    }
     this.commonService.scrollToTarget.next(item.toLowerCase()+'ViewChild');
   }
 }
