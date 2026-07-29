@@ -12,7 +12,8 @@
     "CERTIFICATE_2_ALT": "ஆங்குலர் அடிப்படை சான்றிதழ்",
     "CERTIFICATE_3_ALT": "இன்ஃபோசிஸ் ஆங்குலர் சான்றிதழ்",
     "CERTIFICATE_4_ALT": "இன்ஃபோசிஸ் ஃபிரண்டெண்ட் சான்றிதழ்",
-    "CERTIFICATE_5_ALT": "CSS சான்றிதழ்"
+    "CERTIFICATE_5_ALT": "CSS சான்றிதழ்",
+    "CERTIFICATE_6_ALT": "React basic certificate"
   },
   "CONTACT": {
     "HEADING": "எங்களுக்கு செய்தி அனுப்பவும்",
@@ -55,6 +56,7 @@
   "WORK_EXPERIENCE": {
     "VIEW_MINI_PROJECT": "கான்வாஸ் ஃபார்ம் பில்ல்டர்",
     "VIEW_CHATBOT": "AI ஏஜெண்ட்டை ஆராய்க - சாட்போட்",
+    "GROCERIES_TRACKER": "Grocery tracker",
     "JOB_1": {
       "ROLE": "அசோசியேட்",
       "COMPANY": "காக்னிசன்ட் டெக்னாலஜி சொல்யூஷன்ஸ், லிமிடெட், சென்னை",

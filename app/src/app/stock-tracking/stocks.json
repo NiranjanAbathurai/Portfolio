@@ -1,0 +1,361 @@
+[
+  {
+    "category": "Flours (Maavu)",
+    "items": [
+      "Godhumai maavu - Wheat flour",
+      "Arisi maavu - Rice flour",
+      "Kadalai maavu - Besan (Gram flour)",
+      "Bhajji maavu - Bhajji flour",
+      "Cholam maavu - Corn flour",
+      "Pottukadalai maavu - Roasted gram flour",
+      "Keelvaragu maavu / Ragi maavu - Ragi flour (Finger millet)",
+      "Kambu maavu - Pearl millet flour",
+      "Idli/Dosa maavu - Idli/Dosa batter",
+      "Maida - All-purpose flour"
+    ]
+  },
+  {
+    "category": "Grains & Rice (Arisi & Dhaniyam)",
+    "items": [
+      "Saapattu arisi / Ponni arisi - Ponni boiled rice",
+      "Idli arisi - Idli rice",
+      "Pacharisi - Raw rice",
+      "Basmati arisi - Basmati rice",
+      "Seeraga samba arisi - Seeraga samba rice",
+      "Rava - Semolina",
+      "Kambu - Pearl millet",
+      "Thinai - Foxtail millet",
+      "Aval - Flattened rice / Poha",
+      "Javvarisi - Sago / Tapioca pearls"
+    ]
+  },
+  {
+    "category": "Spices (Anjarai Petti & Whole Spices)",
+    "items": [
+      "Kadugu - Mustard seeds",
+      "Jeeragam - Cumin seeds",
+      "Milagu - Black pepper",
+      "Vendhayam - Fenugreek seeds",
+      "Thaalikkum ulunthu - Split urad dal for tempering",
+      "Sombu - Fennel seeds",
+      "Kaintha milagai - Dry red chillies",
+      "Pattai - Cinnamon",
+      "Kirambu - Cloves",
+      "Elakkai - Cardamom",
+      "Azhinji / Annaasi poo - Star anise",
+      "Kadal paasi - Stone flower",
+      "Kasa kasa - Poppy seeds",
+      "Malli / Kothamalli vithai - Coriander seeds",
+      "Omam - Ajwain / Carom seeds",
+      "Ellu - Sesame seeds",
+      "Biryani ilai - Bay leaf",
+      "Jathikai - Nutmeg",
+      "Jathipathiri - Mace",
+      "Sukku - Dry ginger",
+      "Marati mokku - Kapok buds (dried flower spice)"
+    ]
+  },
+  {
+    "category": "Masalas & Powders (Podi & Masala)",
+    "items": [
+      "Sambar podi - Sambar powder",
+      "Rasam podi - Rasam powder",
+      "Manjal thool - Turmeric powder",
+      "Milagai thool - Red chilli powder",
+      "Malli thool - Coriander powder",
+      "Garam masala - Garam masala",
+      "Idli milagai podi - Idli podi",
+      "Kari masala podi - Meat/Curry masala powder",
+      "Kozhi masala - Chicken masala",
+      "Milagu thool - Pepper powder",
+      "Jeeraga thool - Cumin powder",
+      "Perungayam / Katti perungayam - Asafoetida block/powder",
+      "Biryani masala - Biryani masala",
+      "Chaat masala - Chaat masala",
+      "Pav bhaji masala - Pav bhaji masala",
+      "Kuzhambu milagai thool - Kuzhambu chilli powder",
+      "Vathakkuzhambu podi - Vatha kuzhambu powder"
+    ]
+  },
+  {
+    "category": "Pulses & Lentils (Paruppu Vagaigal)",
+    "items": [
+      "Thuvaram paruppu - Toor dal / Pigeon peas",
+      "Ulutham paruppu (Muzhu/Udaitha) - Urad dal (Whole/Split)",
+      "Kadalai paruppu - Chana dal / Bengal gram",
+      "Paasi paruppu - Moong dal / Yellow lentils",
+      "Pachai payaru - Green gram",
+      "Konda kadalai (Vellai/Karuppu) - Chickpeas (White/Black)",
+      "Karamani / Thattapayaru - Cowpeas / Black-eyed peas",
+      "Rajma - Kidney beans",
+      "Masoor dal - Red lentils",
+      "Pottukadalai - Roasted gram",
+      "Verkadalai / Nilakadalai - Peanuts / Groundnuts"
+    ]
+  },
+  {
+    "category": "Oils & Ghee (Ennai & Nei)",
+    "items": [
+      "Nallennai - Gingelly oil / Sesame oil",
+      "Kadalai ennai - Groundnut oil",
+      "Sunflower ennai - Refined sunflower oil",
+      "Thengai ennai - Coconut oil",
+      "Nei - Pure ghee",
+      "Vilakkennai - Castor oil",
+      "Olive ennai - Olive oil"
+    ]
+  },
+  {
+    "category": "Pantry Staples & Sweeteners",
+    "items": [
+      "Puli - Tamarind",
+      "Vellam - Jaggery block",
+      "Nattu sakkarai - Brown sugar / Cane sugar",
+      "Sakkarai / Seeni - White sugar",
+      "Kal uppu - Crystal salt",
+      "Thool uppu - Table salt",
+      "Indhu uppu - Himalayan pink salt",
+      "Pana karkandu - Palm sugar candy",
+      "Thaen - Honey",
+      "Thengai - Fresh coconut",
+      "Karkandu - Rock sugar candy",
+      "Milk maavu / Milk powder - Milk powder"
+    ]
+  },
+  {
+    "category": "Vegetables (Kaaigal)",
+    "items": [
+      "Vengayam (Chinna/Periya) - Onions (Small/Big)",
+      "Thakkali - Tomatoes",
+      "Urulai kizhangu - Potatoes",
+      "Poondu - Garlic",
+      "Inji - Ginger",
+      "Pachai milagai - Green chillies",
+      "Karuveppilai - Curry leaves",
+      "Kothamalli - Coriander leaves",
+      "Pudina - Mint leaves",
+      "Murungakkai - Drumstick",
+      "Vendakkai - Ladies finger / Okra",
+      "Kathirikai - Brinjal",
+      "Carrot - Carrot",
+      "Beans - Beans",
+      "Muttaikose - Cabbage",
+      "Cauliflower - Cauliflower",
+      "Beetroot - Beetroot",
+      "Chow chow - Chayote",
+      "Pudalangai - Snake gourd",
+      "Peerkangai - Ridge gourd",
+      "Poosanikai (Vellai/Manjal) - Ash/Pumpkin gourd",
+      "Avarakkai - Broad beans",
+      "Keerai vagaigal - Greens (Arai/Mulai/Palak)"
+    ]
+  },
+  {
+    "category": "Fruits (Pazhangal)",
+    "items": [
+      "Vazhaipazham - Bananas",
+      "Aapil - Apple",
+      "Orange - Orange",
+      "Maampazham - Mango",
+      "Mosambi - Sweet lime",
+      "Elumichai - Lemon / Lime",
+      "Draksha - Grapes",
+      "Papali pazham - Papaya",
+      "Maadhulai - Pomegranate",
+      "Tharpoosani - Watermelon"
+    ]
+  },
+  {
+    "category": "Dry Fruits & Nuts (Ular Pazhangal)",
+    "items": [
+      "Mundhiri - Cashews",
+      "Badam - Almonds",
+      "Pista - Pistachios",
+      "Kismis / Ular draksha - Raisins",
+      "Pericham pazham - Dates",
+      "Kopparai - Dried coconut / Copra",
+      "Walnut - Walnuts",
+      "Ellu urundai / Nuts mix - Trail/nut mix"
+    ]
+  },
+  {
+    "category": "Pickles, Vathals & Preserves (Oorugai & Vathal)",
+    "items": [
+      "Maangai oorugai - Raw mango pickle",
+      "Elumichai oorugai - Lemon pickle",
+      "Narthangai oorugai - Citron pickle",
+      "Poondu oorugai - Garlic pickle",
+      "Sundakkai vathal - Turkey berry sun-dried",
+      "Manathakkali vathal - Black nightshade sun-dried",
+      "More milagai - Curd chillies",
+      "Vathal / Vadam - Assorted sun-dried crisps",
+      "Jam - Fruit jam"
+    ]
+  },
+  {
+    "category": "Sauces, Condiments & Baking",
+    "items": [
+      "Tomato sauce - Tomato ketchup",
+      "Chilli sauce - Chilli sauce",
+      "Soya sauce - Soy sauce",
+      "Vinegar - Vinegar",
+      "Cooking soda - Baking soda",
+      "Baking powder - Baking powder",
+      "Eno - Fruit salt",
+      "Vanilla essence - Vanilla essence",
+      "Food color - Food coloring",
+      "China grass / Agar - Agar agar",
+      "Corn flour - Corn starch"
+    ]
+  },
+  {
+    "category": "Beverages & Snacks",
+    "items": [
+      "Coffee thool - Filter coffee powder",
+      "Instant coffee thool - Instant coffee powder",
+      "Tea thool - Tea leaves",
+      "Green tea - Green tea",
+      "Sathumaavu - Health mix powder",
+      "Appalam - Papad",
+      "Vadam / Vathal - Sun-dried crisps",
+      "Biscuit / Rusk - Biscuits / Rusk",
+      "Health drink (Boost/Horlicks) - Malt health drink",
+      "Badam mix - Badam milk mix",
+      "Rasna / Tang - Instant drink mix",
+      "Mixture / Murukku - Savory snacks"
+    ]
+  },
+  {
+    "category": "Dairy, Eggs & Perishables",
+    "items": [
+      "Paal - Milk",
+      "Thayir - Curd / Yogurt",
+      "Vennai - Butter",
+      "Paneer - Cottage cheese",
+      "Muttai - Eggs",
+      "Cheese - Cheese",
+      "Khova / Therattipaal - Milk solids",
+      "Ice cream - Ice cream"
+    ]
+  },
+  {
+    "category": "Pooja Room (Pooja Arai)",
+    "items": [
+      "Karpooram - Camphor",
+      "Oothubathi - Incense sticks",
+      "Sambrani - Benzoin resin / Sambrani cups",
+      "Vilakku ennai / Nallennai - Lamp oil",
+      "Pooja manjal / Kungumam - Turmeric / Kumkum",
+      "Thiri - Cotton wicks",
+      "Sandhanam - Sandalwood powder/paste",
+      "Thee petti - Matchbox",
+      "Vetrilai paaku - Betel leaves & areca nut",
+      "Manjal thandu - Turmeric root",
+      "Kumkum chimizh - Kumkum holder refill",
+      "Rangoli / Maakolam podi - Kolam powder"
+    ]
+  },
+  {
+    "category": "Cleaning Supplies (Suttham)",
+    "items": [
+      "Paathiram theikkum soap/liquid - Dishwash bar/liquid",
+      "Paathiram theikkum nar - Dishwash scrub pad",
+      "Thuni thuvaikkum thool/liquid - Laundry detergent powder/liquid",
+      "Thuni bleach / Ujala - Fabric whitener/conditioner",
+      "Tharai thudaikkum liquid - Floor cleaner liquid",
+      "Toilet cleaner - Toilet cleaner liquid",
+      "Glass cleaner - Glass cleaner spray",
+      "Thennai thudappam - Coconut broom",
+      "Poo thudappam - Soft broom",
+      "Mop - Floor mop",
+      "Kuppai pai - Garbage bags",
+      "Car wash shampoo - Car wash liquid",
+      "Microfiber thuni - Microfiber cloth"
+    ]
+  },
+  {
+    "category": "Kitchen Disposables & Consumables",
+    "items": [
+      "Aluminium foil - Aluminium foil",
+      "Cling wrap - Cling film",
+      "Butter paper - Parchment/butter paper",
+      "Tissue paper - Tissue / napkins",
+      "Kitchen towel roll - Paper towels",
+      "Ziplock covers - Ziplock bags",
+      "Straw / Disposable cups - Disposable cups & straws",
+      "Candle - Candles"
+    ]
+  },
+  {
+    "category": "Toiletries & Personal Care",
+    "items": [
+      "Kulikira soap - Bathing soap",
+      "Shampoo - Shampoo",
+      "Shikakai thool - Shikakai powder",
+      "Palthuukkum paste - Toothpaste",
+      "Palthuukkum brush - Toothbrush",
+      "Thalai ennai - Hair oil",
+      "Shaving cream - Shaving cream",
+      "Shaving razor / blade - Razor and blades",
+      "Kai kazhuvum liquid - Hand wash",
+      "Mugathukku podum powder - Talcum powder",
+      "Body lotion - Moisturizer",
+      "Sanitary pads - Sanitary napkins",
+      "Face wash - Face wash",
+      "Deodorant - Deodorant",
+      "Comb - Comb",
+      "Nail cutter - Nail cutter",
+      "Cotton buds - Ear buds"
+    ]
+  },
+  {
+    "category": "Electricals",
+    "items": [
+      "LED bulb - Spare LED bulbs",
+      "Extension cord - Extension cord",
+      "Insulation tape - Electrical tape",
+      "Battery (AA/AAA) - Batteries",
+      "Kosuvatty charger - Mosquito bat charger",
+      "Plug pin / Socket - Spare plugs"
+    ]
+  },
+  {
+    "category": "Hardware & Tools (Karuvi)",
+    "items": [
+      "Suthiyal - Hammer",
+      "Screwdriver set - Screwdriver set",
+      "Kuraadu - Pliers",
+      "Spanner - Wrench / Spanner",
+      "Measuring tape - Measuring tape",
+      "Aani - Assorted nails and screws",
+      "Pasai / Fevikwik - Instant glue",
+      "Double-sided tape - Double-sided tape",
+      "Cello tape - Transparent tape"
+    ]
+  },
+  {
+    "category": "First Aid & Wellness (Muthal Udhavi)",
+    "items": [
+      "Band-aid - Adhesive bandages",
+      "Dettol / Savlon - Antiseptic liquid",
+      "Thalai vali balm - Pain relief balm",
+      "Panju - Cotton roll",
+      "Kaaichal maathirai - Paracetamol",
+      "Gas maathirai - Antacids (Digene/Gelusil)",
+      "Nilagiri thailam - Eucalyptus oil",
+      "Kattu thuni - Crepe bandage",
+      "Thermometer - Digital thermometer"
+    ]
+  },
+  {
+    "category": "Pest Control & Hygiene",
+    "items": [
+      "Kosu marunthu liquid - Mosquito repellent vaporizer",
+      "Kosu surul - Mosquito coils",
+      "Rasam karpooram / Puchi urundai - Naphthalene balls",
+      "Erumbu powder / Chalk - Ant chalk",
+      "Karappaanpoochi spray - Cockroach spray",
+      "Eli marunthu - Rat poison / trap"
+    ]
+  }
+]

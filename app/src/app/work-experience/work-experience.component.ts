@@ -91,7 +91,9 @@ export class WorkExperienceComponent {
       this.router.navigate(['mini-projects']);
     } else if(project === 'chatbot') {
       this.router.navigate(['ai-agent']);
-    } else {
+    } else if(project == 'stock'){
+      this.router.navigate(['stocks-tracking'])
+    }else {
       console.warn('navigateProject called with unexpected project:', project);
     }
   }

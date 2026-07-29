@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "types": ["node", "react", "react-dom"]
+  },
+  "include": [
+    "app/src/**/*.ts",
+    "app/src/**/*.tsx",
+    "app/src/**/*.js",
+    "app/src/**/*.jsx",
+    "app/src/**/*.d.ts"
+  ],
+  "exclude": [
+    "app/dist",
+    "app/node_modules"
+  ]
+}
