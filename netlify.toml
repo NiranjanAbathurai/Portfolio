@@ -28,4 +28,4 @@
 # Scheduled function for daily expiry notifications
 [functions."expiry-notification"]
   # This is a cron expression that means "at 11:40 AM UTC every day" (5:10 PM IST)
-  schedule = "40 11 * * *"
+  schedule = "0 12 * * *"
