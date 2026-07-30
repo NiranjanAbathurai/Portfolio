@@ -5,25 +5,19 @@
 
 // To use Supabase and EmailJS, you'll need to install them in your project:
 // npm install @supabase/supabase-js @emailjs/nodejs
-const { createClient } = require('@supabase/supabase-js');
-const emailjs = require('@emailjs/nodejs');
 
-// Load .env when running locally
+// Load .env when running locally (must be before importing config that reads process.env)
 try { require('dotenv').config(); } catch (e) {}
 
-// Supabase config - should be in environment variables
-const SUPABASE_URL = process.env.SUPABASE_URL;
-// IMPORTANT: Use the Service Role Key for admin-level access in backend functions.
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const { createClient } = require('@supabase/supabase-js');
+const emailjs = require('@emailjs/nodejs');
+const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = require('./supabase-config');
 
-// EmailJS config - should be in environment variables
+// EmailJS config
 const EMAILJS_SERVICE_ID = 'service_jzegqtm';
 const EMAILJS_TEMPLATE_ID = 'template_35vnbvu'; // A specific template for expiry notifications
 const EMAILJS_PUBLIC_KEY = 'rPoWSI2KJiDg4uFaI';
 const EMAILJS_PRIVATE_KEY = 'bT2hT100y3cLHH83zsT7v';
-
-// Initialize Supabase client
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 exports.handler = async (event, context) => {
   console.log('Running daily expiry check...');
@@ -37,6 +31,9 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ error: errorMessage }),
     };
   }
+
+  // Initialize Supabase client inside handler (after env vars are available)
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   try {
     // 2. Get today's date in YYYY-MM-DD format
