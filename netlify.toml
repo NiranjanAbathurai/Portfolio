@@ -1,8 +1,12 @@
 [build]
-     base = "app"
-    command = "npm run build:prod"
+    base = "app"
+    command = "cd netlify/functions && npm install && cd ../.. && npm run build:prod"
     publish = "dist/browser"
     functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
 [[redirects]]
     from = "/api/*"
     to = "/.netlify/functions/agent/:splat"
