@@ -1,0 +1,346 @@
+import { useRef, useState } from 'react';
+import type { HomeItem, CatalogCategory } from './types';
+
+type HomeAccordionProps = {
+  home: HomeItem;
+  catalog: CatalogCategory[];
+  catalogLoading: boolean;
+  isParsingBill: boolean;
+  isAnotherHomeFocused: boolean;
+  onToggle: (id: number) => void;
+  onDelete: (id: number) => void;
+  onUpdateName: (id: number, name: string) => void;
+  onAddProduct: (homeId: number) => void;
+  onDeleteProduct: (homeId: number, productId: number) => void;
+  onUpdateProduct: (homeId: number, productId: number, fields: Partial<HomeItem['products'][number]>) => void;
+  onUpdateFilters: (homeId: number, filters: Partial<HomeItem['filters']>) => void;
+  onBillUpload: (homeId: number, event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSetFocusedHome: (homeId: number | null) => void;
+};
+
+export const HomeAccordion = (props: HomeAccordionProps) => {
+  const {
+    home,
+    catalog,
+    catalogLoading,
+    isParsingBill,
+    isAnotherHomeFocused,
+    onToggle,
+    onDelete,
+    onUpdateName,
+    onAddProduct,
+    onDeleteProduct,
+    onUpdateProduct,
+    onUpdateFilters,
+    onBillUpload,
+    onSetFocusedHome,
+  } = props;
+
+  const [editingHomeId, setEditingHomeId] = useState<number | null>(null);
+  const [currentEditingHomeName, setCurrentEditingHomeName] = useState('');
+  const [activeStockTypeDropdown, setActiveStockTypeDropdown] = useState<number | null>(null);
+  const [pendingUpdateIds, setPendingUpdateIds] = useState<number[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUpdateHomeName = (id: number) => {
+    onUpdateName(id, currentEditingHomeName);
+    setEditingHomeId(null);
+    setCurrentEditingHomeName('');
+  };
+
+  const handleConfirmUpdate = (productId: number) => {
+    setPendingUpdateIds(prev => prev.filter(id => id !== productId));
+  };
+
+  const filteredProducts = home.products.filter(p => {
+    const availabilityMatch = home.filters.availability === 'all' ||
+                              (home.filters.availability === 'unavailable' && p.availability === 'No') ||
+                              (home.filters.availability === 'unavailable' && pendingUpdateIds.includes(p.id));
+    const stockTypeMatch = home.filters.stockType === 'all' || p.stockType === home.filters.stockType;
+    return availabilityMatch && stockTypeMatch;
+  });
+
+  const hasActiveFilters = home.filters.availability !== 'all' || home.filters.stockType !== 'all';
+  const showNoProductsYetMessage = !hasActiveFilters && home.products.length === 0;
+  const showNoMatchingProductsMessage = hasActiveFilters && filteredProducts.length === 0 && home.products.length > 0;
+  const showEmptyMessage = showNoProductsYetMessage || showNoMatchingProductsMessage;
+
+  return (
+    <div style={{ border: '1px solid #1db954', borderRadius: '0', marginBottom: '0.75rem' }} role="region" aria-labelledby={`home-header-${home.id}`}>
+      {/* Hidden file input for bill uploads */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        accept="image/*"
+        onChange={(e) => onBillUpload(home.id, e)}
+      />
+      <div
+        onClick={() => onToggle(home.id)}
+        style={{
+          width: '100%',
+          background: isAnotherHomeFocused ? '#000' : '#222',
+          color: '#fff',
+          border: 'none',
+          padding: '0.9rem 1rem',
+          textAlign: 'left',
+          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}
+      >
+        {editingHomeId === home.id ? (
+          <input
+            value={currentEditingHomeName}
+            onChange={(e) => setCurrentEditingHomeName(e.target.value)}
+            style={{
+              background: '#fff', color: '#111', border: '1px solid #1db954',
+              borderRadius: '4px', padding: '0.2rem 0.4rem', boxSizing: 'border-box', width: '150px'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          />
+        ) : (
+          <span id={`home-header-${home.id}`} style={{ fontSize: '1.25rem', fontWeight: '600', flexGrow: 1 }}>{home.name}</span>
+        )}
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {editingHomeId === home.id ? (
+            <>
+              <button type="button" onClick={(e) => { e.stopPropagation(); handleUpdateHomeName(home.id); }} style={{ background: '#1db954', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '14px' }} title="Save Home Name">
+                Save
+              </button>
+              <button type="button" onClick={(e) => { e.stopPropagation(); setEditingHomeId(null); setCurrentEditingHomeName(''); }} style={{ background: '#444', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '14px' }} title="Cancel Edit">
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEditingHomeId(home.id);
+                  setCurrentEditingHomeName(home.name);
+                }}
+                style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }}
+                title="Edit Home Name"
+              >
+                ✏️
+              </button>
+              <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(home.id); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }} title="Delete Home">
+                🗑️
+              </button>
+            </>
+          )}
+          <span>{home.expanded ? '−' : '+'}</span>
+        </div>
+      </div>
+
+      {home.expanded && (
+        <div style={{
+          padding: '0.75rem 1.5rem',
+          background: isAnotherHomeFocused ? '#000' : '#181818'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.75rem', gap: '0.5rem' }}>
+            <select
+              value={home.filters.stockType}
+              onChange={(e) => onUpdateFilters(home.id, { stockType: e.target.value })}
+              style={{ background: '#333', color: '#fff', border: '1px solid #555', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer' }}
+              disabled={catalogLoading}
+            >
+              <option value="all">All Stock Types</option>
+              {catalog.map(cat => (
+                <option key={cat.id} value={cat.name}>{cat.name}</option>
+              ))}
+            </select>
+            <button type="button" onClick={() => onUpdateFilters(home.id, { availability: home.filters.availability === 'all' ? 'unavailable' : 'all' })} style={{ background: '#f0ad4e', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer' }}>
+              {home.filters.availability === 'all' ? 'Show Unavailable' : 'Show All'}
+            </button>
+            <button type="button" onClick={() => { onSetFocusedHome(home.id); fileInputRef.current?.click(); }} disabled={isParsingBill} style={{ background: '#5bc0de', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: isParsingBill ? 0.6 : 1 }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 14.5 0zM11 3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 11 3m-3 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 3m-3 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 5 3m-2 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m10-4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5m0 2a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5m0 2a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5m-5-6a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2a.5.5 0 0 1 .5-.5"/>
+              </svg>
+              {isParsingBill ? 'Parsing...' : 'Add from Bill'}
+            </button>
+            <button type="button" onClick={() => onAddProduct(home.id)} style={{ background: '#1db954', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer' }}>
+              + Add Product
+            </button>
+          </div>
+
+          <div style={{ overflowX: activeStockTypeDropdown !== null ? 'visible' : 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', color: '#fff' }}>
+              <thead>
+                <tr style={{ background: '#222' }}>
+                  <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444' }}>S.No</th>
+                  <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444' }}>Type of Stock <span style={{ color: 'red' }}>*</span></th>
+                  <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444' }}>Product <span style={{ color: 'red' }}>*</span></th>
+                  <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444' }}>Availability <span style={{ color: 'red' }}>*</span></th>
+                  <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444', width: '80px' }}>Quantity</th>
+                  <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444', width: '120px' }}>Expire Date</th>
+                  <th style={{ padding: '0.6rem', textAlign: 'center', borderBottom: '1px solid #444' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {showEmptyMessage ? (
+                  <tr>
+                    <td colSpan={7} style={{ padding: '1rem', textAlign: 'center', color: '#aaa', borderBottom: '1px solid #333' }}>
+                      {showNoProductsYetMessage ? 'No products yet.' : 'No products match the current filters.'}
+                    </td>
+                  </tr>
+                ) : (
+                  filteredProducts.map((product, index) => (
+                    <tr 
+                      key={product.id} 
+                      style={{ 
+                        backgroundColor: product.isExpired ? 'rgba(255, 77, 77, 0.2)' : 'transparent' 
+                      }}
+                    >
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>{index + 1}</td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
+                        <div style={{ position: 'relative' }}>
+                          <input
+                            value={product.stockType}
+                            onChange={(e) => {
+                              onUpdateProduct(home.id, product.id, { stockType: e.target.value });
+                              if (activeStockTypeDropdown !== product.id) {
+                                setActiveStockTypeDropdown(product.id);
+                              }
+                            }}
+                            onFocus={() => setActiveStockTypeDropdown(product.id)}
+                            onBlur={() => {
+                              setTimeout(() => {
+                                const isValid = catalog.some(c => c.name.toLowerCase() === product.stockType.toLowerCase());
+                                if (!isValid && product.stockType !== '') {
+                                  onUpdateProduct(home.id, product.id, { stockType: '', product: '' });
+                                }
+                                setActiveStockTypeDropdown(null);
+                              }, 150);
+                            }}
+                            placeholder={catalogLoading ? 'Loading...' : 'Search type...'}
+                            style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box' }}
+                            disabled={catalogLoading}
+                            autoComplete="off"
+                          />
+                          {activeStockTypeDropdown === product.id && (
+                            <div style={{
+                              position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: '#fff',
+                              border: '1px solid #ccc', borderRadius: '4px', marginTop: '2px',
+                              maxHeight: '150px', overflowY: 'auto', zIndex: 999, color: '#111'
+                            }}>
+                              {(() => {
+                                const filteredCatalog = catalog.filter(cat =>
+                                  product.stockType ? cat.name.toLowerCase().includes(product.stockType.toLowerCase()) : true
+                                );
+
+                                if (filteredCatalog.length === 0) {
+                                  return <div style={{ padding: '0.5rem', color: '#888' }}>No matches found</div>;
+                                }
+
+                                return filteredCatalog.map(cat => (
+                                  <div
+                                    key={cat.id}
+                                    onMouseDown={() => {
+                                      onUpdateProduct(home.id, product.id, { stockType: cat.name, product: '' });
+                                    }}
+                                    style={{ padding: '0.5rem', cursor: 'pointer' }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
+                                  >{cat.name}</div>
+                                ));
+                              })()}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
+                        <div style={{ position: 'relative' }}>
+                          <input
+                            value={product.product}
+                            onChange={(e) => onUpdateProduct(home.id, product.id, { product: e.target.value })}
+                            style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box' }}
+                            list={`product-list-${product.id}`}
+                            disabled={!product.stockType}
+                          />
+                          <datalist id={`product-list-${product.id}`}>
+                            {catalog.find(cat => cat.name === product.stockType)?.items.map(item => (
+                              <option key={item.id} value={item.name} />
+                            ))}
+                          </datalist>
+                        </div>
+                      </td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', margin: '0' }}>
+                            <input type="radio" style={{ marginTop: '4px' }} name={`availability-${product.id}`} value="Yes" checked={product.availability === 'Yes'} onChange={(e) => {
+                              if (product.availability === 'No') {
+                                setPendingUpdateIds(prev => [...prev, product.id]);
+                              }
+                              onUpdateProduct(home.id, product.id, { availability: e.target.value as 'Yes', isExpired: false });
+                            }} />
+                            Yes
+                          </label>
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', margin: '0' }}>
+                            <input type="radio" style={{ marginTop: '4px' }} name={`availability-${product.id}`} value="No" checked={product.availability === 'No'} onChange={(e) => {
+                              setPendingUpdateIds(prev => prev.filter(id => id !== product.id));
+                              onUpdateProduct(home.id, product.id, {
+                                availability: 'No',
+                                quantity: '',
+                                expiryDate: '',
+                                isExpired: false
+                              });
+                            }} />
+                            No
+                          </label>
+                        </div>
+                      </td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
+                        <input type="text" value={product.quantity} onChange={(e) => onUpdateProduct(home.id, product.id, { quantity: e.target.value })} disabled={product.availability === 'No'} style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#eee' : '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
+                      </td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
+                        <input
+                          type={product.expiryDate ? 'date' : 'text'}
+                          placeholder="DD-MM-YYYY"
+                          onFocus={(e) => (e.currentTarget.type = 'date')}
+                          onBlur={(e) => {
+                            if (!e.currentTarget.value) {
+                              e.currentTarget.type = 'text';
+                            }
+                          }}
+                          value={product.expiryDate}
+                          onChange={(e) => onUpdateProduct(home.id, product.id, { expiryDate: e.target.value })}
+                          disabled={product.availability === 'No'}
+                          style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#eee' : '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
+                      </td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333', textAlign: 'center' }}>
+                        {pendingUpdateIds.includes(product.id) && (
+                          <button
+                            type="button"
+                            onClick={() => handleConfirmUpdate(product.id)}
+                            style={{ background: 'none', border: 'none', color: '#1db954', cursor: 'pointer', fontSize: '16px', marginRight: '0.5rem' }}
+                            title="Confirm and move to available"
+                          >
+                            ✓
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => onDeleteProduct(home.id, product.id)}
+                          style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }}
+                          title="Delete Product"
+                        >
+                          🗑️
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

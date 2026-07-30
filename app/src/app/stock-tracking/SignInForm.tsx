@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { ReusableInput } from '../shared/ui/ReusableInput';
 import { ReusableButton } from '../shared/ui/ReusableButton';
@@ -10,67 +10,73 @@ type SignInFormValues = {
 };
 
 type SignInFormProps = {
-  onSubmitSuccess: (message: string) => void;
+  onSuccess?: (message: string) => void;
+  onError?: (message: string) => void;
+  onSubmitSuccess?: (message: string) => void; // For backward compatibility
   onSwitchToSignUp: () => void;
   headerGreen: string;
 };
 
-export const SignInForm = ({ onSubmitSuccess, onSwitchToSignUp, headerGreen }: SignInFormProps) => {
-  const [rememberMe, setRememberMe] = useState(false);
+export const SignInForm = (props: SignInFormProps) => {
   const storageKey = 'stock-tracker-session-auth';
+  const { onSwitchToSignUp, headerGreen } = props;
 
-  const getStoredCredentials = () => {
+  const storedCredentials = useMemo(() => {
     if (typeof window === 'undefined') return { email: '', password: '', rememberMe: false };
-
     try {
-      const stored = window.sessionStorage.getItem(storageKey);
+      const stored = window.localStorage.getItem(storageKey);
       if (!stored) return { email: '', password: '', rememberMe: false };
-
       const parsed = JSON.parse(stored) as { email?: string; password?: string; rememberMe?: boolean };
       return {
         email: parsed.email ?? '',
         password: parsed.password ?? '',
         rememberMe: parsed.rememberMe ?? false,
       };
-    } catch {
+    } catch (e) {
+      console.error("Failed to parse stored credentials:", e);
       return { email: '', password: '', rememberMe: false };
     }
-  };
+  }, []);
+
+  const [rememberMe, setRememberMe] = useState(storedCredentials.rememberMe);
 
   const signInForm = useForm<SignInFormValues>({
     defaultValues: {
-      email: getStoredCredentials().email,
-      password: getStoredCredentials().password,
+      email: storedCredentials.email,
+      password: storedCredentials.password,
     }
   });
 
   useEffect(() => {
-    const stored = getStoredCredentials();
-    if (stored.rememberMe) {
-      setRememberMe(true);
-      signInForm.setValue('email', stored.email);
-      signInForm.setValue('password', stored.password);
+    if (storedCredentials.rememberMe) {
+      signInForm.setValue('email', storedCredentials.email);
+      signInForm.setValue('password', storedCredentials.password);
     }
-  }, []);
+  }, [storedCredentials, signInForm]);
 
-  const persistCredentials = (data: SignInFormValues) => {
+  const persistCredentials = useCallback((data: SignInFormValues) => {
     if (typeof window === 'undefined') return;
-
     if (rememberMe) {
-      window.sessionStorage.setItem(storageKey, JSON.stringify({ email: data.email, password: data.password, rememberMe: true }));
+      window.localStorage.setItem(storageKey, JSON.stringify({ email: data.email, password: data.password, rememberMe: true }));
     } else {
-      window.sessionStorage.removeItem(storageKey);
+      window.localStorage.removeItem(storageKey);
     }
-  };
+  }, [rememberMe]);
 
   const onSubmit = async (data: SignInFormValues) => {
     try {
       await loginUser(data.email, data.password);
       persistCredentials(data);
-      onSubmitSuccess(`Welcome back, ${data.email}!`);
+      const successMessage = `Welcome back, ${data.email}!`;
+      props.onSuccess?.(successMessage);
+      props.onSubmitSuccess?.(successMessage); // Call old prop if it exists
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Login failed';
-      onSubmitSuccess(message);
+      props.onError?.(message);
+      // The old prop was used for both success and error, so we call it here too.
+      if (props.onSubmitSuccess) {
+        props.onSubmitSuccess(message);
+      }
     }
   };
 
@@ -111,7 +117,7 @@ export const SignInForm = ({ onSubmitSuccess, onSwitchToSignUp, headerGreen }: S
               const checked = e.target.checked;
               setRememberMe(checked);
               if (!checked) {
-                window.sessionStorage.removeItem(storageKey);
+                window.localStorage.removeItem(storageKey);
               }
             }}
           />

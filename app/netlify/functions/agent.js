@@ -174,6 +174,24 @@ const PORTFOLIO_SYSTEM_PROMPT = `You are Niranjan's portfolio assistant — a fr
 - Keep responses focused; avoid long generic essays.`;
 
 // ============================================================
+// NEW: System prompt for parsing bills
+// ============================================================
+const BILL_PARSER_SYSTEM_PROMPT = `You are an intelligent assistant that extracts structured data from images of grocery bills or receipts.
+
+Your task is to analyze the provided image and identify all purchased items.
+
+## Rules:
+1.  **Identify Key Information**: For each item, extract the product name and quantity.
+2.  **Categorize**: Assign a relevant 'stockType' from the following list: "Fruits & Vegetables", "Meat & Seafood", "Dairy & Eggs", "Bakery & Bread", "Pantry Staples", "Snacks", "Beverages", "Frozen Foods", "Household & Cleaning", "Personal Care", "Other". If you cannot determine a category, use "Other".
+3.  **Output Format**: You MUST return the data as a single, minified JSON array. Do not include any other text, explanations, or markdown formatting like \`\`\`json. Your entire response should be only the JSON array.
+4.  **JSON Structure**: Each object in the array must have these exact keys: \`product\` (string), \`quantity\` (string), \`stockType\` (string).
+5.  **Accuracy**: Be as accurate as possible. If an item is unclear, do your best to interpret it or omit it if it's unreadable. Do not invent items.
+6.  **Escape Quotes**: If a product name or any other string value contains double quotes ("), you MUST escape them with a backslash (e.g., "12\\" pizza").
+
+## Example Output:
+[{"product":"Organic Bananas","quantity":"1.5 lbs","stockType":"Fruits & Vegetables"},{"product":"Whole Milk 1gal","quantity":"1","stockType":"Dairy & Eggs"},{"product":"Sourdough Loaf","quantity":"1","stockType":"Bakery & Bread"}]
+`;
+// ============================================================
 // TOOL EXECUTION
 // ============================================================
 function executeTool(toolName, toolInput) {
@@ -535,9 +553,10 @@ async function handleChat(body) {
   const { messages, system, agentSlug } = body;
 
   if (!GEMINI_API_KEY || GEMINI_API_KEY === 'your-gemini-api-key-here') {
+    console.error('handleChat: GEMINI_API_KEY is missing or is the placeholder value.');
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: 'Gemini API key not configured. Please set GEMINI_API_KEY environment variable.' })
+      body: JSON.stringify({ error: 'Gemini API key not configured on the server. Please set the GEMINI_API_KEY environment variable.' })
     };
   }
 
@@ -589,6 +608,12 @@ async function handleChat(body) {
           })
         };
       }
+      if (response.status === 401 || response.status === 403) {
+        return {
+            statusCode: response.status,
+            body: JSON.stringify({ error: `Gemini API Authorization Error: The API key is invalid or missing permissions. Please check your server's environment variables.` })
+        };
+      }
       return {
         statusCode: response.status,
         body: JSON.stringify({ error: `Gemini API Error: ${errorData}` })
@@ -632,15 +657,119 @@ async function handleChat(body) {
   }
 }
 
+// NEW: Handler for parsing bills
+async function handleParseBill(body) {
+  const { image } = body;
+
+  if (!image) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'No image data provided.' }) };
+  }
+
+  if (!GEMINI_API_KEY || GEMINI_API_KEY === 'your-gemini-api-key-here') {
+    console.error('handleParseBill: GEMINI_API_KEY is missing or is the placeholder value.');
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Gemini API key not configured on the server. Please set the GEMINI_API_KEY environment variable.' })
+    };
+  }
+
+  try {
+    const geminiContents = [
+      {
+        role: 'user',
+        parts: [
+          {
+            inlineData: {
+              mimeType: 'image/jpeg', // Assuming jpeg, but could be png etc.
+              data: image
+            }
+          },
+          { text: 'Extract all items from this receipt and return them as a JSON array.' }
+        ]
+      }
+    ];
+
+    const requestBody = {
+      contents: geminiContents,
+      generationConfig: {
+        maxOutputTokens: 4096,
+        temperature: 0.2, // Lower temperature for more deterministic, structured output
+        responseMimeType: "application/json", // Request JSON output directly
+      },
+      systemInstruction: {
+        parts: [{ text: BILL_PARSER_SYSTEM_PROMPT }]
+      }
+    };
+
+    const apiUrl = `${GEMINI_BASE_URL}/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+
+    const response = await fetchWithRetry(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("Gemini API Error:", errorData);
+      if (response.status === 401 || response.status === 403) {
+          return {
+              statusCode: response.status,
+              body: JSON.stringify({ error: `Gemini API Authorization Error: The API key is invalid or missing permissions. Please check your server's environment variables.` })
+          };
+      }
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ error: `Gemini API Error: ${errorData}` })
+      };
+    }
+
+    const data = await response.json();
+    const candidate = data.candidates && data.candidates[0];
+
+    if (!candidate || !candidate.content || !candidate.content.parts[0] || !candidate.content.parts[0].text) {
+      console.error("Invalid Gemini Response:", data);
+      return { statusCode: 500, body: JSON.stringify({ error: 'Invalid or empty response from AI.' }) };
+    }
+
+    // Because we requested "application/json", the text should be a valid JSON string.
+    let jsonText = candidate.content.parts[0].text;
+
+    // Defensive cleanup: AI can sometimes wrap the JSON in markdown or add extra text.
+    // We'll try to extract the first valid JSON array or object from the response.
+    const jsonMatch = jsonText.match(/(\[.*\]|\{.*\})/s);
+    if (jsonMatch) {
+      jsonText = jsonMatch[0];
+    } else {
+      console.error("AI response did not contain a recognizable JSON structure:", jsonText);
+      return { statusCode: 500, body: JSON.stringify({ error: 'AI response was not in the expected JSON format.' }) };
+    }
+
+    const parsedJson = JSON.parse(jsonText); // This can still fail if the JSON itself is malformed (e.g. unescaped quotes)
+    return {
+      statusCode: 200,
+      body: JSON.stringify(parsedJson)
+    };
+
+  } catch (error) {
+    console.error("Server error in handleParseBill:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: `Server error: ${error.message}` })
+    };
+  }
+}
+
 // POST /api/chat/agent (agentic with SSE streaming)
 async function handleAgentChat(body) {
   const { messages, agentSlug, system } = body;
 
   if (!GEMINI_API_KEY || GEMINI_API_KEY === 'your-gemini-api-key-here') {
+    console.error('handleAgentChat: GEMINI_API_KEY is missing or is the placeholder value.');
     return {
       statusCode: 400,
       headers: { 'Content-Type': 'text/event-stream' },
-      body: `data: ${JSON.stringify({ type: 'error', message: 'Gemini API key not configured.' })}\n\n`
+      body: `data: ${JSON.stringify({ type: 'error', message: 'Gemini API key not configured on the server. Please set the GEMINI_API_KEY environment variable.' })}\n\n`
     };
   }
 
@@ -711,7 +840,11 @@ async function handleAgentChat(body) {
 
       if (!response.ok) {
         const errorData = await response.text();
-        sendEvent('error', { message: `Gemini API Error ${response.status}: ${errorData}` });
+        let errorMessage = `Gemini API Error ${response.status}: ${errorData}`;
+        if (response.status === 401 || response.status === 403) {
+            errorMessage = `Gemini API Authorization Error: The API key is invalid or missing permissions. Please check your server's environment variables.`;
+        }
+        sendEvent('error', { message: errorMessage });
         break;
       }
 
@@ -901,6 +1034,9 @@ exports.handler = async (event, context) => {
     } else if (method === 'POST' && (route === 'chat/agent')) {
       const body = JSON.parse(event.body || '{}');
       result = await handleAgentChat(body);
+    } else if (method === 'POST' && route === 'stock-tracker/parse-bill') {
+      const body = JSON.parse(event.body || '{}');
+      result = await handleParseBill(body);
     } else {
       result = {
         statusCode: 404,

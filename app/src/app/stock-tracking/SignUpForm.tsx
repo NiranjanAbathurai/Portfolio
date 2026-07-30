@@ -11,12 +11,14 @@ type RegisterFormValues = {
 };
 
 type SignUpFormProps = {
-  onSubmitResult: (message: string, isSuccess: boolean) => void;
+  onSuccess?: (message: string) => void;
+  onError?: (message: string) => void;
+  onSubmitResult?: (message: string, isSuccess: boolean) => void; // For backward compatibility
   onSwitchToSignIn: () => void;
   headerGreen: string;
 };
 
-export const SignUpForm = ({ onSubmitResult, onSwitchToSignIn, headerGreen }: SignUpFormProps) => {
+export const SignUpForm = (props: SignUpFormProps) => {
   const registerForm = useForm<RegisterFormValues>({
     defaultValues: {
       username: '',
@@ -25,17 +27,19 @@ export const SignUpForm = ({ onSubmitResult, onSwitchToSignIn, headerGreen }: Si
       confirmPassword: ''
     }
   });
-
-  const password = registerForm.watch('password');
+  const { onSwitchToSignIn, headerGreen } = props;
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
       await signUpUser(data.username, data.email, data.password);
-      onSubmitResult(`Account created for ${data.username}.`, true);
+      const successMessage = `Account created for ${data.username}. Please check your email to verify your account.`;
+      props.onSuccess?.(successMessage);
+      props.onSubmitResult?.(successMessage, true); // Call old prop if it exists
       registerForm.reset();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Sign up failed';
-      onSubmitResult(message, false);
+      props.onError?.(message);
+      props.onSubmitResult?.(message, false); // Call old prop if it exists
     }
   };
 

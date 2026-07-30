@@ -1,33 +1,10 @@
 import { useState, useEffect } from 'react';
 // NOTE: This assumes 'supabase' is exported from your authService or another client file.
 // You may need to adjust the import path to your actual Supabase client instance.
-import { supabase } from './supabase';
-
-type CatalogItem = {
-  id: number;
-  name: string;
-};
-
-type CatalogCategory = {
-  id: number;
-  name: string;
-  items: CatalogItem[];
-};
-
-type HomeItem = {
-  id: number;
-  name: string;
-  expanded: boolean;
-  filter: 'all' | 'unavailable';
-  products: Array<{
-    id: number;
-    stockType: string;
-    product: string;
-    quantity: string;
-    expiryDate: string;
-    availability: string;
-  }>;
-};
+import { supabase } from './supabase-database';
+import * as api from './homeApi';
+import { HomeAccordion } from './HomeAccordion';
+import type { HomeItem, CatalogCategory } from './types';
 
 type StockTrackerDashboardProps = {
   onLogout: () => void;
@@ -37,12 +14,12 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
   const [homes, setHomes] = useState<HomeItem[]>([]);
   const [newHomeName, setNewHomeName] = useState('');
   const [showAddHome, setShowAddHome] = useState(false);
-  const [editingHomeId, setEditingHomeId] = useState<number | null>(null);
-  const [currentEditingHomeName, setCurrentEditingHomeName] = useState('');
   const [focusedHomeId, setFocusedHomeId] = useState<number | null>(null);
   const [catalog, setCatalog] = useState<CatalogCategory[]>([]);
   const [catalogLoading, setCatalogLoading] = useState<boolean>(true);
   const [catalogError, setCatalogError] = useState<string | null>(null);
+  const [isParsingBill, setIsParsingBill] = useState<number | null>(null); // Store homeId being processed
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
   useEffect(() => {
     const getCatalog = async () => {
@@ -65,53 +42,98 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
         setCatalogLoading(false);
       }
     };
+
+    const loadInitialData = async () => {
+      setIsDataLoading(true);
+      try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to beginning of the day for accurate comparison
+
+        const homesFromApi = await api.getHomesWithProducts();
+        const formattedHomes = homesFromApi.map((home:any) => ({
+          ...home,
+          expanded: false,
+          filters: { availability: 'all', stockType: 'all' },
+          // Map snake_case from DB to camelCase for component state
+          products: (home.products || []).map((p: any) => {
+            const expiryDate = p.expiry_date ? new Date(p.expiry_date) : null;
+            const isExpired = expiryDate && expiryDate < today;
+            const availability = (isExpired && p.availability === 'Yes') ? 'No' : p.availability;
+
+            return {
+              id: p.id,
+              stockType: p.stock_type,
+              product: p.product,
+              quantity: availability === 'No' ? '' : p.quantity,
+              expiryDate: availability === 'No' ? '' : p.expiry_date,
+              availability: availability as HomeItem['products'][number]['availability'],
+              isExpired: isExpired && p.availability === 'Yes', // Flag it only if we auto-changed it
+            };
+          }),
+        }));
+        setHomes(formattedHomes);
+      } catch (err: any) {
+        console.error("Error fetching homes:", err);
+        setCatalogError("Failed to load your homes. Please try again later.");
+      } finally {
+        setIsDataLoading(false);
+      }
+    };
     getCatalog();
+    loadInitialData();
   }, []);
 
-  const addHome = () => {
+  const addHome = async () => {
     const trimmed = newHomeName.trim();
     if (!trimmed) return;
 
-    setHomes((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        name: trimmed,
+    try {
+      const newHomeFromApi = await api.addHome(trimmed);
+      const newHome = {
+        ...newHomeFromApi,
         expanded: true,
-        filter: 'all',
+        filters: { availability: 'all', stockType: 'all' },
         products: [],
-      },
-    ]);
-    setNewHomeName('');
-    setFocusedHomeId(null);
-    setEditingHomeId(null); // Clear editing state if adding a new home
-    setShowAddHome(false);
+      };
+      setHomes((prev) => [...prev, newHome]);
+      setNewHomeName('');
+      setFocusedHomeId(null);
+      setShowAddHome(false);
+    } catch (error) {
+      console.error("Error adding home:", error);
+      alert("Failed to add home.");
+    }
   };
 
-  const deleteHome = (id: number) => {
+  const deleteHome = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this home and all its products?')) {
-      setHomes((prev) => prev.filter((home) => home.id !== id));
-      if (focusedHomeId === id) {
-        setFocusedHomeId(null);
-      }
-      if (editingHomeId === id) {
-        setEditingHomeId(null);
-        setCurrentEditingHomeName('');
+      try {
+        await api.removeHome(id);
+
+        setHomes((prev) => prev.filter((home) => home.id !== id));
+        if (focusedHomeId === id) {
+          setFocusedHomeId(null);
+        }
+      } catch (error) {
+        console.error("Error deleting home:", error);
+        alert("Failed to delete home.");
       }
     }
   };
 
-  const updateHomeName = (id: number) => {
-    const trimmed = currentEditingHomeName.trim();
+  const updateHomeName = async (id: number, name: string) => {
+    const trimmed = name.trim();
     if (!trimmed) {
       alert('Home name cannot be empty.');
       return;
     }
-    setHomes((prev) =>
-      prev.map((home) => (home.id === id ? { ...home, name: trimmed } : home))
-    );
-    setEditingHomeId(null);
-    setCurrentEditingHomeName('');
+    try {
+      await api.updateHomeName(id, trimmed);
+      setHomes((prev) => prev.map((home) => (home.id === id ? { ...home, name: trimmed } : home)));
+    } catch (error) {
+      console.error("Error updating home name:", error);
+      alert("Failed to update home name.");
+    }
   };
 
   const toggleHome = (id: number) => {
@@ -123,67 +145,214 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
     setHomes((prev) => prev.map((home) => (home.id === id ? { ...home, expanded: !home.expanded } : home)));
   };
 
-  const addProduct = (homeId: number) => {
+  const addProduct = async (homeId: number) => {
     const home = homes.find(h => h.id === homeId);
     if (!home) return;
     setFocusedHomeId(homeId);
 
-    const isInvalid = home.products.some(p => !p.stockType || !p.product.trim() || !p.availability);
+    const isInvalid = home.products.some(p => !p.stockType || !p.product.trim() || !p.availability.trim());
     if (isInvalid) {
       alert('Please fill in all mandatory fields (Type of Stock, Product, and Availability) for existing products before adding a new one.');
       return;
     }
 
+    try {
+      // The component state uses camelCase, which homeApi.js now expects
+      const newProductData = {
+        stockType: '',
+        product: '',
+        quantity: '',
+        expiryDate: '',
+        availability: '',
+      };
+      const newProductFromApi = await api.addProduct(homeId, newProductData);
 
-    setHomes((prev) => prev.map((home) => home.id === homeId ? {
-      ...home,
-      products: [
-        ...home.products,
-        {
-          id: Date.now(),
-          stockType: '',
-          product: '',
-          quantity: '',
-          expiryDate: '',
-          availability: '',
-        },
-      ],
-    } : home));
-  };
-
-  const deleteProduct = (homeId: number, productId: number) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      setHomes((prev) =>
-        prev.map((home) =>
-          home.id === homeId
-            ? {
-                ...home,
-                products: home.products.filter((product) => product.id !== productId),
-              }
-            : home
-        )
-      );
+      setHomes((prev) => prev.map((h) => h.id === homeId ? {
+        ...h,
+        // Map the returned snake_case object to camelCase for the UI state
+        products: [...h.products, {
+          id: newProductFromApi.id,
+          stockType: newProductFromApi.stock_type,
+          product: newProductFromApi.product,
+          quantity: newProductFromApi.quantity,
+          expiryDate: newProductFromApi.expiry_date,
+          availability: newProductFromApi.availability,
+        } as HomeItem['products'][number]],
+      } : h));
+    } catch (error) {
+      console.error("Error adding product:", error);
+      alert("Failed to add product.");
     }
   };
-  const updateProduct = (homeId: number, productId: number, field: keyof NonNullable<HomeItem['products']>[number], value: string) => {
-    setHomes((prev) => prev.map((home) => home.id === homeId ? {
-      ...home,
-      products: home.products.map((product) => product.id === productId ? { ...product, [field]: value } : product),
-    } : home));
+
+  const deleteProduct = async (homeId: number, productId: number) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        await api.removeProduct(productId);
+        setHomes((prev) =>
+          prev.map((home) =>
+            home.id === homeId
+              ? {
+                  ...home,
+                  products: home.products.filter((product) => product.id !== productId),
+                }
+              : home
+          )
+        );
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        alert("Failed to delete product.");
+      }
+    }
   };
 
-  const toggleProductFilter = (homeId: number) => {
+  const updateProduct = async (homeId: number, productId: number, fields: Partial<HomeItem['products'][number]>) => {
+    // Optimistic UI update for responsiveness
     setHomes((prev) =>
       prev.map((home) =>
         home.id === homeId
-          ? { ...home, filter: home.filter === 'all' ? 'unavailable' : 'all' }
+          ? { ...home, products: home.products.map((p) => (p.id === productId ? { ...p, ...fields } : p)) }
           : home
+      )
+    );
+
+    try {
+      await api.updateProduct(productId, fields);
+    } catch (error) {
+      console.error(`Error updating product:`, error);
+      alert(`Failed to save changes. Please refresh and try again.`);
+    }
+  };
+
+  const updateHomeFilters = (homeId: number, filters: Partial<HomeItem['filters']>) => {
+    setHomes((prev) =>
+      prev.map((home) =>
+        home.id === homeId ? { ...home, filters: { ...home.filters, ...filters } } : home
       )
     );
   };
 
+  const handleBillUpload = async (homeId: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsParsingBill(homeId);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+      const base64Image = reader.result as string;
+      const base64Data = base64Image.split(',')[1];
+
+      try {
+        // This should point to your Netlify function endpoint
+        const response = await fetch('/api/stock-tracker/parse-bill', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Data }),
+        });
+
+        if (!response.ok) {
+          // Read the body as text first, as it can only be read once.
+          const errorText = await response.text();
+          let errorMessage = `Error: ${response.status} ${response.statusText}`;
+
+          try {
+            // Try to parse the text as JSON.
+            const errorData = JSON.parse(errorText);
+            // If successful, use the structured error message.
+            errorMessage = errorData.error || errorText;
+          } catch (e) {
+            // If parsing fails, the response was not JSON. Use the raw text.
+            errorMessage = errorText || errorMessage;
+          }
+          throw new Error(errorMessage);
+        }
+
+        const parsedItems: Array<{ product: string; quantity: string; stockType: string; }> = await response.json();
+
+        if (!Array.isArray(parsedItems) || parsedItems.length === 0) {
+          alert('The AI could not find any items in the bill. Please try a clearer image or add items manually.');
+          return;
+        }
+
+        // Persist each parsed item to the database
+        const addedProducts = await Promise.all(
+          parsedItems.map(item => api.addProduct(homeId, {
+            // The API function expects camelCase keys, which the AI provides.
+            product: item.product || '',
+            quantity: String(item.quantity || '1'),
+            stockType: item.stockType || '',
+            expiryDate: '',
+            availability: 'Yes',
+          }))
+        );
+
+        // Map the snake_case properties from the API response to camelCase for the UI state
+        const newProductsForState = addedProducts.map((p:any) => ({
+          id: p.id,
+          stockType: p.stock_type,
+          product: p.product,
+          quantity: p.quantity,
+          expiryDate: p.expiry_date,
+          availability: p.availability,
+        }));
+
+        setHomes(prev => prev.map(home => 
+          home.id === homeId ? { ...home, products: [...home.products, ...(newProductsForState as HomeItem['products'])] } : home
+        ));
+
+      } catch (err: any) {
+        console.error('Error parsing bill:', err);
+        alert(`An error occurred: ${err.message}`);
+      } finally {
+        setIsParsingBill(null);
+        if (event.target) {
+          event.target.value = '';
+        }
+      }
+    };
+    reader.onerror = (error) => {
+      console.error('Error reading file:', error);
+      alert('Failed to read the image file.');
+      setIsParsingBill(null);
+    };
+  };
+
+  if (isDataLoading) {
+    return <div style={{ color: 'white', textAlign: 'center', paddingTop: '2rem' }}>Loading your stock data...</div>;
+  }
+
   return (
     <div style={{ width: '100%', color: '#fff', position: 'relative', fontSize: '14px' }}>
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
+      {isParsingBill !== null && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 10000,
+          flexDirection: 'column',
+          gap: '1rem'
+        }}>
+          <div style={{ border: '4px solid rgba(255, 255, 255, 0.2)', borderTop: '4px solid #1db954', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite' }}></div>
+          <p style={{ color: '#fff', fontSize: '1rem', fontWeight: 600 }}>Parsing your bill, please wait...</p>
+        </div>
+      )}
+
       <button
         type="button"
         onClick={onLogout}
@@ -227,220 +396,25 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
           No homes added yet.
         </div>
        ) : (
-        homes.map((home) => { // Start of home mapping
-          const isFocused = focusedHomeId === home.id;
-          const isAnotherFocused = focusedHomeId !== null && !isFocused;
-
-          return (
-          <div key={home.id} style={{ border: '1px solid #1db954', borderRadius: '8px', marginBottom: '0.75rem', overflow: 'hidden' }}>
-            <button
-              type="button"
-              onClick={() => toggleHome(home.id)}
-              style={{
-                width: '100%',
-                background: isAnotherFocused ? '#000' : '#222',
-                color: '#fff',
-                border: 'none',
-                padding: '0.9rem 1rem',
-                textAlign: 'left',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: '0.5rem' // Added gap for buttons
-              }}
-            >
-              {/* Left side: Name or Input */}
-              {editingHomeId === home.id ? (
-                <input
-                  value={currentEditingHomeName}
-                  onChange={(e) => setCurrentEditingHomeName(e.target.value)}
-                  style={{
-                    background: '#fff',
-                    color: '#111',
-                    border: '1px solid #1db954',
-                    borderRadius: '4px',
-                    padding: '0.2rem 0.4rem',
-                    boxSizing: 'border-box',
-                    width: '150px'
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                />
-              ) : (
-                <span style={{fontSize: '1.25rem', fontWeight: '600'}}>{home.name}</span>
-              )}
-
-              {/* Right side: Controls */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                {editingHomeId === home.id ? (
-                  <>
-                    <button type="button" onClick={(e) => { e.stopPropagation(); updateHomeName(home.id); }} style={{ background: '#1db954', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '14px' }} title="Save Home Name">
-                      Save
-                    </button>
-                    <button type="button" onClick={(e) => { e.stopPropagation(); setEditingHomeId(null); setCurrentEditingHomeName(''); }} style={{ background: '#444', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '14px' }} title="Cancel Edit">
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEditingHomeId(home.id);
-                        setCurrentEditingHomeName(home.name);
-                      }}
-                      style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }}
-                      title="Edit Home Name"
-                    >
-                      ✏️
-                    </button>
-                    <button type="button" onClick={(e) => { e.stopPropagation(); deleteHome(home.id); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }} title="Delete Home">
-                      🗑️
-                    </button>
-                  </>
-                )}
-                <span>{home.expanded ? '−' : '+'}</span>
-              </div>
-            </button>
-
-            {home.expanded && (
-              (() => {
-                const filteredProducts = home.products.filter(p => home.filter === 'all' || (home.filter === 'unavailable' && p.availability === 'No'));
-                // If filter is 'unavailable' and no products match, but there are products in total,
-                // we should show the "No unavailable products found" message.
-                const showNoUnavailableMessage = home.filter === 'unavailable' && filteredProducts.length === 0 && home.products.length > 0;
-
-                // If filter is 'all' and no products at all, show "No products yet."
-                const showNoProductsYetMessage = home.filter === 'all' && home.products.length === 0;
-
-                const showEmptyMessage = showNoProductsYetMessage || showNoUnavailableMessage;
-                
-                return <div style={{
-                  padding: '0.75rem 1.5rem',
-                  background: isAnotherFocused ? '#000' : '#181818'
-                }}>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.75rem', gap: '0.5rem' }}>
-                  <button type="button" onClick={() => toggleProductFilter(home.id)} style={{ background: '#f0ad4e', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer' }}>
-                    {home.filter === 'all' ? 'Show Unavailable' : 'Show All'}
-                  </button>
-                  <button type="button" onClick={() => addProduct(home.id)} style={{ background: '#1db954', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer' }}>
-                    + Add Product
-                  </button>
-                </div>
-
-                {showEmptyMessage ? (
-                  <div style={{ border: '1px dashed #555', borderRadius: '8px', padding: '0.75rem', textAlign: 'center', color: '#aaa' }}>
-                    {showNoProductsYetMessage ? 'No products yet.' : 'No unavailable products found.'}
-                  </div>
-                ) : (
-                  <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', color: '#fff' }}>
-                      <thead>
-                        <tr style={{ background: '#222' }}>
-                          <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444' }}>S.No</th>
-                          <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444' }}>Type of Stock <span style={{ color: 'red' }}>*</span></th>
-                          <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444' }}>Product <span style={{ color: 'red' }}>*</span></th>
-                          <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444' }}>Availability <span style={{ color: 'red' }}>*</span></th>
-                          <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444', width: '80px' }}>Quantity</th>
-                          <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444', width: '120px' }}>Expire Date</th>
-                          <th style={{ padding: '0.6rem', textAlign: 'left', borderBottom: '1px solid #444' }}>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredProducts.map((product, index) => (
-                          <tr key={product.id}>
-                            <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>{index + 1}</td>
-                            <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                              <select
-                                value={product.stockType}
-                                onChange={(e) => {
-                                  updateProduct(home.id, product.id, 'stockType', e.target.value);
-                                  updateProduct(home.id, product.id, 'product', ''); // Reset product when category changes
-                                }}
-                                style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box' }}
-                                disabled={catalogLoading}
-                              >
-                                <option value="">{catalogLoading ? 'Loading...' : 'Select Type'}</option>
-                                {catalog.map(cat => (
-                                  <option key={cat.id} value={cat.name}>{cat.name}</option>
-                                ))}
-                              </select>
-                            </td>
-                            <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                              <div style={{ position: 'relative' }}>
-                                <input
-                                  value={product.product}
-                                  onChange={(e) => updateProduct(home.id, product.id, 'product', e.target.value)}
-                                  style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box' }}
-                                  list={`product-list-${product.id}`}
-                                  disabled={!product.stockType}
-                                />
-                                <datalist id={`product-list-${product.id}`}>
-                                  {catalog.find(cat => cat.name === product.stockType)?.items.map(item => (
-                                    <option key={item.id} value={item.name} />
-                                  ))}
-                                </datalist>
-                              </div>
-                            </td>
-                            <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', margin:'0' }}>
-                                  <input type="radio" style={{marginTop:'4px'}} name={`availability-${product.id}`} value="Yes" checked={product.availability === 'Yes'} onChange={(e) => updateProduct(home.id, product.id, 'availability', e.target.value)}/>
-                                  Yes
-                                </label>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem',  margin:'0' }}>
-                                  <input type="radio"  style={{marginTop:'4px'}} name={`availability-${product.id}`} value="No" checked={product.availability === 'No'} onChange={(e) => {
-                                    updateProduct(home.id, product.id, 'availability', e.target.value);
-                                    // Also clear quantity and expiry date when set to No
-                                    updateProduct(home.id, product.id, 'quantity', '');
-                                    updateProduct(home.id, product.id, 'expiryDate', '');
-                                  }} />
-                                  No
-                                </label>
-                              </div>
-                            </td>
-                            <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                              <input type="number" value={product.quantity} onChange={(e) => updateProduct(home.id, product.id, 'quantity', e.target.value)} disabled={product.availability === 'No'} style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#eee' : '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
-                            </td>
-                            <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                              <input
-                                type={product.expiryDate ? 'date' : 'text'}
-                                placeholder="DD-MM-YYYY"
-                                onFocus={(e) => (e.currentTarget.type = 'date')}
-                                onBlur={(e) => {
-                                  if (!e.currentTarget.value) {
-                                    e.currentTarget.type = 'text';
-                                  }
-                                }}
-                                value={product.expiryDate}
-                                onChange={(e) => updateProduct(home.id, product.id, 'expiryDate', e.target.value)}
-                                disabled={product.availability === 'No'}
-                                style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#eee' : '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
-                            </td>
-                            {/* New Actions column */}
-                            <td style={{ padding: '0.6rem', borderBottom: '1px solid #333', textAlign: 'center' }}>
-                              <button
-                                type="button"
-                                onClick={() => deleteProduct(home.id, product.id)}
-                                style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }}
-                                title="Delete Product"
-                              >
-                                🗑️
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>;
-              })()
-            )}
-          </div>
-          );
-        })
+        homes.map((home) => (
+          <HomeAccordion
+            key={home.id}
+            home={home}
+            catalog={catalog}
+            catalogLoading={catalogLoading}
+            isParsingBill={isParsingBill === home.id}
+            isAnotherHomeFocused={focusedHomeId !== null && focusedHomeId !== home.id}
+            onToggle={toggleHome}
+            onDelete={deleteHome}
+            onUpdateName={updateHomeName}
+            onAddProduct={addProduct}
+            onDeleteProduct={deleteProduct}
+            onUpdateProduct={updateProduct}
+            onUpdateFilters={updateHomeFilters}
+            onBillUpload={handleBillUpload}
+            onSetFocusedHome={setFocusedHomeId}
+          />
+        ))
       )}
 
       {showAddHome && (
