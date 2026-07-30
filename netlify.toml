@@ -1,8 +1,8 @@
 [build]
-    base = "app"
-    command = "npm run build:prod"
-    publish = "dist/browser"
-    functions = "netlify/functions"
+    base = "" # Run from the root
+    command = "cd app && npm run build:prod" # Build the app from its directory
+    publish = "app/dist/browser"
+    functions = "app/netlify/functions" # Full path from the root
 
 [[redirects]]
     from = "/api/*"
