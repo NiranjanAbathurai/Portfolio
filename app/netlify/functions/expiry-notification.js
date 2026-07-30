@@ -57,7 +57,7 @@ exports.handler = async (event, context) => {
           user_id
         )
       `)
-      .lt('expiry_date', today)
+      .lte('expiry_date', today) // Use 'less than or equal to'
       .eq('availability', 'Yes'); // Only check available products
 
     if (error) {

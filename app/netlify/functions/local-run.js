@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 function buildEvent(req) {
   const body = req.body && Object.keys(req.body).length ? JSON.stringify(req.body) : req.rawBody || undefined;
   return {
+    // The agent handler expects a path relative to the function endpoint.
     path: req.originalUrl || req.path,
     httpMethod: req.method,
     headers: req.headers,

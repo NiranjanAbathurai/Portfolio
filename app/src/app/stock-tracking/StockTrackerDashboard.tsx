@@ -58,16 +58,18 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
           products: (home.products || []).map((p: any) => {
             const expiryDate = p.expiry_date ? new Date(p.expiry_date) : null;
             const isExpired = expiryDate && expiryDate < today;
-            const availability = (isExpired && p.availability === 'Yes') ? 'No' : p.availability;
+            const wasAvailable = p.availability === 'Yes';
+            const isNowExpiredAndUnavailable = isExpired && wasAvailable;
+            const availability = isNowExpiredAndUnavailable ? 'No' : p.availability;
 
             return {
               id: p.id,
               stockType: p.stock_type,
               product: p.product,
-              quantity: availability === 'No' ? '' : p.quantity,
-              expiryDate: availability === 'No' ? '' : p.expiry_date,
+              quantity: availability === 'No' && !isNowExpiredAndUnavailable ? '' : p.quantity,
+              expiryDate: availability === 'No' && !isNowExpiredAndUnavailable ? '' : p.expiry_date,
               availability: availability as HomeItem['products'][number]['availability'],
-              isExpired: isExpired && p.availability === 'Yes', // Flag it only if we auto-changed it
+              isExpired: isNowExpiredAndUnavailable, // Flag it only if we auto-changed it
             };
           }),
         }));

@@ -194,7 +194,9 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                     <tr 
                       key={product.id} 
                       style={{ 
-                        backgroundColor: product.isExpired ? 'rgba(255, 77, 77, 0.2)' : 'transparent' 
+                        backgroundColor: product.isExpired ? 'rgba(255, 77, 77, 0.2)' : 'transparent',
+                        // Apply red color to text for expired items for better visibility
+                        color: product.isExpired ? '#ff9999' : '#fff'
                       }}
                     >
                       <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>{index + 1}</td>
@@ -296,11 +298,11 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                         </div>
                       </td>
                       <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                        <input type="text" value={product.quantity} onChange={(e) => onUpdateProduct(home.id, product.id, { quantity: e.target.value })} disabled={product.availability === 'No'} style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#eee' : '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
+                        <input type="text" value={product.quantity} onChange={(e) => onUpdateProduct(home.id, product.id, { quantity: e.target.value })} disabled={product.availability === 'No'} style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#555' : '#fff', color: product.availability === 'No' ? '#ccc' : '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
                       </td>
                       <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
                         <input
-                          type={product.expiryDate ? 'date' : 'text'}
+                          type="date"
                           placeholder="DD-MM-YYYY"
                           onFocus={(e) => (e.currentTarget.type = 'date')}
                           onBlur={(e) => {
@@ -309,9 +311,22 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                             }
                           }}
                           value={product.expiryDate}
-                          onChange={(e) => onUpdateProduct(home.id, product.id, { expiryDate: e.target.value })}
+                          onChange={(e) => {
+                            const selectedDateValue = e.target.value;
+                            if (selectedDateValue) {
+                              const today = new Date();
+                              today.setHours(0, 0, 0, 0); // Set to the beginning of today
+                              const selectedDate = new Date(selectedDateValue + 'T00:00:00'); // Treat as local time
+
+                              if (selectedDate <= today) {
+                                alert('Expiry date must be in the future.');
+                                return; // Do not update if the date is not valid
+                              }
+                            }
+                            onUpdateProduct(home.id, product.id, { expiryDate: selectedDateValue });
+                          }}
                           disabled={product.availability === 'No'}
-                          style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#eee' : '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
+                          style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#555' : '#fff', color: product.availability === 'No' ? '#ccc' : '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
                       </td>
                       <td style={{ padding: '0.6rem', borderBottom: '1px solid #333', textAlign: 'center' }}>
                         {pendingUpdateIds.includes(product.id) && (
