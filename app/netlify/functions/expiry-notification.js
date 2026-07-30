@@ -32,16 +32,24 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Initialize Supabase client inside handler (after env vars are available)
-  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  // Initialize Supabase client with service role key to bypass RLS
+  // The service role key bypasses Row Level Security, allowing the cron job
+  // to read all users' products without an authenticated session.
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
 
   try {
     // 2. Get today's date in YYYY-MM-DD format
     const today = new Date().toISOString().split('T')[0];
+    console.log(`Checking for products expired before: ${today}`);
 
     // 3. Fetch all expired products from Supabase
     // This query assumes:
-    // - A 'products' table with 'expiryDate', 'product' (name), and 'home_id'.
+    // - A 'products' table with 'expiry_date', 'product' (name), and 'home_id'.
     // - A 'homes' table with 'id', 'name', and 'user_id'.
     // - The 'user_id' in 'homes' is a foreign key to Supabase's 'auth.users' table's 'id'.
     const { data: expiredProducts, error } = await supabase
@@ -54,8 +62,11 @@ exports.handler = async (event, context) => {
           user_id
         )
       `)
-      .lte('expiry_date', today) // Use 'less than or equal to'
+      .not('expiry_date', 'is', null) // Exclude products without expiry date
+      .lt('expiry_date', today) // Use 'less than' to match UI logic (expired = before today)
       .eq('availability', 'Yes'); // Only check available products
+
+    console.log(`Query result: ${expiredProducts ? expiredProducts.length : 0} products found, error: ${error ? error.message : 'none'}`);
 
     if (error) {
       throw new Error(`Supabase query failed: ${error.message}`);
