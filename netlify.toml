@@ -1,12 +1,8 @@
 [build]
     base = "" # Run from the root
-    command = "cd app/netlify/functions && npm install && cd ../../.. && cd app && npm run build:prod" # Install function deps then build the app
+    command = "cd app && npm run build:prod" # Build the app from its directory
     publish = "app/dist/browser"
     functions = "app/netlify/functions" # Full path from the root
-
-[functions]
-    node_bundler = "esbuild"
-    included_files = ["app/netlify/functions/**"]
 
 [[redirects]]
     from = "/api/*"
