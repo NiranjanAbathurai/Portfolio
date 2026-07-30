@@ -15,7 +15,7 @@ const { SUPABASE_URL, SUPABASE_SERVICE_SECRET_KEY } = require('./supabase-config
 
 // EmailJS config
 const EMAILJS_SERVICE_ID = 'service_jzegqtm';
-const EMAILJS_TEMPLATE_ID = 'template_ykcrmpy'; // A specific template for expiry notifications
+const EMAILJS_TEMPLATE_ID = 'template_z4ips6l'; // A specific template for expiry notifications
 const EMAILJS_PUBLIC_KEY = 'rPoWSI2KJiDg4uFaI';
 const EMAILJS_PRIVATE_KEY = 'bT2hT100y3cLHH83zsT7v';
 
