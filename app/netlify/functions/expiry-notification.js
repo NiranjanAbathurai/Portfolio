@@ -11,7 +11,7 @@ try { require('dotenv').config(); } catch (e) {}
 
 const { createClient } = require('@supabase/supabase-js');
 const emailjs = require('@emailjs/nodejs');
-const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = require('./supabase-config');
+const { SUPABASE_URL, SUPABASE_SERVICE_SECRET_KEY } = require('./supabase-config');
 
 // EmailJS config
 const EMAILJS_SERVICE_ID = 'service_jzegqtm';
@@ -23,7 +23,7 @@ exports.handler = async (event, context) => {
   console.log('Running daily expiry check...');
 
   // 1. Validate environment variables
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY || !EMAILJS_PRIVATE_KEY) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_SECRET_KEY || !EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY || !EMAILJS_PRIVATE_KEY) {
     const errorMessage = 'Missing required environment variables for Supabase or EmailJS.';
     console.error(errorMessage);
     return {
@@ -35,7 +35,7 @@ exports.handler = async (event, context) => {
   // Initialize Supabase client with service role key to bypass RLS
   // The service role key bypasses Row Level Security, allowing the cron job
   // to read all users' products without an authenticated session.
-  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_SECRET_KEY, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
