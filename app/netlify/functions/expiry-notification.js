@@ -111,32 +111,30 @@ exports.handler = async (event, context) => {
       }
     }
 
-    // 5. Send one email per user with all their expired items
+    // 5. Send one email per expired product per user
+    // The EmailJS template expects: {{email}}, {{userName}}, {{homeName}}, {{productName}}, {{expiryDate}}
     for (const userId in userNotifications) {
       const notification = userNotifications[userId];
       const { email, username, products } = notification;
 
-      // Format the list of products for the email body
-      const productListHtml = products.map(p => 
-        `<li><b>${p.productName}</b> in home '<em>${p.homeName}</em>' expired on ${p.expiryDate}.</li>`
-      ).join('');
+      for (const product of products) {
+        const templateParams = {
+          email: email,
+          userName: username,
+          homeName: product.homeName,
+          productName: product.productName,
+          expiryDate: product.expiryDate,
+        };
 
-      const templateParams = {
-        to_email: email,
-        username: username, // Add username to template parameters
-        // Assuming your EmailJS template has variables like {{product_list_html}} and {{item_count}}
-        product_list_html: `<ul>${productListHtml}</ul>`,
-        item_count: products.length,
-      };
-
-      try {
-        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, {
-          publicKey: EMAILJS_PUBLIC_KEY,
-          privateKey: EMAILJS_PRIVATE_KEY,
-        });
-        console.log(`Successfully sent expiry notification to ${email}`);
-      } catch (emailError) {
-        console.error(`Failed to send email to ${email}:`, emailError);
+        try {
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, {
+            publicKey: EMAILJS_PUBLIC_KEY,
+            privateKey: EMAILJS_PRIVATE_KEY,
+          });
+          console.log(`Successfully sent expiry notification to ${email} for product: ${product.productName}`);
+        } catch (emailError) {
+          console.error(`Failed to send email to ${email}:`, emailError);
+        }
       }
     }
 
