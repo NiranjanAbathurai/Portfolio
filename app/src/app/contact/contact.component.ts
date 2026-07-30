@@ -27,8 +27,8 @@ export class ContactComponent {
 
   private readonly RECAPTCHA_SITE_KEY = '6LdF8w0tAAAAAHCwbKTwx1h0L22-wnyrbmeY5k1s';
   private readonly EMAILJS_SERVICE_ID = 'service_rwwe5fo';
-  private readonly EMAILJS_TEMPLATE_ID = 'YOUR_EMAILJS_TEMPLATE_ID';
-  private readonly EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY';
+  private readonly EMAILJS_TEMPLATE_ID = 'template_lr19d9g'; // User-facing template
+  private readonly EMAILJS_PUBLIC_KEY = '7slh2XluDfB5VFJMm';
   
   ngOnInit(){
     this.contactForm = new FormGroup({
@@ -165,5 +165,3 @@ export function customValidator(control: AbstractControl): ValidationErrors | nu
 
   return null;
 };
-
-

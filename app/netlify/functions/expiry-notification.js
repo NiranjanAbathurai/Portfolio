@@ -17,10 +17,10 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 // EmailJS config - should be in environment variables
-const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = process.env.EMAILJS_EXPIRY_TEMPLATE_ID; // A specific template for expiry notifications
-const EMAILJS_PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
-const EMAILJS_PRIVATE_KEY = process.env.EMAILJS_PRIVATE_KEY;
+const EMAILJS_SERVICE_ID = 'service_jzegqtm';
+const EMAILJS_TEMPLATE_ID = 'template_35vnbvu'; // A specific template for expiry notifications
+const EMAILJS_PUBLIC_KEY = 'rPoWSI2KJiDg4uFaI';
+const EMAILJS_PRIVATE_KEY = 'bT2hT100y3cLHH83zsT7v';
 
 // Initialize Supabase client
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
