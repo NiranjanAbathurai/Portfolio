@@ -110,7 +110,7 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
           box-shadow: 0 4px 12px rgba(0,0,0,0.4);
           z-index: 999;
           overflow: hidden;
-          min-width: 150px;
+          min-width: 100px;
         }
         .bill-menu-item {
           padding: 0.5rem 0.75rem;
@@ -277,10 +277,10 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                   <div className="bill-menu-overlay" onClick={() => setShowBillMenu(false)} />
                   <div className="bill-menu">
                     <button type="button" className="bill-menu-item" onClick={handleCameraSelect}>
-                      📷 Open Camera
+                      📷 Camera
                     </button>
                     <button type="button" className="bill-menu-item" onClick={handleGallerySelect}>
-                      🖼️ Select from Gallery
+                      🖼️ Gallery
                     </button>
                   </div>
                 </>
