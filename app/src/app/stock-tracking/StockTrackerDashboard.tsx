@@ -278,16 +278,51 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
           return;
         }
 
-        // Persist each parsed item to the database
-        const addedProducts = await Promise.all(
-          parsedItems.map(item => api.addProduct(homeId, {
-            // The API function expects camelCase keys, which the AI provides.
-            product: item.product || '',
+        // Match parsed items against catalog for accurate stockType/product names
+        const matchedItems = parsedItems.map(item => {
+          let matchedStockType = '';
+          let matchedProduct = item.product || '';
+          const productLower = (item.product || '').toLowerCase();
+          let foundInCatalog = false;
+
+          for (const cat of catalog) {
+            const matchedItem = cat.items.find((catItem: any) =>
+              catItem.name.toLowerCase() === productLower ||
+              catItem.name.toLowerCase().includes(productLower) ||
+              productLower.includes(catItem.name.toLowerCase())
+            );
+            if (matchedItem) {
+              matchedStockType = cat.name;
+              matchedProduct = matchedItem.name;
+              foundInCatalog = true;
+              break;
+            }
+          }
+
+          if (!foundInCatalog && item.stockType) {
+            const stockTypeLower = item.stockType.toLowerCase();
+            const matchedCat = catalog.find(cat =>
+              cat.name.toLowerCase() === stockTypeLower ||
+              cat.name.toLowerCase().includes(stockTypeLower) ||
+              stockTypeLower.includes(cat.name.toLowerCase())
+            );
+            matchedStockType = matchedCat ? matchedCat.name : 'Others';
+          } else if (!foundInCatalog) {
+            matchedStockType = 'Others';
+          }
+
+          return {
+            product: matchedProduct,
             quantity: String(item.quantity || '1'),
-            stockType: item.stockType || '',
+            stockType: matchedStockType,
             expiryDate: '',
             availability: 'Yes',
-          }))
+          };
+        });
+
+        // Persist each matched item to the database
+        const addedProducts = await Promise.all(
+          matchedItems.map(item => api.addProduct(homeId, item))
         );
 
         // Map the snake_case properties from the API response to camelCase for the UI state
