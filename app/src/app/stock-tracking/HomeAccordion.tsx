@@ -40,12 +40,35 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
   const [currentEditingHomeName, setCurrentEditingHomeName] = useState('');
   const [activeStockTypeDropdown, setActiveStockTypeDropdown] = useState<number | null>(null);
   const [pendingUpdateIds, setPendingUpdateIds] = useState<number[]>([]);
+  const [showBillMenu, setShowBillMenu] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+
+  const isMobile = typeof window !== 'undefined' && /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   const handleUpdateHomeName = (id: number) => {
     onUpdateName(id, currentEditingHomeName);
     setEditingHomeId(null);
     setCurrentEditingHomeName('');
+  };
+
+  const handleBillButtonClick = () => {
+    onSetFocusedHome(home.id);
+    if (isMobile) {
+      setShowBillMenu(prev => !prev);
+    } else {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleCameraSelect = () => {
+    setShowBillMenu(false);
+    cameraInputRef.current?.click();
+  };
+
+  const handleGallerySelect = () => {
+    setShowBillMenu(false);
+    fileInputRef.current?.click();
   };
 
   const handleConfirmUpdate = (productId: number) => {
@@ -67,12 +90,96 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
 
   return (
     <div style={{ border: '1px solid #1db954', borderRadius: '0', marginBottom: '0.75rem' }} role="region" aria-labelledby={`home-header-${home.id}`}>
-      {/* Hidden file input for bill uploads */}
+      <style>{`
+        .bill-menu-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 998;
+        }
+        .bill-menu {
+          position: absolute;
+          top: calc(100% + 4px);
+          left: 50%;
+          transform: translateX(-50%);
+          background: #2a2a2a;
+          border: 1px solid #555;
+          border-radius: 6px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+          z-index: 999;
+          overflow: hidden;
+          min-width: 150px;
+        }
+        .bill-menu-item {
+          padding: 0.5rem 0.75rem;
+          color: #fff;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 12px;
+          white-space: nowrap;
+          border: none;
+          background: none;
+          width: 100%;
+          text-align: left;
+        }
+        .bill-menu-item:hover {
+          background: #3a3a3a;
+        }
+        .bill-menu-item + .bill-menu-item {
+          border-top: 1px solid #444;
+        }
+        @media (max-width: 780px) {
+          .stock-filter-bar {
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 0.35rem !important;
+          }
+          .stock-filter-bar select,
+          .stock-filter-bar button {
+            font-size: 11px !important;
+            padding: 0.3rem 0.5rem !important;
+            min-width: unset !important;
+            border-radius: 4px !important;
+          }
+          .stock-filter-bar select {
+            flex: 1 1 100% !important;
+            max-width: 100% !important;
+            padding: 0.35rem 0.5rem !important;
+          }
+          .stock-filter-bar button {
+            flex: 1 1 calc(33.33% - 0.35rem) !important;
+            text-align: center !important;
+            justify-content: center !important;
+            white-space: nowrap !important;
+          }
+          .stock-filter-bar button svg {
+            width: 12px !important;
+            height: 12px !important;
+          }
+          .stock-expanded-content {
+            padding: 0.5rem 0.75rem !important;
+          }
+        }
+      `}</style>
+      {/* Hidden file input for gallery uploads */}
       <input
         type="file"
         ref={fileInputRef}
         style={{ display: 'none' }}
         accept="image/*"
+        onChange={(e) => onBillUpload(home.id, e)}
+      />
+      {/* Hidden file input for camera capture */}
+      <input
+        type="file"
+        ref={cameraInputRef}
+        style={{ display: 'none' }}
+        accept="image/*"
+        capture="environment"
         onChange={(e) => onBillUpload(home.id, e)}
       />
       <div
@@ -139,11 +246,11 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
       </div>
 
       {home.expanded && (
-        <div style={{
+        <div className="stock-expanded-content" style={{
           padding: '0.75rem 1.5rem',
           background: isAnotherHomeFocused ? '#000' : '#181818'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.75rem', gap: '0.5rem' }}>
+          <div className="stock-filter-bar" style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.75rem', gap: '0.5rem', alignItems: 'center' }}>
             <select
               value={home.filters.stockType}
               onChange={(e) => onUpdateFilters(home.id, { stockType: e.target.value })}
@@ -158,12 +265,27 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
             <button type="button" onClick={() => onUpdateFilters(home.id, { availability: home.filters.availability === 'all' ? 'unavailable' : 'all' })} style={{ background: '#f0ad4e', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer' }}>
               {home.filters.availability === 'all' ? 'Show Unavailable' : 'Show All'}
             </button>
-            <button type="button" onClick={() => { onSetFocusedHome(home.id); fileInputRef.current?.click(); }} disabled={isParsingBill} style={{ background: '#5bc0de', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: isParsingBill ? 0.6 : 1 }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 14.5 0zM11 3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 11 3m-3 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 3m-3 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 5 3m-2 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m10-4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5m0 2a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5m0 2a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5m-5-6a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2a.5.5 0 0 1 .5-.5"/>
-              </svg>
-              {isParsingBill ? 'Parsing...' : 'Add from Bill'}
-            </button>
+            <div style={{ position: 'relative' }}>
+              <button type="button" onClick={handleBillButtonClick} disabled={isParsingBill} style={{ background: '#5bc0de', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: isParsingBill ? 0.6 : 1, width: '100%', justifyContent: 'center' }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 14.5 0zM11 3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 11 3m-3 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 3m-3 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 5 3m-2 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m10-4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5m0 2a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5m0 2a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5m-5-6a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2a.5.5 0 0 1 .5-.5"/>
+                </svg>
+                {isParsingBill ? 'Parsing...' : 'Add from Bill'}
+              </button>
+              {showBillMenu && (
+                <>
+                  <div className="bill-menu-overlay" onClick={() => setShowBillMenu(false)} />
+                  <div className="bill-menu">
+                    <button type="button" className="bill-menu-item" onClick={handleCameraSelect}>
+                      📷 Open Camera
+                    </button>
+                    <button type="button" className="bill-menu-item" onClick={handleGallerySelect}>
+                      🖼️ Select from Gallery
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
             <button type="button" onClick={() => onAddProduct(home.id)} style={{ background: '#1db954', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer' }}>
               + Add Product
             </button>
