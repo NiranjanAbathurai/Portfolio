@@ -52,24 +52,37 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
     setCurrentEditingHomeName('');
   };
 
-  const handleBillButtonClick = () => {
-    onSetFocusedHome(home.id);
-    if (isMobile) {
-      setShowBillMenu(prev => !prev);
-    } else {
-      fileInputRef.current?.click();
-    }
+  // const handleBillButtonClick = () => {
+  //   onSetFocusedHome(home.id);
+  //   if (isMobile) {
+  //     setShowBillMenu(prev => !prev);
+  //   } else {
+  //     fileInputRef.current?.click();
+  //   }
+  // };
+
+  // const handleCameraSelect = () => {
+  //   setShowBillMenu(false);
+  //   cameraInputRef.current?.click();
+  // };
+
+  // const handleGallerySelect = () => {
+  //   setShowBillMenu(false);
+  //   fileInputRef.current?.click();
+  // };
+
+    const handleBillButtonClick = () => {
+    alert('📲 Download the Stock Tracker app to fully access AI features and notifications.\n\nVisit: https://stock-tracker-pwa-nj.netlify.app');
   };
 
   const handleCameraSelect = () => {
-    setShowBillMenu(false);
-    cameraInputRef.current?.click();
+    alert('📲 Download the Stock Tracker app to fully access AI features and notifications.\n\nVisit: https://stock-tracker-pwa-nj.netlify.app');
   };
 
   const handleGallerySelect = () => {
-    setShowBillMenu(false);
-    fileInputRef.current?.click();
+    alert('📲 Download the Stock Tracker app to fully access AI features and notifications.\n\nVisit: https://stock-tracker-pwa-nj.netlify.app');
   };
+
 
   const handleConfirmUpdate = (productId: number) => {
     setPendingUpdateIds(prev => prev.filter(id => id !== productId));
