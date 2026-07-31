@@ -278,16 +278,51 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
           return;
         }
 
-        // Persist each parsed item to the database
-        const addedProducts = await Promise.all(
-          parsedItems.map(item => api.addProduct(homeId, {
-            // The API function expects camelCase keys, which the AI provides.
-            product: item.product || '',
+        // Match parsed items against catalog for accurate stockType/product names
+        const matchedItems = parsedItems.map(item => {
+          let matchedStockType = '';
+          let matchedProduct = item.product || '';
+          const productLower = (item.product || '').toLowerCase();
+          let foundInCatalog = false;
+
+          for (const cat of catalog) {
+            const matchedItem = cat.items.find((catItem: any) =>
+              catItem.name.toLowerCase() === productLower ||
+              catItem.name.toLowerCase().includes(productLower) ||
+              productLower.includes(catItem.name.toLowerCase())
+            );
+            if (matchedItem) {
+              matchedStockType = cat.name;
+              matchedProduct = matchedItem.name;
+              foundInCatalog = true;
+              break;
+            }
+          }
+
+          if (!foundInCatalog && item.stockType) {
+            const stockTypeLower = item.stockType.toLowerCase();
+            const matchedCat = catalog.find(cat =>
+              cat.name.toLowerCase() === stockTypeLower ||
+              cat.name.toLowerCase().includes(stockTypeLower) ||
+              stockTypeLower.includes(cat.name.toLowerCase())
+            );
+            matchedStockType = matchedCat ? matchedCat.name : 'Others';
+          } else if (!foundInCatalog) {
+            matchedStockType = 'Others';
+          }
+
+          return {
+            product: matchedProduct,
             quantity: String(item.quantity || '1'),
-            stockType: item.stockType || '',
+            stockType: matchedStockType,
             expiryDate: '',
             availability: 'Yes',
-          }))
+          };
+        });
+
+        // Persist each matched item to the database
+        const addedProducts = await Promise.all(
+          matchedItems.map(item => api.addProduct(homeId, item))
         );
 
         // Map the snake_case properties from the API response to camelCase for the UI state
@@ -458,6 +493,32 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
           </button>
         </div>
       )}
+
+      {/* Download PWA App Link */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #333' }}>
+        <a
+          href="https://my-stock-tracker-app.netlify.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '0.75rem 1.25rem',
+            cursor: 'pointer',
+            fontWeight: 600,
+            fontSize: '0.85rem',
+            textDecoration: 'none',
+            boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)',
+          }}
+        >
+          📲 Download App (PWA)
+        </a>
+      </div>
     </div>
   );
 };
