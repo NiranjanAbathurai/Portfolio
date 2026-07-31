@@ -367,8 +367,14 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                             onBlur={() => {
                               setTimeout(() => {
                                 const isValid = catalog.some(c => c.name.toLowerCase() === product.stockType.toLowerCase());
-                                if (!isValid && product.stockType !== '') {
-                                  onUpdateProduct(home.id, product.id, { stockType: '', product: '' });
+                                if (!isValid && product.stockType !== '' && product.stockType !== 'Others') {
+                                  // Only clear product if it was dependent on the invalid stock type
+                                  if (!product.product.trim()) {
+                                    onUpdateProduct(home.id, product.id, { stockType: '' });
+                                  } else {
+                                    // Product already has a value — keep it, just clear invalid stock type
+                                    onUpdateProduct(home.id, product.id, { stockType: '' });
+                                  }
                                 }
                                 setActiveStockTypeDropdown(null);
                               }, 150);
@@ -397,7 +403,14 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                                   <div
                                     key={cat.id}
                                     onMouseDown={() => {
-                                      onUpdateProduct(home.id, product.id, { stockType: cat.name, product: '' });
+                                      // Only clear product if it doesn't belong to the newly selected category
+                                      const productBelongsToNewCategory = cat.items.some(
+                                        item => item.name.toLowerCase() === product.product.toLowerCase()
+                                      );
+                                      onUpdateProduct(home.id, product.id, {
+                                        stockType: cat.name,
+                                        product: productBelongsToNewCategory ? product.product : ''
+                                      });
                                     }}
                                     style={{ padding: '0.5rem', cursor: 'pointer' }}
                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'}
@@ -413,15 +426,47 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                         <div style={{ position: 'relative' }}>
                           <input
                             value={product.product}
-                            onChange={(e) => onUpdateProduct(home.id, product.id, { product: e.target.value })}
+                            onChange={(e) => {
+                              const newValue = e.target.value;
+                              onUpdateProduct(home.id, product.id, { product: newValue });
+                              // Auto-detect stock type from product name
+                              if (!product.stockType || product.stockType === 'Others') {
+                                const matchedCategory = catalog.find(cat =>
+                                  cat.items.some(item => item.name.toLowerCase() === newValue.toLowerCase())
+                                );
+                                if (matchedCategory) {
+                                  onUpdateProduct(home.id, product.id, { product: newValue, stockType: matchedCategory.name });
+                                }
+                              }
+                            }}
+                            onBlur={(e) => {
+                              const val = e.target.value.trim();
+                              if (val && !product.stockType) {
+                                // Check if product matches any catalog item
+                                const matchedCategory = catalog.find(cat =>
+                                  cat.items.some(item => item.name.toLowerCase() === val.toLowerCase())
+                                );
+                                if (matchedCategory) {
+                                  onUpdateProduct(home.id, product.id, { stockType: matchedCategory.name });
+                                } else {
+                                  // Not in catalog — set as "Others"
+                                  onUpdateProduct(home.id, product.id, { stockType: 'Others' });
+                                }
+                              }
+                            }}
                             style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box' }}
                             list={`product-list-${product.id}`}
-                            disabled={!product.stockType}
+                            placeholder={product.stockType ? 'Product...' : 'Search all products...'}
                           />
                           <datalist id={`product-list-${product.id}`}>
-                            {catalog.find(cat => cat.name === product.stockType)?.items.map(item => (
-                              <option key={item.id} value={item.name} />
-                            ))}
+                            {product.stockType && product.stockType !== 'Others'
+                              ? catalog.find(cat => cat.name === product.stockType)?.items.map(item => (
+                                  <option key={item.id} value={item.name} />
+                                ))
+                              : catalog.flatMap(cat => cat.items).map(item => (
+                                  <option key={item.id} value={item.name} />
+                                ))
+                            }
                           </datalist>
                         </div>
                       </td>
@@ -545,16 +590,45 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                       {/* Product Name */}
                       <input
                         value={product.product}
-                        onChange={(e) => onUpdateProduct(home.id, product.id, { product: e.target.value })}
-                        placeholder="Product..."
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          onUpdateProduct(home.id, product.id, { product: newValue });
+                          // Auto-detect stock type from product name
+                          if (!product.stockType || product.stockType === 'Others') {
+                            const matchedCategory = catalog.find(cat =>
+                              cat.items.some(item => item.name.toLowerCase() === newValue.toLowerCase())
+                            );
+                            if (matchedCategory) {
+                              onUpdateProduct(home.id, product.id, { product: newValue, stockType: matchedCategory.name });
+                            }
+                          }
+                        }}
+                        onBlur={(e) => {
+                          const val = e.target.value.trim();
+                          if (val && !product.stockType) {
+                            const matchedCategory = catalog.find(cat =>
+                              cat.items.some(item => item.name.toLowerCase() === val.toLowerCase())
+                            );
+                            if (matchedCategory) {
+                              onUpdateProduct(home.id, product.id, { stockType: matchedCategory.name });
+                            } else {
+                              onUpdateProduct(home.id, product.id, { stockType: 'Others' });
+                            }
+                          }
+                        }}
+                        placeholder={product.stockType ? 'Product...' : 'Search all products...'}
                         className="mobile-field-input"
                         list={`mobile-product-list-${product.id}`}
-                        disabled={!product.stockType}
                       />
                       <datalist id={`mobile-product-list-${product.id}`}>
-                        {catalog.find(cat => cat.name === product.stockType)?.items.map(item => (
-                          <option key={item.id} value={item.name} />
-                        ))}
+                        {product.stockType && product.stockType !== 'Others'
+                          ? catalog.find(cat => cat.name === product.stockType)?.items.map(item => (
+                              <option key={item.id} value={item.name} />
+                            ))
+                          : catalog.flatMap(cat => cat.items).map(item => (
+                              <option key={item.id} value={item.name} />
+                            ))
+                        }
                       </datalist>
 
                       {/* Qty + Expiry on same row */}
