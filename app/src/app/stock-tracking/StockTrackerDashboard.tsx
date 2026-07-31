@@ -494,6 +494,38 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
         </div>
       )}
 
+      
+      {/* Voice Assistant Mic FAB (disabled - prompts to download app) */}
+      <button
+        type="button"
+        onClick={() => alert('📲 Download the Stock Tracker app to fully access AI features and notifications.\n\nVisit: https://stock-tracker-pwa-nj.netlify.app')}
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          width: '56px',
+          height: '56px',
+          borderRadius: '50%',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10000,
+          backgroundColor: '#1db954',
+          boxShadow: '0 4px 12px rgba(29, 185, 84, 0.4)',
+          opacity: 0.7,
+        }}
+        title="Download the app for voice AI features"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+          <line x1="12" y1="19" x2="12" y2="23" />
+          <line x1="8" y1="23" x2="16" y2="23" />
+        </svg>
+      </button>
+
       {/* Download PWA App Link */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #333' }}>
         <a
