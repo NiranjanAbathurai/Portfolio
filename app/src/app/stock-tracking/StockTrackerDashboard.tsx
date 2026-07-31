@@ -493,6 +493,32 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
           </button>
         </div>
       )}
+
+      {/* Download PWA App Link */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #333' }}>
+        <a
+          href="https://my-stock-tracker-app.netlify.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '0.75rem 1.25rem',
+            cursor: 'pointer',
+            fontWeight: 600,
+            fontSize: '0.85rem',
+            textDecoration: 'none',
+            boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)',
+          }}
+        >
+          📲 Download App (PWA)
+        </a>
+      </div>
     </div>
   );
 };
