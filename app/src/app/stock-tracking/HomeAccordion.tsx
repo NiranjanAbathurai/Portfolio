@@ -20,20 +20,9 @@ type HomeAccordionProps = {
 
 export const HomeAccordion = (props: HomeAccordionProps) => {
   const {
-    home,
-    catalog,
-    catalogLoading,
-    isParsingBill,
-    isAnotherHomeFocused,
-    onToggle,
-    onDelete,
-    onUpdateName,
-    onAddProduct,
-    onDeleteProduct,
-    onUpdateProduct,
-    onUpdateFilters,
-    onBillUpload,
-    onSetFocusedHome,
+    home, catalog, catalogLoading, isParsingBill, isAnotherHomeFocused,
+    onToggle, onDelete, onUpdateName, onAddProduct, onDeleteProduct,
+    onUpdateProduct, onUpdateFilters, onBillUpload, onSetFocusedHome,
   } = props;
 
   const [editingHomeId, setEditingHomeId] = useState<number | null>(null);
@@ -77,8 +66,8 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
 
   const filteredProducts = home.products.filter(p => {
     const availabilityMatch = home.filters.availability === 'all' ||
-                              (home.filters.availability === 'unavailable' && p.availability === 'No') ||
-                              (home.filters.availability === 'unavailable' && pendingUpdateIds.includes(p.id));
+      (home.filters.availability === 'unavailable' && p.availability === 'No') ||
+      (home.filters.availability === 'unavailable' && pendingUpdateIds.includes(p.id));
     const stockTypeMatch = home.filters.stockType === 'all' || p.stockType === home.filters.stockType;
     return availabilityMatch && stockTypeMatch;
   });
@@ -88,157 +77,220 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
   const showNoMatchingProductsMessage = hasActiveFilters && filteredProducts.length === 0 && home.products.length > 0;
   const showEmptyMessage = showNoProductsYetMessage || showNoMatchingProductsMessage;
 
+  const renderStockTypeInput = (product: HomeItem['products'][number]) => (
+    <div style={{ position: 'relative' }}>
+      <input
+        value={product.stockType}
+        onChange={(e) => {
+          onUpdateProduct(home.id, product.id, { stockType: e.target.value });
+          if (activeStockTypeDropdown !== product.id) setActiveStockTypeDropdown(product.id);
+        }}
+        onFocus={() => setActiveStockTypeDropdown(product.id)}
+        onBlur={() => {
+          setTimeout(() => {
+            const isValid = catalog.some(c => c.name.toLowerCase() === product.stockType.toLowerCase());
+            if (!isValid && product.stockType !== '') {
+              onUpdateProduct(home.id, product.id, { stockType: '', product: '' });
+            }
+            setActiveStockTypeDropdown(null);
+          }, 150);
+        }}
+        placeholder={catalogLoading ? 'Loading...' : 'Search type...'}
+        style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box', fontSize: '12px' }}
+        disabled={catalogLoading}
+        autoComplete="off"
+      />
+      {activeStockTypeDropdown === product.id && (
+        <div style={{
+          position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: '#fff',
+          border: '1px solid #ccc', borderRadius: '4px', marginTop: '2px',
+          maxHeight: '150px', overflowY: 'auto', zIndex: 999, color: '#111'
+        }}>
+          {(() => {
+            const filteredCatalog = catalog.filter(cat =>
+              product.stockType ? cat.name.toLowerCase().includes(product.stockType.toLowerCase()) : true
+            );
+            if (filteredCatalog.length === 0) {
+              return <div style={{ padding: '0.5rem', color: '#888' }}>No matches found</div>;
+            }
+            return filteredCatalog.map(cat => (
+              <div
+                key={cat.id}
+                onMouseDown={() => onUpdateProduct(home.id, product.id, { stockType: cat.name, product: '' })}
+                style={{ padding: '0.5rem', cursor: 'pointer' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
+              >{cat.name}</div>
+            ));
+          })()}
+        </div>
+      )}
+    </div>
+  );
+
+  const renderProductInput = (product: HomeItem['products'][number]) => (
+    <div style={{ position: 'relative' }}>
+      <input
+        value={product.product}
+        onChange={(e) => onUpdateProduct(home.id, product.id, { product: e.target.value })}
+        style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box', fontSize: '12px' }}
+        list={`product-list-${home.id}-${product.id}`}
+        disabled={!product.stockType}
+      />
+      <datalist id={`product-list-${home.id}-${product.id}`}>
+        {catalog.find(cat => cat.name === product.stockType)?.items.map(item => (
+          <option key={item.id} value={item.name} />
+        ))}
+      </datalist>
+    </div>
+  );
+
+  const renderAvailability = (product: HomeItem['products'][number], prefix: string) => (
+    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+      <label style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', margin: '0', fontSize: '12px', color: '#fff' }}>
+        <input type="radio" name={`${prefix}-availability-${product.id}`} value="Yes" checked={product.availability === 'Yes'} onChange={(e) => {
+          if (product.availability === 'No') setPendingUpdateIds(prev => [...prev, product.id]);
+          onUpdateProduct(home.id, product.id, { availability: e.target.value as 'Yes', isExpired: false });
+        }} />
+        Yes
+      </label>
+      <label style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', margin: '0', fontSize: '12px', color: '#fff' }}>
+        <input type="radio" name={`${prefix}-availability-${product.id}`} value="No" checked={product.availability === 'No'} onChange={(e) => {
+          setPendingUpdateIds(prev => prev.filter(id => id !== product.id));
+          onUpdateProduct(home.id, product.id, { availability: 'No', quantity: '', expiryDate: '', isExpired: false });
+        }} />
+        No
+      </label>
+    </div>
+  );
+
+  const renderQuantityInput = (product: HomeItem['products'][number]) => (
+    <input
+      type="text"
+      value={product.quantity}
+      onChange={(e) => onUpdateProduct(home.id, product.id, { quantity: e.target.value })}
+      disabled={product.availability === 'No'}
+      style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#555' : '#fff', color: product.availability === 'No' ? '#ccc' : '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1, fontSize: '12px' }}
+    />
+  );
+
+  const renderExpiryInput = (product: HomeItem['products'][number]) => (
+    <input
+      type="date"
+      value={product.expiryDate}
+      onChange={(e) => {
+        const selectedDateValue = e.target.value;
+        if (selectedDateValue) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const selectedDate = new Date(selectedDateValue + 'T00:00:00');
+          if (selectedDate <= today) {
+            alert('Expiry date must be in the future.');
+            return;
+          }
+        }
+        onUpdateProduct(home.id, product.id, { expiryDate: selectedDateValue });
+      }}
+      disabled={product.availability === 'No'}
+      style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#555' : '#fff', color: product.availability === 'No' ? '#ccc' : '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1, fontSize: '12px' }}
+    />
+  );
+
+  const renderActions = (product: HomeItem['products'][number]) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      {pendingUpdateIds.includes(product.id) && (
+        <button type="button" onClick={() => handleConfirmUpdate(product.id)} style={{ background: 'none', border: 'none', color: '#1db954', cursor: 'pointer', fontSize: '16px' }} title="Confirm and move to available">
+          ✓
+        </button>
+      )}
+      <button type="button" onClick={() => onDeleteProduct(home.id, product.id)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }} title="Delete Product">
+        🗑️
+      </button>
+    </div>
+  );
+
   return (
     <div style={{ border: '1px solid #1db954', borderRadius: '0', marginBottom: '0.75rem' }} role="region" aria-labelledby={`home-header-${home.id}`}>
       <style>{`
         .bill-menu-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 998;
+          position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 998;
         }
         .bill-menu {
-          position: absolute;
-          top: calc(100% + 4px);
-          left: 50%;
-          transform: translateX(-50%);
-          background: #2a2a2a;
-          border: 1px solid #555;
-          border-radius: 6px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-          z-index: 999;
-          overflow: hidden;
-          min-width: 100px;
+          position: absolute; top: calc(100% + 4px); left: 50%; transform: translateX(-50%);
+          background: #2a2a2a; border: 1px solid #555; border-radius: 6px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 999; overflow: hidden; min-width: 100px;
         }
         .bill-menu-item {
-          padding: 0.5rem 0.75rem;
-          color: #fff;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 12px;
-          white-space: nowrap;
-          border: none;
-          background: none;
-          width: 100%;
-          text-align: left;
+          padding: 0.5rem 0.75rem; color: #fff; cursor: pointer; display: flex;
+          align-items: center; gap: 0.5rem; font-size: 12px; white-space: nowrap;
+          border: none; background: none; width: 100%; text-align: left;
         }
-        .bill-menu-item:hover {
-          background: #3a3a3a;
-        }
-        .bill-menu-item + .bill-menu-item {
-          border-top: 1px solid #444;
-        }
+        .bill-menu-item:hover { background: #3a3a3a; }
+        .bill-menu-item + .bill-menu-item { border-top: 1px solid #444; }
+        .stock-desktop-table { display: block; }
+        .stock-mobile-cards { display: none; }
         @media (max-width: 780px) {
           .stock-filter-bar {
-            flex-wrap: wrap !important;
-            justify-content: center !important;
-            gap: 0.35rem !important;
+            flex-wrap: wrap !important; justify-content: center !important; gap: 0.35rem !important;
           }
-          .stock-filter-bar select,
-          .stock-filter-bar button {
-            font-size: 11px !important;
-            padding: 0.3rem 0.5rem !important;
-            min-width: unset !important;
-            border-radius: 4px !important;
+          .stock-filter-bar select, .stock-filter-bar button {
+            font-size: 11px !important; padding: 0.3rem 0.5rem !important;
+            min-width: unset !important; border-radius: 4px !important;
           }
           .stock-filter-bar select {
-            flex: 1 1 100% !important;
-            max-width: 100% !important;
-            padding: 0.35rem 0.5rem !important;
+            flex: 1 1 100% !important; max-width: 100% !important; padding: 0.35rem 0.5rem !important;
           }
           .stock-filter-bar button {
-            flex: 1 1 calc(33.33% - 0.35rem) !important;
-            text-align: center !important;
-            justify-content: center !important;
-            white-space: nowrap !important;
+            flex: 1 1 calc(33.33% - 0.35rem) !important; text-align: center !important;
+            justify-content: center !important; white-space: nowrap !important;
           }
-          .stock-filter-bar button svg {
-            width: 12px !important;
-            height: 12px !important;
-          }
-          .stock-expanded-content {
-            padding: 0.5rem 0.75rem !important;
-          }
+          .stock-filter-bar button svg { width: 12px !important; height: 12px !important; }
+          .stock-expanded-content { padding: 0.5rem 0.75rem !important; }
+          .stock-desktop-table { display: none !important; }
+          .stock-mobile-cards { display: block !important; }
         }
+        .mobile-product-card {
+          border: 1px solid #333; border-radius: 6px; padding: 0.6rem;
+          margin-bottom: 0.5rem; background: #1e1e1e;
+        }
+        .mobile-product-card.expired {
+          background: rgba(255, 77, 77, 0.15); border-color: rgba(255, 77, 77, 0.4);
+        }
+        .mobile-card-row {
+          display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+          margin-bottom: 0.4rem; align-items: start;
+        }
+        .mobile-card-row:last-child { margin-bottom: 0; }
+        .mobile-card-label { font-size: 10px; color: #888; text-transform: uppercase; margin-bottom: 2px; }
       `}</style>
-      {/* Hidden file input for gallery uploads */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        accept="image/*"
-        onChange={(e) => onBillUpload(home.id, e)}
-      />
-      {/* Hidden file input for camera capture */}
-      <input
-        type="file"
-        ref={cameraInputRef}
-        style={{ display: 'none' }}
-        accept="image/*"
-        capture="environment"
-        onChange={(e) => onBillUpload(home.id, e)}
-      />
+
+      <input type="file" ref={fileInputRef} style={{ display: 'none' }} accept="image/*" onChange={(e) => onBillUpload(home.id, e)} />
+      <input type="file" ref={cameraInputRef} style={{ display: 'none' }} accept="image/*" capture="environment" onChange={(e) => onBillUpload(home.id, e)} />
+
       <div
         onClick={() => onToggle(home.id)}
-        style={{
-          width: '100%',
-          background: isAnotherHomeFocused ? '#000' : '#222',
-          color: '#fff',
-          border: 'none',
-          padding: '0.9rem 1rem',
-          textAlign: 'left',
-          cursor: 'pointer',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '0.5rem'
-        }}
+        style={{ width: '100%', background: isAnotherHomeFocused ? '#000' : '#222', color: '#fff', border: 'none', padding: '0.9rem 1rem', textAlign: 'left', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}
       >
         {editingHomeId === home.id ? (
           <input
             value={currentEditingHomeName}
             onChange={(e) => setCurrentEditingHomeName(e.target.value)}
-            style={{
-              background: '#fff', color: '#111', border: '1px solid #1db954',
-              borderRadius: '4px', padding: '0.2rem 0.4rem', boxSizing: 'border-box', width: '150px'
-            }}
+            style={{ background: '#fff', color: '#111', border: '1px solid #1db954', borderRadius: '4px', padding: '0.2rem 0.4rem', boxSizing: 'border-box', width: '150px' }}
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
           <span id={`home-header-${home.id}`} style={{ fontSize: '1.25rem', fontWeight: '600', flexGrow: 1 }}>{home.name}</span>
         )}
-
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           {editingHomeId === home.id ? (
             <>
-              <button type="button" onClick={(e) => { e.stopPropagation(); handleUpdateHomeName(home.id); }} style={{ background: '#1db954', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '14px' }} title="Save Home Name">
-                Save
-              </button>
-              <button type="button" onClick={(e) => { e.stopPropagation(); setEditingHomeId(null); setCurrentEditingHomeName(''); }} style={{ background: '#444', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '14px' }} title="Cancel Edit">
-                Cancel
-              </button>
+              <button type="button" onClick={(e) => { e.stopPropagation(); handleUpdateHomeName(home.id); }} style={{ background: '#1db954', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '14px' }} title="Save Home Name">Save</button>
+              <button type="button" onClick={(e) => { e.stopPropagation(); setEditingHomeId(null); setCurrentEditingHomeName(''); }} style={{ background: '#444', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '14px' }} title="Cancel Edit">Cancel</button>
             </>
           ) : (
             <>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setEditingHomeId(home.id);
-                  setCurrentEditingHomeName(home.name);
-                }}
-                style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }}
-                title="Edit Home Name"
-              >
-                ✏️
-              </button>
-              <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(home.id); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }} title="Delete Home">
-                🗑️
-              </button>
+              <button type="button" onClick={(e) => { e.stopPropagation(); setEditingHomeId(home.id); setCurrentEditingHomeName(home.name); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }} title="Edit Home Name">✏️</button>
+              <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(home.id); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }} title="Delete Home">🗑️</button>
             </>
           )}
           <span>{home.expanded ? '−' : '+'}</span>
@@ -246,10 +298,7 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
       </div>
 
       {home.expanded && (
-        <div className="stock-expanded-content" style={{
-          padding: '0.75rem 1.5rem',
-          background: isAnotherHomeFocused ? '#000' : '#181818'
-        }}>
+        <div className="stock-expanded-content" style={{ padding: '0.75rem 1.5rem', background: isAnotherHomeFocused ? '#000' : '#181818' }}>
           <div className="stock-filter-bar" style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.75rem', gap: '0.5rem', alignItems: 'center' }}>
             <select
               value={home.filters.stockType}
@@ -258,9 +307,7 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
               disabled={catalogLoading}
             >
               <option value="all">All Stock Types</option>
-              {catalog.map(cat => (
-                <option key={cat.id} value={cat.name}>{cat.name}</option>
-              ))}
+              {catalog.map(cat => (<option key={cat.id} value={cat.name}>{cat.name}</option>))}
             </select>
             <button type="button" onClick={() => onUpdateFilters(home.id, { availability: home.filters.availability === 'all' ? 'unavailable' : 'all' })} style={{ background: '#f0ad4e', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 0.75rem', cursor: 'pointer' }}>
               {home.filters.availability === 'all' ? 'Show Unavailable' : 'Show All'}
@@ -276,12 +323,8 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                 <>
                   <div className="bill-menu-overlay" onClick={() => setShowBillMenu(false)} />
                   <div className="bill-menu">
-                    <button type="button" className="bill-menu-item" onClick={handleCameraSelect}>
-                      📷 Camera
-                    </button>
-                    <button type="button" className="bill-menu-item" onClick={handleGallerySelect}>
-                      🖼️ Gallery
-                    </button>
+                    <button type="button" className="bill-menu-item" onClick={handleCameraSelect}>📷 Open Camera</button>
+                    <button type="button" className="bill-menu-item" onClick={handleGallerySelect}>🖼️ Select from Gallery</button>
                   </div>
                 </>
               )}
@@ -291,7 +334,8 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
             </button>
           </div>
 
-          <div style={{ overflowX: activeStockTypeDropdown !== null ? 'visible' : 'auto' }}>
+          {/* Desktop Table View */}
+          <div className="stock-desktop-table" style={{ overflowX: activeStockTypeDropdown !== null ? 'visible' : 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', color: '#fff' }}>
               <thead>
                 <tr style={{ background: '#222' }}>
@@ -313,168 +357,69 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                   </tr>
                 ) : (
                   filteredProducts.map((product, index) => (
-                    <tr 
-                      key={product.id} 
-                      style={{ 
-                        backgroundColor: product.isExpired ? 'rgba(255, 77, 77, 0.2)' : 'transparent',
-                        // Apply red color to text for expired items for better visibility
-                        color: product.isExpired ? '#ff9999' : '#fff'
-                      }}
-                    >
+                    <tr key={product.id} style={{ backgroundColor: product.isExpired ? 'rgba(255, 77, 77, 0.2)' : 'transparent', color: product.isExpired ? '#ff9999' : '#fff' }}>
                       <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>{index + 1}</td>
-                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                        <div style={{ position: 'relative' }}>
-                          <input
-                            value={product.stockType}
-                            onChange={(e) => {
-                              onUpdateProduct(home.id, product.id, { stockType: e.target.value });
-                              if (activeStockTypeDropdown !== product.id) {
-                                setActiveStockTypeDropdown(product.id);
-                              }
-                            }}
-                            onFocus={() => setActiveStockTypeDropdown(product.id)}
-                            onBlur={() => {
-                              setTimeout(() => {
-                                const isValid = catalog.some(c => c.name.toLowerCase() === product.stockType.toLowerCase());
-                                if (!isValid && product.stockType !== '') {
-                                  onUpdateProduct(home.id, product.id, { stockType: '', product: '' });
-                                }
-                                setActiveStockTypeDropdown(null);
-                              }, 150);
-                            }}
-                            placeholder={catalogLoading ? 'Loading...' : 'Search type...'}
-                            style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box' }}
-                            disabled={catalogLoading}
-                            autoComplete="off"
-                          />
-                          {activeStockTypeDropdown === product.id && (
-                            <div style={{
-                              position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: '#fff',
-                              border: '1px solid #ccc', borderRadius: '4px', marginTop: '2px',
-                              maxHeight: '150px', overflowY: 'auto', zIndex: 999, color: '#111'
-                            }}>
-                              {(() => {
-                                const filteredCatalog = catalog.filter(cat =>
-                                  product.stockType ? cat.name.toLowerCase().includes(product.stockType.toLowerCase()) : true
-                                );
-
-                                if (filteredCatalog.length === 0) {
-                                  return <div style={{ padding: '0.5rem', color: '#888' }}>No matches found</div>;
-                                }
-
-                                return filteredCatalog.map(cat => (
-                                  <div
-                                    key={cat.id}
-                                    onMouseDown={() => {
-                                      onUpdateProduct(home.id, product.id, { stockType: cat.name, product: '' });
-                                    }}
-                                    style={{ padding: '0.5rem', cursor: 'pointer' }}
-                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'}
-                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
-                                  >{cat.name}</div>
-                                ));
-                              })()}
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                        <div style={{ position: 'relative' }}>
-                          <input
-                            value={product.product}
-                            onChange={(e) => onUpdateProduct(home.id, product.id, { product: e.target.value })}
-                            style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: '#fff', color: '#111', border: '1px solid #ccc', boxSizing: 'border-box' }}
-                            list={`product-list-${product.id}`}
-                            disabled={!product.stockType}
-                          />
-                          <datalist id={`product-list-${product.id}`}>
-                            {catalog.find(cat => cat.name === product.stockType)?.items.map(item => (
-                              <option key={item.id} value={item.name} />
-                            ))}
-                          </datalist>
-                        </div>
-                      </td>
-                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                          <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', margin: '0' }}>
-                            <input type="radio" style={{ marginTop: '4px' }} name={`availability-${product.id}`} value="Yes" checked={product.availability === 'Yes'} onChange={(e) => {
-                              if (product.availability === 'No') {
-                                setPendingUpdateIds(prev => [...prev, product.id]);
-                              }
-                              onUpdateProduct(home.id, product.id, { availability: e.target.value as 'Yes', isExpired: false });
-                            }} />
-                            Yes
-                          </label>
-                          <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', margin: '0' }}>
-                            <input type="radio" style={{ marginTop: '4px' }} name={`availability-${product.id}`} value="No" checked={product.availability === 'No'} onChange={(e) => {
-                              setPendingUpdateIds(prev => prev.filter(id => id !== product.id));
-                              onUpdateProduct(home.id, product.id, {
-                                availability: 'No',
-                                quantity: '',
-                                expiryDate: '',
-                                isExpired: false
-                              });
-                            }} />
-                            No
-                          </label>
-                        </div>
-                      </td>
-                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                        <input type="text" value={product.quantity} onChange={(e) => onUpdateProduct(home.id, product.id, { quantity: e.target.value })} disabled={product.availability === 'No'} style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#555' : '#fff', color: product.availability === 'No' ? '#ccc' : '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
-                      </td>
-                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>
-                        <input
-                          type="date"
-                          placeholder="DD-MM-YYYY"
-                          onFocus={(e) => (e.currentTarget.type = 'date')}
-                          onBlur={(e) => {
-                            if (!e.currentTarget.value) {
-                              e.currentTarget.type = 'text';
-                            }
-                          }}
-                          value={product.expiryDate}
-                          onChange={(e) => {
-                            const selectedDateValue = e.target.value;
-                            if (selectedDateValue) {
-                              const today = new Date();
-                              today.setHours(0, 0, 0, 0); // Set to the beginning of today
-                              const selectedDate = new Date(selectedDateValue + 'T00:00:00'); // Treat as local time
-
-                              if (selectedDate <= today) {
-                                alert('Expiry date must be in the future.');
-                                return; // Do not update if the date is not valid
-                              }
-                            }
-                            onUpdateProduct(home.id, product.id, { expiryDate: selectedDateValue });
-                          }}
-                          disabled={product.availability === 'No'}
-                          style={{ width: '100%', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#555' : '#fff', color: product.availability === 'No' ? '#ccc' : '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1 }} />
-                      </td>
-                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333', textAlign: 'center' }}>
-                        {pendingUpdateIds.includes(product.id) && (
-                          <button
-                            type="button"
-                            onClick={() => handleConfirmUpdate(product.id)}
-                            style={{ background: 'none', border: 'none', color: '#1db954', cursor: 'pointer', fontSize: '16px', marginRight: '0.5rem' }}
-                            title="Confirm and move to available"
-                          >
-                            ✓
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => onDeleteProduct(home.id, product.id)}
-                          style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }}
-                          title="Delete Product"
-                        >
-                          🗑️
-                        </button>
-                      </td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>{renderStockTypeInput(product)}</td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>{renderProductInput(product)}</td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>{renderAvailability(product, 'dt')}</td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>{renderQuantityInput(product)}</td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333' }}>{renderExpiryInput(product)}</td>
+                      <td style={{ padding: '0.6rem', borderBottom: '1px solid #333', textAlign: 'center' }}>{renderActions(product)}</td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="stock-mobile-cards">
+            {showEmptyMessage ? (
+              <div style={{ padding: '1rem', textAlign: 'center', color: '#aaa', border: '1px solid #333', borderRadius: '6px' }}>
+                {showNoProductsYetMessage ? 'No products yet.' : 'No products match the current filters.'}
+              </div>
+            ) : (
+              filteredProducts.map((product) => (
+                <div key={product.id} className={`mobile-product-card${product.isExpired ? ' expired' : ''}`}>
+                  <div className="mobile-card-row">
+                    <div>
+                      <div className="mobile-card-label">Type of Stock</div>
+                      {renderStockTypeInput(product)}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                      <div className="mobile-card-label">Availability</div>
+                      {renderAvailability(product, 'mb')}
+                    </div>
+                  </div>
+                  <div className="mobile-card-row">
+                    <div>
+                      <div className="mobile-card-label">Product</div>
+                      {renderProductInput(product)}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                      <div className="mobile-card-label">Quantity</div>
+                      <input
+                        type="text"
+                        value={product.quantity}
+                        onChange={(e) => onUpdateProduct(home.id, product.id, { quantity: e.target.value })}
+                        disabled={product.availability === 'No'}
+                        style={{ width: '60px', padding: '0.2rem', borderRadius: '4px', background: product.availability === 'No' ? '#555' : '#fff', color: product.availability === 'No' ? '#ccc' : '#111', border: '1px solid #ccc', boxSizing: 'border-box', opacity: product.availability === 'No' ? 0.6 : 1, fontSize: '12px', textAlign: 'center' }}
+                      />
+                    </div>
+                  </div>
+                  <div className="mobile-card-row">
+                    <div>
+                      <div className="mobile-card-label">Expiry Date</div>
+                      {renderExpiryInput(product)}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                      <div className="mobile-card-label">Actions</div>
+                      {renderActions(product)}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}
