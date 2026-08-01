@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from './supabase-database';
 import * as api from './homeApi';
 import { HomeAccordion } from './HomeAccordion';
+import { InfoDialog } from '../shared/ui/ConfirmDialog';
 import type { HomeItem, CatalogCategory } from './types';
 
 type StockTrackerDashboardProps = {
@@ -12,6 +13,7 @@ type StockTrackerDashboardProps = {
 
 export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) => {
   const [homes, setHomes] = useState<HomeItem[]>([]);
+  const [showMicFeatureDialog, setShowMicFeatureDialog] = useState(false);
   const [newHomeName, setNewHomeName] = useState('');
   const [showAddHome, setShowAddHome] = useState(false);
   const [focusedHomeId, setFocusedHomeId] = useState<number | null>(null);
@@ -498,7 +500,7 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
       {/* Voice Assistant Mic FAB (disabled - prompts to download app) */}
       <button
         type="button"
-        onClick={() => alert('📲 Download the Stock Tracker app to fully access AI features and notifications.\n\nVisit: https://stock-tracker-pwa-nj.netlify.app')}
+        onClick={() => setShowMicFeatureDialog(true)}
         style={{
           position: 'fixed',
           bottom: '24px',
@@ -551,6 +553,17 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
           📲 Download App (PWA)
         </a>
       </div>
+
+      {/* Mic Feature Info Dialog */}
+      <InfoDialog
+        open={showMicFeatureDialog}
+        title="AI Features Available in App"
+        message="Download the Stock Tracker app to access AI-powered voice commands, bill scanning, and expiry notifications."
+        buttonText="Close"
+        onClose={() => setShowMicFeatureDialog(false)}
+        linkUrl="https://stock-tracker-pwa-nj.netlify.app"
+        linkText="📲 Download App"
+      />
     </div>
   );
 };

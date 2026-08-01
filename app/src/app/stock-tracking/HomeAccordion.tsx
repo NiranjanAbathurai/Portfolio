@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import type { HomeItem, CatalogCategory } from './types';
+import { ConfirmDialog, InfoDialog } from '../shared/ui/ConfirmDialog';
 
 type HomeAccordionProps = {
   home: HomeItem;
@@ -41,6 +42,9 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
   const [activeStockTypeDropdown, setActiveStockTypeDropdown] = useState<number | null>(null);
   const [pendingUpdateIds, setPendingUpdateIds] = useState<number[]>([]);
   const [showBillMenu, setShowBillMenu] = useState(false);
+  const [showDeleteHomeDialog, setShowDeleteHomeDialog] = useState(false);
+  const [showDeleteProductDialog, setShowDeleteProductDialog] = useState<number | null>(null);
+  const [showFeatureDialog, setShowFeatureDialog] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
@@ -72,16 +76,16 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
   // };
 
     const handleBillButtonClick = () => {
-    alert('📲 Download the Stock Tracker app to fully access AI features and notifications.\n\nVisit: https://stock-tracker-pwa-nj.netlify.app');
-  };
-
-  const handleCameraSelect = () => {
-    alert('📲 Download the Stock Tracker app to fully access AI features and notifications.\n\nVisit: https://stock-tracker-pwa-nj.netlify.app');
-  };
-
-  const handleGallerySelect = () => {
-    alert('📲 Download the Stock Tracker app to fully access AI features and notifications.\n\nVisit: https://stock-tracker-pwa-nj.netlify.app');
-  };
+      setShowFeatureDialog(true);
+    };
+  
+    const handleCameraSelect = () => {
+      setShowFeatureDialog(true);
+    };
+  
+    const handleGallerySelect = () => {
+      setShowFeatureDialog(true);
+    };
 
 
   const handleConfirmUpdate = (productId: number) => {
@@ -280,7 +284,7 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
               >
                 ✏️
               </button>
-              <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(home.id); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }} title="Delete Home">
+              <button type="button" onClick={(e) => { e.stopPropagation(); setShowDeleteHomeDialog(true); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }} title="Delete Home">
                 🗑️
               </button>
             </>
@@ -552,7 +556,7 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                         )}
                         <button
                           type="button"
-                          onClick={() => onDeleteProduct(home.id, product.id)}
+                          onClick={() => setShowDeleteProductDialog(product.id)}
                           style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }}
                           title="Delete Product"
                         >
@@ -698,7 +702,7 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
                     <div style={{ paddingTop: '0.3rem', textAlign: 'center' }}>
                       <button
                         type="button"
-                        onClick={() => onDeleteProduct(home.id, product.id)}
+                        onClick={() => setShowDeleteProductDialog(product.id)}
                         style={{ background: 'none', border: 'none', color: '#e53935', cursor: 'pointer', fontSize: '1.2rem', padding: '0.2rem' }}
                         title="Delete product"
                       >
@@ -712,6 +716,49 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
           </div>
         </div>
       )}
+
+      {/* Delete Home Confirm Dialog */}
+      <ConfirmDialog
+        open={showDeleteHomeDialog}
+        title="Delete Home"
+        message={`Are you sure you want to delete "${home.name}" and all its products? This cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          setShowDeleteHomeDialog(false);
+          onDelete(home.id);
+        }}
+        onCancel={() => setShowDeleteHomeDialog(false)}
+      />
+
+      {/* Delete Product Confirm Dialog */}
+      <ConfirmDialog
+        open={showDeleteProductDialog !== null}
+        title="Delete Product"
+        message="Are you sure you want to delete this product?"
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          if (showDeleteProductDialog !== null) {
+            onDeleteProduct(home.id, showDeleteProductDialog);
+          }
+          setShowDeleteProductDialog(null);
+        }}
+        onCancel={() => setShowDeleteProductDialog(null)}
+      />
+
+      {/* Feature Not Available Info Dialog */}
+      <InfoDialog
+        open={showFeatureDialog}
+        title="AI Features Available in App"
+        message="Download the Stock Tracker app to access AI-powered bill scanning, voice commands, and expiry notifications."
+        buttonText="Close"
+        onClose={() => setShowFeatureDialog(false)}
+        linkUrl="https://stock-tracker-pwa-nj.netlify.app"
+        linkText="📲 Download App"
+      />
     </div>
   );
 };
