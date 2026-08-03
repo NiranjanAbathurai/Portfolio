@@ -1,3 +1,7 @@
+export type AvailabilityStatus = 'available' | 'low' | 'out_of_stock';
+
+export type Tab = 'dashboard' | 'inventory' | 'profile';
+
 export type CatalogItem = {
   id: number;
   name: string;
@@ -9,6 +13,17 @@ export type CatalogCategory = {
   items: CatalogItem[];
 };
 
+export type Product = {
+  id: number;
+  stockType: string;
+  product: string;
+  quantity: string;
+  expiryDate: string;
+  availability: 'Yes' | 'No' | '';
+  isExpired?: boolean;
+  availability_status?: AvailabilityStatus;
+};
+
 export type HomeItem = {
   id: number;
   name: string;
@@ -17,13 +32,5 @@ export type HomeItem = {
     availability: 'all' | 'unavailable';
     stockType: string;
   };
-  products: Array<{
-    id: number;
-    stockType: string;
-    product: string;
-    quantity: string;
-    expiryDate: string;
-    availability: 'Yes' | 'No' | '';
-    isExpired?: boolean;
-  }>;
+  products: Product[];
 };

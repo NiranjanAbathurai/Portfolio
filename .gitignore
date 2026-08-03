@@ -16,3 +16,6 @@ pnpm-debug.log*
 /app/dist/
 /.angular/
 /app/.angular/
+
+# Local Netlify folder
+.netlify

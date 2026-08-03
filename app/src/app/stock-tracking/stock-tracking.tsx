@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
-import { StockTrackerDashboard } from './StockTrackerDashboard';
+import { AppShellPortfolio } from './AppShellPortfolio';
 
 export const StockTracking = () => {
     const [formMode, setFormMode] = useState<'signin' | 'signup' | 'dashboard'>('signin');
@@ -25,7 +25,6 @@ export const StockTracking = () => {
 
     const handleLogout = () => {
         if (typeof window !== 'undefined') {
-            // Clear the "Remember me" session
             window.sessionStorage.removeItem('stock-tracker-session-auth');
         }
         setFormMode('signin');
@@ -34,6 +33,7 @@ export const StockTracking = () => {
             setSignInMessage(null);
         }, 3000);
     };
+
     const showTemporarySignInMessage = (message: string) => {
         setSignInMessage(message);
         setRegisterMessage(null);
@@ -43,16 +43,20 @@ export const StockTracking = () => {
         }, 3000);
     };
 
+    // ============================================================
+    // DASHBOARD VIEW — New PWA-style AppShell
+    // ============================================================
     if (formMode === 'dashboard') {
         return (
-            <div style={{ minHeight: '70vh', padding: 'clamp(1rem, 3vw, 2rem)', background: '#000000' }}>
-                <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto', border: `2px solid ${headerGreen}`, borderRadius: '12px', background: darkBg, color: cardText, padding: 'clamp(1rem, 3vw, 1.5rem)', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-                    <StockTrackerDashboard onLogout={handleLogout} />
-                </div>
+            <div style={{ minHeight: '70vh', background: '#000000' }}>
+                <AppShellPortfolio onLogout={handleLogout} />
             </div>
         );
     }
 
+    // ============================================================
+    // AUTH FORMS VIEW
+    // ============================================================
     return (
         <div style={{ minHeight: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 'clamp(1rem, 3vw, 2rem)', background: '#000000', gap: '1.5rem' }}>
             <div style={{ width: '100%', maxWidth: '420px', border: `2px solid ${headerGreen}`, borderRadius: '12px', background: darkBg, color: cardText, padding: 'clamp(1rem, 3vw, 1.5rem)', margin: '0 0.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
@@ -101,23 +105,25 @@ export const StockTracking = () => {
                     <li>🏠 Organize stock by homes</li>
                     <li>📅 Track expiry dates</li>
                     <li>🔔 Get notified when products expire</li>
+                    <li>🎤 AI voice commands to manage stock</li>
                     <li>📷 Add items by scanning bills</li>
                     <li>📱 Works offline as an installed app</li>
                 </ul>
                 <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                     <a
-                        href="https://my-stock-tracker-app.netlify.app?install=true"
+                        href="https://my-stock-tracker-app.netlify.app/?install=true"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
                             display: 'inline-block',
-                            background: headerGreen,
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                             color: '#fff',
                             textDecoration: 'none',
                             padding: '0.6rem 1.5rem',
                             borderRadius: '8px',
                             fontWeight: 600,
                             fontSize: '0.9rem',
+                            boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)',
                         }}
                     >
                         📲 Download App
