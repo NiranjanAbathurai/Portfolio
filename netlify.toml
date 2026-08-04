@@ -28,7 +28,3 @@
     to = "/index.csr.html"
     status = 200
 
-# Scheduled function for daily expiry notifications
-[functions."expiry-notification"]
-  # This is a cron expression that means "at 6:05 PM (18:05) UTC every day"
-  schedule = "5 18 * * *"
