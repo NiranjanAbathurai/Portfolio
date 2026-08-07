@@ -111,7 +111,7 @@ export const StockTracking = () => {
                 </ul>
                 <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                     <a
-                        href="https://my-stock-tracker-app.netlify.app/?install=true"
+                        href="https://stock-tracker-app-ai.netlify.app/?install=true"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{

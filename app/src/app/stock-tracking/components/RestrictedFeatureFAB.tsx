@@ -62,7 +62,7 @@ export const RestrictedFeatureFAB = () => {
         message="Download the Stock Tracker app to access AI-powered voice commands, bill scanning, and expiry notifications."
         buttonText="Close"
         onClose={() => setShowDialog(false)}
-        linkUrl="https://my-stock-tracker-app.netlify.app/?install=true"
+        linkUrl="https://stock-tracker-app-ai.netlify.app/?install=true"
         linkText="📲 Download App"
       />
     </>

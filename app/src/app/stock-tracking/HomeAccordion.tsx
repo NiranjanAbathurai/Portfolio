@@ -756,7 +756,7 @@ export const HomeAccordion = (props: HomeAccordionProps) => {
         message="Download the Stock Tracker app to access AI-powered bill scanning, voice commands, and expiry notifications."
         buttonText="Close"
         onClose={() => setShowFeatureDialog(false)}
-        linkUrl="https://stock-tracker-pwa-nj.netlify.app"
+        linkUrl="https://stock-tracker-app-ai.netlify.app"
         linkText="📲 Download App"
       />
     </div>

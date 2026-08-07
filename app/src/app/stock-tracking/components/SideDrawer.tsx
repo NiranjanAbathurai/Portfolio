@@ -142,7 +142,7 @@ export const SideDrawer = ({ isOpen, onClose, homes, selectedHomeId, onSelectHom
         {/* Footer */}
         <div style={{ padding: '16px', borderTop: '1px solid var(--st-border-color, #334155)' }}>
           <a
-            href="https://my-stock-tracker-app.netlify.app/?install=true"
+            href="https://stock-tracker-app-ai.netlify.app/?install=true"
             target="_blank"
             rel="noopener noreferrer"
             style={{

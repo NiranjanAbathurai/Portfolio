@@ -304,7 +304,7 @@ export const AppShellPortfolio = ({ onLogout }: AppShellPortfolioProps) => {
         message="Download the Stock Tracker app to receive push notifications when your products are about to expire."
         buttonText="Close"
         onClose={() => setShowNotificationDialog(false)}
-        linkUrl="https://my-stock-tracker-app.netlify.app/?install=true"
+        linkUrl="https://stock-tracker-app-ai.netlify.app/?install=true"
         linkText="📲 Download App"
       />
     </div>

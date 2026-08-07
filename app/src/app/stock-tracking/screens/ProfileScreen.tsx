@@ -247,7 +247,7 @@ export const ProfileScreen = ({ userName, userEmail, homes, onLogout, onAddHome,
 
       {/* Download App CTA */}
       <a
-        href="https://my-stock-tracker-app.netlify.app/?install=true"
+        href="https://stock-tracker-app-ai.netlify.app/?install=true"
         target="_blank"
         rel="noopener noreferrer"
         style={{
@@ -294,7 +294,7 @@ export const ProfileScreen = ({ userName, userEmail, homes, onLogout, onAddHome,
         message="Download the Stock Tracker app to receive push notifications when your products are about to expire."
         buttonText="Close"
         onClose={() => setShowNotificationDialog(false)}
-        linkUrl="https://my-stock-tracker-app.netlify.app/?install=true"
+        linkUrl="https://stock-tracker-app-ai.netlify.app/?install=true"
         linkText="📲 Download App"
       />
     </div>

@@ -191,7 +191,7 @@ export const InventoryScreen = ({
         message="Download the Stock Tracker app to scan bills with AI and automatically add products to your inventory."
         buttonText="Close"
         onClose={() => setShowBillScanDialog(false)}
-        linkUrl="https://my-stock-tracker-app.netlify.app/?install=true"
+        linkUrl="https://stock-tracker-app-ai.netlify.app/?install=true"
         linkText="📲 Download App"
       />
     </div>

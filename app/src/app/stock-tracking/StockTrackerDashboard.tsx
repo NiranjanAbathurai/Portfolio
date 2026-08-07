@@ -561,7 +561,7 @@ export const StockTrackerDashboard = ({ onLogout }: StockTrackerDashboardProps) 
         message="Download the Stock Tracker app to access AI-powered voice commands, bill scanning, and expiry notifications."
         buttonText="Close"
         onClose={() => setShowMicFeatureDialog(false)}
-        linkUrl="https://stock-tracker-pwa-nj.netlify.app"
+        linkUrl="https://stock-tracker-app-ai.netlify.app"
         linkText="📲 Download App"
       />
     </div>
