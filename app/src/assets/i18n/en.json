@@ -13,7 +13,8 @@
     "CERTIFICATE_3_ALT": "Infosys Angular certificate",
     "CERTIFICATE_4_ALT": "Infosys frontend certificate",
     "CERTIFICATE_5_ALT": "CSS certificate",
-    "CERTIFICATE_6_ALT": "React basic certificate"
+    "CERTIFICATE_6_ALT": "React basic certificate",
+    "CERTIFICATE_7_ALT": "Frontend developer React certificate"
   },
   "CONTACT": {
     "HEADING": "Feel free to drop a message",

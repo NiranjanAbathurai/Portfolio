@@ -29,6 +29,7 @@ export class HomeComponent {
     { file: 'angular-inter.png', altKey: 'HOME.CERTIFICATE_1_ALT' },
     { file: 'angular_basic.png', altKey: 'HOME.CERTIFICATE_2_ALT' },
     { file: 'react_basic.png', altKey: 'HOME.CERTIFICATE_6_ALT' },
+     { file: 'frontend_developer_react.png', altKey: 'HOME.CERTIFICATE_7_ALT' },
     { file: 'infosys_angular.png', altKey: 'HOME.CERTIFICATE_3_ALT' },
     { file: 'infosys_frontend.png', altKey: 'HOME.CERTIFICATE_4_ALT' },
     { file: 'css-certificate.png', altKey: 'HOME.CERTIFICATE_5_ALT' }
