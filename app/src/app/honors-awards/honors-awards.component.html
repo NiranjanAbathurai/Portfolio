@@ -11,13 +11,24 @@
             <span class="quote-mark">&ldquo;&ldquo;</span>
           </div>
 
+          <!-- Certificate image (shown for awards that have one) -->
+          <div class="card-certificate" *ngIf="award.certificate">
+            <img [src]="award.certificate" [alt]="award.title + ' certificate'" class="certificate-img">
+          </div>
+
           <p class="card-description">{{ award.description }}</p>
 
           <div class="card-footer">
             <div class="avatar-wrapper">
-              <div class="avatar" [ngClass]="'avatar-' + (award.id % 4)">
-                <i [class]="getIconClass(award.icon)"></i>
-              </div>
+              <img *ngIf="award.logo; else iconFallback"
+                   [src]="award.logo"
+                   [alt]="award.title"
+                   class="avatar-img">
+              <ng-template #iconFallback>
+                <div class="avatar" [ngClass]="'avatar-' + (award.id % 4)">
+                  <i [class]="getIconClass(award.icon)"></i>
+                </div>
+              </ng-template>
             </div>
             <div class="card-info">
               <h4 class="card-title">{{ award.title }}</h4>

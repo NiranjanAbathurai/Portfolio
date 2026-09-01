@@ -18,6 +18,8 @@ interface Award {
   description: string;
   icon: string;
   type: string;
+  logo:string;
+  certificate:string;
 }
 
 @Component({
