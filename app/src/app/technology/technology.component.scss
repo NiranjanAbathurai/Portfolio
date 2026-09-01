@@ -5,7 +5,7 @@
     color: green;
     font-family: 'my-font';
     margin-top: 2rem;
-    animation: slideIn 1s ease-in forwards;
+    animation: slideIn 0.25s ease-in forwards;
   }
 
   .glowing-text {
@@ -38,7 +38,7 @@
   .image-div{
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3), 0 0 15px rgba(40, 167, 69, 0.1),0 4px 8px rgba(40, 167, 69, 0.3), 0 0 15px rgba(40, 167, 69, 0.1);
-    animation: slideIn 1s ease-in forwards;
+    animation: slideIn 0.25s ease-in forwards;
   }
 
   .object_contain{

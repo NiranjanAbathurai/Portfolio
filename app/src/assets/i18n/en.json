@@ -55,6 +55,8 @@
     "IDE_WORKED": "IDE worked"
   },
   "WORK_EXPERIENCE": {
+    "TITLE": "Work Experience",
+    "PROJECTS": "Work Experience & Projects",
     "VIEW_MINI_PROJECT": "Canvas Form Builder",
     "VIEW_CHATBOT": "Explore AI Agent - Chatbot",
     "GROCERIES_TRACKER": "Grocery tracker",

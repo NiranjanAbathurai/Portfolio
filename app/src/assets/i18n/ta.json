@@ -55,6 +55,8 @@
     "IDE_WORKED": "பயன்படுத்திய IDE"
   },
   "WORK_EXPERIENCE": {
+    "TITLE": "பணி அனுபவம்",
+    "PROJECTS": "பணி அனுபவம் & திட்டங்கள்",
     "VIEW_MINI_PROJECT": "கான்வாஸ் ஃபார்ம் பில்ல்டர்",
     "VIEW_CHATBOT": "AI ஏஜெண்ட்டை ஆராய்க - சாட்போட்",
     "GROCERIES_TRACKER": "Grocery tracker",

@@ -1,6 +1,7 @@
-<div class="work-experience mt-4">
-  <div class="row m-0 p-4 onScroll">
-    <!-- <h3 class="text-color">PROJECTS</h3> -->
+
+<div class="work-experience onScroll">
+  <div class="row m-0 ">
+    <h3 class="technology mb-8"><span class="glowing-text">{{ 'WORK_EXPERIENCE.TITLE' | translate | uppercase }}</span></h3>
     <div class="row" *ngFor="let item of jobDetails; let odd=odd">
       <!-- Odd -->
       <div class="col-md-6 col-12 p-4" [ngClass]="isMobile()?'vertical-line-l justify-start':'vertical-line-r justify-end'" *ngIf="!odd">
@@ -46,10 +47,6 @@
       </div>
 
     </div>
-    <!-- <div class="d-flex justify-content-evenly mt-4">
-      <button type="button" class="btn btn-outline-success w-25" (click)="navigateProject('mini-project')">{{ 'WORK_EXPERIENCE.VIEW_MINI_PROJECT' | translate }}</button>
-      <button type="button" class="btn btn-outline-success w-25" (click)="navigateProject('chatbot')">{{ 'WORK_EXPERIENCE.VIEW_CHATBOT' | translate }}</button>
-    </div> -->
     <div class="d-flex flex-column flex-md-row justify-content-evenly mt-4" [ngClass]="isMobile()?'gap-1':'gap-4'"  >
       <button type="button" class="btn btn-outline-success mb-2 mb-md-0 w-100 w-md-25"
         (click)="navigateProject('mini-project')">
