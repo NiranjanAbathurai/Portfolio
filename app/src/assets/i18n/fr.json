@@ -55,6 +55,8 @@
     "IDE_WORKED": "IDE utilisés"
   },
   "WORK_EXPERIENCE": {
+    "TITLE": "Expérience Professionnelle",
+    "PROJECTS": "Expérience Professionnelle & Projets",
     "VIEW_MINI_PROJECT": "Générateur de formulaires Canvas",
     "VIEW_CHATBOT": "Explorer l'agent IA - Chatbot",
     "GROCERIES_TRACKER": "Grocery tracker",

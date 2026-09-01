@@ -55,6 +55,8 @@
     "IDE_WORKED": "उपयोग किए गए IDE"
   },
   "WORK_EXPERIENCE": {
+    "TITLE": "कार्य अनुभव",
+    "PROJECTS": "कार्य अनुभव और परियोजनाएँ",
     "VIEW_MINI_PROJECT": "कैनवास फ़ॉर्म बिल्डर",
     "VIEW_CHATBOT": "AI एजेंट एक्सप्लोर करें - चैटबोट",
     "GROCERIES_TRACKER": "Grocery tracker",

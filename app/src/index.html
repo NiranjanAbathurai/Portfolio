@@ -24,6 +24,29 @@
   <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
 </head>
 <body>
+  <!-- Pre-Angular splash: covers page instantly before Angular bootstraps -->
+  <div id="pre-splash" style="
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: #000;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  "></div>
+
   <app-root></app-root>
+
+  <script>
+    // Remove the static pre-splash once Angular's splash overlay takes over
+    document.addEventListener('DOMContentLoaded', function() {
+      // Small delay to ensure Angular has rendered its own splash overlay
+      setTimeout(function() {
+        var preSplash = document.getElementById('pre-splash');
+        if (preSplash) preSplash.remove();
+      }, 300);
+    });
+  </script>
 </body>
 </html>

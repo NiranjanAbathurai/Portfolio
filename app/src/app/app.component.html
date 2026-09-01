@@ -1,3 +1,11 @@
+
+<div class="splash-overlay"
+     *ngIf="showSplash()"
+     [class.splash-exit]="splashExiting()">
+  <span class="splash-greeting"
+        *ngIf="greetingVisible()">{{ activeGreeting() }}</span>
+</div>
+
 <app-header></app-header>
 
 <router-outlet></router-outlet>

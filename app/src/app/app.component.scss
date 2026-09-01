@@ -1,0 +1,58 @@
+// ─── Splash / Intro Overlay ──────────────────────────────────────────────────
+
+.splash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.splash-greeting {
+  font-family: 'my-font', sans-serif;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  animation: greetFade 0.4s ease-in-out;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+// Each time the text changes Angular re-renders, triggering this animation
+@keyframes greetFade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Exit animation — overlay slides up and fades out
+.splash-exit {
+  animation: splashSlideUp 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes splashSlideUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
