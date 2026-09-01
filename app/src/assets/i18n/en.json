@@ -130,5 +130,12 @@
     "SELECT_TIME": "Select time",
     "SELECT_DATE_TIME": "Select date and time",
     "REQUIRED": "Required"
+    },
+  "HONORS_AWARDS": {
+    "TITLE": "Words of praise from others about our presence.",
+    "AWARD": "Award",
+    "CERTIFICATION": "Certification",
+    "RECOMMENDATION": "Recommendation",
+    "ISSUED_BY": "Issued by"
   }
 }

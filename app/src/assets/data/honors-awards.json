@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "title": "Saravana Kumar",
+    "issuer": "Full Stack Developer at Cognizant Technology Solutions",
+    "date": "August 29, 2026",
+    "description": "I had a great experience working with Niranjan. He has a strong understanding of frontend technologies, especially React, Angular, JavaScript, and HTML. He is technically sound, quick to understand requirements, and always puts in the effort to deliver quality solutions. His dedication, willingness to learn, and ability to work well with the team make him a valuable professional.",
+    "icon": "star",
+    "type": "recommendation",
+    "logo": "assets/data/images/saravana.jpg",
+    "certificate": ""
+  },
+  {
+    "id": 2,
+    "title": "Pranab Kumar Padhy",
+    "issuer": "Technology Lead at Infosys Limited",
+    "date": "October 16, 2024",
+    "description": "I had the pleasure of working with Niranjan during his time as a Technology Analyst at Infosys. He quickly demonstrated strong skills in HTML, CSS, JavaScript and Angular, with a keen eye for design and attention to detail. He consistently delivered high-quality, responsive UIs and was always eager to learn and improve.",
+    "icon": "star",
+    "type": "recommendation",
+    "logo": "assets/data/images/pranab.jpg",
+    "certificate": ""
+  },
+  {
+    "id": 3,
+    "title": "Rising Star",
+    "issuer": "Abbvie Inc",
+    "date": "Aug 2026",
+    "description": "Recognized as a Rising Star for exceptional performance and outstanding contributions at Cognizant Technology Solutions, demonstrating excellence in frontend development and team collaboration.",
+    "icon": "trophy",
+    "type": "award",
+    "logo": "assets/data/images/cognizant_logo.jpg",
+    "certificate": "assets/data/images/Cognizant_Riseawards.jpg"
+  },
+  {
+    "id": 4,
+    "title": "Infosys INSTA Awards",
+    "issuer": "Infosys",
+    "date": "Feb 2025",
+    "description": "Certificate of Appreciation — Recognized for outstanding contribution and innovative problem-solving in delivering high-quality frontend solutions at Infosys.",
+    "icon": "trophy",
+    "type": "award",
+    "logo": "assets/data/images/infosys_logo.png",
+    "certificate": "assets/data/images/infosys_instaAwards.jpg"
+  }
+]
