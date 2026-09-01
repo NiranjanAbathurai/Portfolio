@@ -1,0 +1,47 @@
+<section class="honors-section" id="awardsViewChild">
+  <div class="section-header">
+    <h2 class="section-title">{{ 'HONORS_AWARDS.TITLE' | translate }}</h2>
+  </div>
+
+  <div class="carousel-wrapper">
+    <div class="carousel-track">
+      <div class="award-card" *ngFor="let award of displayAwards; let i = index">
+        <div class="card-content">
+          <div class="quote-icon">
+            <span class="quote-mark">&ldquo;&ldquo;</span>
+          </div>
+
+          <!-- Certificate image (shown for awards that have one) -->
+          <div class="card-certificate" *ngIf="award.certificate">
+            <img [src]="award.certificate" [alt]="award.title + ' certificate'" class="certificate-img">
+          </div>
+
+          <p class="card-description">{{ award.description }}</p>
+
+          <div class="card-footer">
+            <div class="avatar-wrapper">
+              <img *ngIf="award.logo; else iconFallback"
+                   [src]="award.logo"
+                   [alt]="award.title"
+                   class="avatar-img">
+              <ng-template #iconFallback>
+                <div class="avatar" [ngClass]="'avatar-' + (award.id % 4)">
+                  <i [class]="getIconClass(award.icon)"></i>
+                </div>
+              </ng-template>
+            </div>
+            <div class="card-info">
+              <h4 class="card-title">{{ award.title }}</h4>
+              <span class="card-issuer">{{ award.issuer }} &middot; {{ award.date }}</span>
+            </div>
+          </div>
+
+          <span class="card-type-badge"
+                [ngClass]="{'badge-award': award.type === 'award', 'badge-recommendation': award.type === 'recommendation'}">
+            {{ getBadgeKey(award.type) | translate }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

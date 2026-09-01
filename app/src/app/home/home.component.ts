@@ -5,6 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TechnologyComponent } from '../technology/technology.component';
 import { WorkExperienceComponent } from '../work-experience/work-experience.component';
 import { ContactComponent } from '../contact/contact.component';
+import { HonorsAwardsComponent } from '../honors-awards/honors-awards.component';
 
 import * as angJson from '../../../../app/angular.json';
 
@@ -14,7 +15,7 @@ import * as angJson from '../../../../app/angular.json';
   templateUrl: './home.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./home.component.scss'],
-  imports: [CommonModule, TranslateModule, TechnologyComponent, WorkExperienceComponent, ContactComponent]
+  imports: [CommonModule, TranslateModule, TechnologyComponent, WorkExperienceComponent, ContactComponent, HonorsAwardsComponent]
 })
 export class HomeComponent {
 
@@ -24,6 +25,7 @@ export class HomeComponent {
   @ViewChild('projectsViewChild') projectsSection: ElementRef | undefined;
   @ViewChild('skillsViewChild') skillsSection: ElementRef | undefined;
   @ViewChild('contactViewChild') contactSection: ElementRef | undefined;
+  @ViewChild('awardsViewChild') awardsSection: ElementRef | undefined;
   jsonFile !: any;
   carouselImages = [
     { file: 'angular-inter.png', altKey: 'HOME.CERTIFICATE_1_ALT' },
@@ -49,7 +51,9 @@ export class HomeComponent {
         this.skillsSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
       } else if (this.contactSection && data == 'contactViewChild') {
         this.contactSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
-      } 
+      } else if (this.awardsSection && data == 'awardsViewChild') {
+        this.awardsSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      }
     });
     this.jsonFile = angJson
 

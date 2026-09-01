@@ -1,0 +1,234 @@
+// ─── Honors & Awards Carousel ───────────────────────────────────────────────
+// Dark theme, auto-sliding CSS animation, hover pause + scale
+
+$card-width: 300px;
+$card-gap: 24px;
+$accent-green: #28a745;
+$glow-green: #44ed44;
+$bg-section: #000000;
+$card-bg: rgba(20, 20, 20, 0.9);
+$card-border: rgba(40, 167, 69, 0.3);
+$text-white: #ffffff;
+$text-light: whitesmoke;
+$text-muted: #9ca3af;
+
+.honors-section {
+  background-color: $bg-section;
+  padding: 3rem 0 2rem;
+  overflow: hidden;
+  position: relative;
+}
+
+// ─── Section Header ─────────────────────────────────────────────────────────
+.section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-family: 'my-font', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-white;
+  margin: 0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+}
+
+// ─── Carousel Wrapper ───────────────────────────────────────────────────────
+.carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  cursor: default;
+  padding: 0.5rem 0 1.5rem;
+
+  &:hover .carousel-track {
+    animation-play-state: paused;
+  }
+}
+
+// Total width of one set = number of cards * (card-width + gap)
+// With 4 cards: 4 * (300 + 24) = 1296px
+.carousel-track {
+  display: flex;
+  gap: $card-gap;
+  width: max-content;
+  animation: scroll-left 20s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    // Scroll exactly one set of cards (4 cards * (300px + 24px) = 1296px)
+    transform: translateX(calc(-1 * (#{$card-width} + #{$card-gap}) * 4));
+  }
+}
+
+// ─── Award Card ─────────────────────────────────────────────────────────────
+.award-card {
+  flex: 0 0 $card-width;
+  min-width: $card-width;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.06);
+    z-index: 10;
+
+    .card-content {
+      box-shadow: 0 0 15px rgba(40, 167, 69, 0.4),
+                  0 0 30px rgba(40, 167, 69, 0.15);
+      border-color: $accent-green;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    flex: 0 0 260px;
+    min-width: 260px;
+  }
+
+  @media screen and (max-width: 480px) {
+    flex: 0 0 230px;
+    min-width: 230px;
+  }
+}
+
+.card-content {
+  background: $card-bg;
+  border-radius: 12px;
+  padding: 1.25rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid $card-border;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  min-height: 220px;
+}
+
+// ─── Quote Icon ─────────────────────────────────────────────────────────────
+.quote-icon {
+  margin-bottom: 0.5rem;
+}
+
+.quote-mark {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: $accent-green;
+  line-height: 1;
+  letter-spacing: -3px;
+}
+
+// ─── Card Description ───────────────────────────────────────────────────────
+.card-description {
+  font-family: 'regular-font', sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: $text-light;
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+// ─── Card Footer (Avatar + Info) ────────────────────────────────────────────
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.avatar-wrapper {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: white;
+
+  &.avatar-0 {
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+  }
+  &.avatar-1 {
+    background: linear-gradient(135deg, #28a745, #059669);
+  }
+  &.avatar-2 {
+    background: linear-gradient(135deg, #4361ee, #7c3aed);
+  }
+  &.avatar-3 {
+    background: linear-gradient(135deg, #ec4899, #f43f5e);
+  }
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-family: 'my-font', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $text-white;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.card-issuer {
+  font-family: 'light-font', sans-serif;
+  font-size: 0.7rem;
+  color: $text-muted;
+  margin-top: 1px;
+}
+
+// ─── Type Badge ─────────────────────────────────────────────────────────────
+.card-type-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-family: 'regular-font', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.badge-award {
+    background: rgba(40, 167, 69, 0.15);
+    color: $glow-green;
+  }
+
+  &.badge-recommendation {
+    background: rgba(40, 167, 69, 0.15);
+    color: $glow-green;
+  }
+}

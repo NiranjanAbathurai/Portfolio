@@ -15,7 +15,7 @@ import { DropdownComponent } from '../shared/dropdown/dropdown.component';
 })
 export class HeaderComponent {
 
-  navItems = ['Home','Skills','Projects','Contact']
+  navItems = ['Home','Skills','Awards','Projects','Contact']
   windowWidth !: number;
   isMobile = false;
   dropdownVisible = false;
