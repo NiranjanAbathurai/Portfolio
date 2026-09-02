@@ -23,7 +23,7 @@ export class AppComponent {
   greetingVisible = signal<boolean>(false);
   splashExiting = signal<boolean>(false);
 
-  private greetings = ['Hello', 'Bonjour', 'Hola', 'வணக்கம்', 'नमस्ते'];
+  private greetings = ['Hi','Hello', 'Bonjour', 'Hola', 'வணக்கம்', 'नमस्ते'];
 
   constructor(private translate: TranslateService, @Inject(PLATFORM_ID) private platformId: Object){
     this.translate.setDefaultLang('en');
