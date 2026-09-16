@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommonService } from '../service/common.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -27,6 +27,13 @@ export class HomeComponent {
   @ViewChild('contactViewChild') contactSection: ElementRef | undefined;
   @ViewChild('awardsViewChild') awardsSection: ElementRef | undefined;
   jsonFile !: any;
+
+  /** Download CV animation state (signals for Eager change detection) */
+  isDownloading = signal(false);
+  isDownloadComplete = signal(false);
+  downloadProgress = signal(0);
+  private downloadInterval: any;
+
   carouselImages = [
     { file: 'angular-inter.png', altKey: 'HOME.CERTIFICATE_1_ALT' },
     { file: 'angular_basic.png', altKey: 'HOME.CERTIFICATE_2_ALT' },
@@ -71,9 +78,38 @@ export class HomeComponent {
     }
 
   downloadFile(){
-    const link = document.createElement('a');
-    link.href = '/assets/Niranjan_Abathurai_2026.pdf';
-    link.download = 'Niranjan_Abathurai_2026.pdf'; // Set the file name for the download
-    link.click(); // Simulate a click to start downloading
+    if (this.isDownloading() || this.isDownloadComplete()) return;
+
+    this.isDownloading.set(true);
+    this.downloadProgress.set(0);
+
+    // Animate from 0% to 100% over ~2 seconds (40ms per tick, 2% per tick = 50 ticks × 40ms = 2s)
+    this.downloadInterval = setInterval(() => {
+      this.downloadProgress.update(v => v + 2);
+
+      if (this.downloadProgress() >= 100) {
+        this.downloadProgress.set(100);
+        clearInterval(this.downloadInterval);
+
+        // Brief pause at 100%, then show tick mark
+        setTimeout(() => {
+          this.isDownloading.set(false);
+          this.isDownloadComplete.set(true);
+
+          // Trigger actual file download after tick is shown
+          setTimeout(() => {
+            const link = document.createElement('a');
+            link.href = '/assets/Niranjan_Abathurai_2026.pdf';
+            link.download = 'Niranjan_Abathurai_2026.pdf';
+            link.click();
+
+            // Reset button after a short delay so it can be clicked again
+            setTimeout(() => {
+              this.isDownloadComplete.set(false);
+            }, 1500);
+          }, 600);
+        }, 300);
+      }
+    }, 40);
   }
 }

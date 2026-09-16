@@ -7,7 +7,40 @@
         <h1 class="my-name">{{ 'HOME.NAME' | translate }}</h1>
 
         <h4 class="role">{{ 'HOME.ROLE' | translate }}</h4>
-        <button class="btn btn-dark my-3" (click)="downloadFile()"><i class="fa fa-thin fa-download icon-cls"></i>{{ 'HOME.DOWNLOAD_CV' | translate }}</button>
+        <button class="btn btn-dark my-3 download-btn"
+                [class.downloading]="isDownloading()"
+                [class.download-complete]="isDownloadComplete()"
+                (click)="downloadFile()"
+                [disabled]="isDownloading() || isDownloadComplete()">
+          <!-- Green water-fill overlay — height driven by JS progress -->
+          <span class="fill-overlay" [style.height.%]="isDownloading() ? downloadProgress() : (isDownloadComplete() ? 100 : 0)">
+            <!-- SVG wave sitting on top of the fill for a watery surface -->
+            <svg *ngIf="isDownloading() && downloadProgress() < 100"
+                 class="wave-svg"
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 1200 40"
+                 preserveAspectRatio="none">
+              <path class="wave-path wave-back"
+                    d="M0,20 C150,0 350,40 600,20 C850,0 1050,40 1200,20 L1200,40 L0,40 Z"/>
+              <path class="wave-path wave-front"
+                    d="M0,25 C200,5 400,45 600,25 C800,5 1000,45 1200,25 L1200,40 L0,40 Z"/>
+            </svg>
+          </span>
+          <!-- Default state: icon + text -->
+          <span class="btn-content default-content" *ngIf="!isDownloading() && !isDownloadComplete()">
+            <i class="fa fa-thin fa-download icon-cls"></i>{{ 'HOME.DOWNLOAD_CV' | translate }}
+          </span>
+          <!-- Downloading state: percentage counter -->
+          <span class="btn-content progress-content" *ngIf="isDownloading()">
+            {{ downloadProgress() }}%
+          </span>
+          <!-- Complete state: tick mark -->
+          <span class="btn-content complete-content" *ngIf="isDownloadComplete()">
+            <svg class="tick-svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6" class="tick-path"/>
+            </svg>
+          </span>
+        </button>
       </div>
 
       <div>
@@ -58,7 +91,7 @@
         <app-honors-awards></app-honors-awards>
       </div>
 
-      <div #projectsViewChild class="col-12 bg-black">
+      <div #projectsViewChild class="col-12 bg-black pt-2rem">
         <app-work-experience></app-work-experience>
       </div>
 
