@@ -23,7 +23,9 @@ export class AppComponent {
   greetingVisible = signal<boolean>(false);
   splashExiting = signal<boolean>(false);
 
-  private greetings = ['Hi','Hello', 'Bonjour', 'Hola', 'வணக்கம்', 'नमस्ते'];
+  private greetings = ['Hi', 'Hello', 'Bonjour', 'Hola', 'வணக்கம்', 'नमस्ते'];
+  /** Duration (ms) each greeting stays on screen — first greeting ("Hi") lingers longer */
+  private greetingDurations = [1000, 200, 200, 200, 200, 200];
 
   constructor(private translate: TranslateService, @Inject(PLATFORM_ID) private platformId: Object){
     this.translate.setDefaultLang('en');
@@ -45,34 +47,38 @@ export class AppComponent {
   }
 
   private runSplashSequence(): void {
-    const duration = 400; // ms per greeting
     let index = 0;
 
     // Show first greeting immediately
     this.activeGreeting.set(this.greetings[0]);
     this.greetingVisible.set(true);
 
-    const interval = setInterval(() => {
-      index++;
-      if (index < this.greetings.length) {
-        // Briefly hide to force Angular to re-create the <span>, re-triggering CSS animation
-        this.greetingVisible.set(false);
-        setTimeout(() => {
-          this.activeGreeting.set(this.greetings[index]);
-          this.greetingVisible.set(true);
-        }, 50);
-      } else {
-        clearInterval(interval);
-        // Start exit animation after last greeting
-        setTimeout(() => {
-          this.splashExiting.set(true);
-          // After exit animation completes, hide splash
+    const showNext = () => {
+      const currentDuration = this.greetingDurations[index];
+      setTimeout(() => {
+        index++;
+        if (index < this.greetings.length) {
+          // Briefly hide to force Angular to re-create the <span>, re-triggering CSS animation
+          this.greetingVisible.set(false);
           setTimeout(() => {
-            this.showSplash.set(false);
-            this.splashDone.set(true);
-          }, 600); // matches CSS exit animation duration
-        }, 300);
-      }
-    }, duration);
+            this.activeGreeting.set(this.greetings[index]);
+            this.greetingVisible.set(true);
+            showNext(); // schedule the next greeting
+          }, 50);
+        } else {
+          // Start exit animation after last greeting
+          setTimeout(() => {
+            this.splashExiting.set(true);
+            // After exit animation completes, hide splash
+            setTimeout(() => {
+              this.showSplash.set(false);
+              this.splashDone.set(true);
+            }, 600); // matches CSS exit animation duration
+          }, 300);
+        }
+      }, currentDuration);
+    };
+
+    showNext();
   }
 }
