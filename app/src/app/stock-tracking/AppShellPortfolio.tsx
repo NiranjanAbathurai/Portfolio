@@ -128,6 +128,7 @@ export const AppShellPortfolio = ({ onLogout }: AppShellPortfolioProps) => {
 
   const handleUpdateProduct = async (homeId: number, productId: number, fields: Partial<Product>) => {
     // Optimistic update
+    const previousHome = homes
     setHomes((prev) =>
       prev.map((home) =>
         home.id === homeId
@@ -138,10 +139,12 @@ export const AppShellPortfolio = ({ onLogout }: AppShellPortfolioProps) => {
     try {
       await api.updateProduct(productId, fields);
     } catch (error) {
+      setHomes(previousHome)
       console.error('Error updating product:', error);
       alert('Failed to save changes.');
     }
   };
+
 
   const handleDeleteProduct = async (homeId: number, productId: number) => {
     try {
@@ -266,6 +269,7 @@ export const AppShellPortfolio = ({ onLogout }: AppShellPortfolioProps) => {
               selectedHomeId={selectedHomeId}
               onSelectHome={setSelectedHomeId}
               userName={userName}
+              onAddHome={handleAddHome}
             />
           )}
           {activeTab === 'inventory' && (

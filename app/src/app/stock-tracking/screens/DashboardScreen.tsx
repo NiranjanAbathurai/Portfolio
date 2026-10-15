@@ -8,9 +8,10 @@ interface DashboardScreenProps {
   selectedHomeId: number | null;
   onSelectHome: (homeId: number) => void;
   userName: string;
+  onAddHome : (name:string) => void;
 }
 
-export const DashboardScreen = ({ homes, selectedHomeId, onSelectHome, userName }: DashboardScreenProps) => {
+export const DashboardScreen = ({ homes, selectedHomeId, onSelectHome, userName, onAddHome }: DashboardScreenProps) => {
   const selectedHome = homes.find((h) => h.id === selectedHomeId);
   const products = selectedHome?.products || [];
 
@@ -23,8 +24,13 @@ export const DashboardScreen = ({ homes, selectedHomeId, onSelectHome, userName 
 
   const firstName = userName.split(' ')[0] || 'User';
 
+  const onAddHomeBtn = () => {
+    onAddHome("New Home");
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <button onClick={onAddHomeBtn}>Add home</button>
       {/* Greeting */}
       <div style={{ marginBottom: '4px' }}>
         <h2 style={{ color: 'var(--st-text-primary, #F8FAFC)', fontSize: '1.25rem', fontWeight: 600, margin: '0 0 4px' }}>
